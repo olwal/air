@@ -7,4 +7,4 @@ Visualization of sensor data from [PurpleAir](https://purpleair.com/), leveragin
 
 [![3D pan over the Peninsula](media/peninsula_pan.gif)](https://olwal.github.io/air/3d/)
 [![3D rotation over the Bay](media/bay_rotate.gif)](https://olwal.github.io/air/3d/)
-[![3D visualization of air quality sensor data](media/air_sensors.jpg)](https://olwal.github.io/air/3d/)
+[![3D visualization of air quality sensor data](media/air_sensors_smaller.jpg)](https://olwal.github.io/air/3d/)
