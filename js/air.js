@@ -6,22 +6,21 @@
 
 class Air 
 {
-    self;
-    static colors;
-    static mapping;
+    constructor()
+    {
+        this.latitudes = [ 10000, -10000 ]; //min, max
+        this.longitudes = [ 10000, -10000 ];  //min, max
 
-    latitudes = [ 10000, -10000 ]; //min, max
-    longitudes = [ 10000, -10000 ];  //min, max
+        this.selected = undefined; //tracking clicked object
 
-    selected = undefined; //tracking clicked object
+        this.FEATURE_OPACITY = 100;
+        this.TIME_BETWEEN_REQUESTS_FIRST = 1; //the first round should update fast
+        this.TIME_BETWEEN_REQUESTS = 10; //slower updates when we refresh the data
 
-    FEATURE_OPACITY = 100;
-    TIME_BETWEEN_REQUESTS_FIRST = 1; //the first round should update fast
-    TIME_BETWEEN_REQUESTS = 10; //slower updates when we refresh the data
-
-    nSensorsUpdated = 0; //track updated sensors
-    updatingSensors = false; //flag whether we are currently updating
-    initialized = false; //has there been a first update of all sensor data
+        this.nSensorsUpdated = 0; //track updated sensors
+        this.updatingSensors = false; //flag whether we are currently updating
+        this.initialized = false; //has there been a first update of all sensor data
+    }
 
     preload() //load table with sensor IDs and locations
     {

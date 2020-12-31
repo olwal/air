@@ -7,12 +7,10 @@
 
 class Features
 {
-  static cities;
-
   static preload()
   {
     console.log(LANDMARKS_PATH);
-    Features.cities = loadTable(LANDMARKS_PATH, 'csv', 'header');
+    return loadTable(LANDMARKS_PATH, 'csv', 'header');
   }
 
   static buildFromData(data, name)
@@ -121,7 +119,7 @@ class Features
     return o;
   }
 
-  static getBayAreaFeatures()
+  static getBayAreaFeatures(cities)
   {   
     let o = {};
     o.type = "FeatureCollection";
@@ -147,9 +145,9 @@ class Features
 
     o.features = [];
 
-    console.log("length: " + Features.cities.rows.length);    
+    console.log("length: " + cities.rows.length);    
 
-    for (let row of Features.cities.rows)
+    for (let row of cities.rows)
     {
 /*      count += 1;
       if (count > 10)

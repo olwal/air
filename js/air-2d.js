@@ -27,12 +27,13 @@ let air; //object that manages updates through server
 let lastUpdated = -1; //keep track of last update (seconds)
 let timestamp; //used for the first update
 let focusOnClick = false;
+let cities; 
 
 function preload() 
 {
     air = new Air();
     air.preload();
-    Features.preload();
+    cities = Features.preload();
 }
 
 function digit(number)
@@ -50,7 +51,7 @@ function setup()
     self = air;
 
     //add city names overlays
-    Procedural.addOverlay(Features.getBayAreaFeatures());
+    Procedural.addOverlay(Features.getBayAreaFeatures(cities));
 
     //callback for receiving updated sensor data
     air.onUpdateCallback = function(sensors) 

@@ -8,17 +8,22 @@ class AirQuality
 { 
   //colors =['#68E143', '#FFFF55', '#EF8533', '#EA3324', '#8C1A4B', '#8C1A4B', '#731425', '#731425', '#731425', '#731425', '#731425'] 
   //colors to interpolate in categories from 0-300
-    static colors = 
-    [ 
-        [104, 225, 67],
-        [255, 255, 85], 
-        [239, 133, 51],
-        [234, 51, 36],
-        [140, 26, 76],
-        [140, 26, 76],      
-        [115, 20, 37],
-        [115, 20, 37],      
-    ];
+    
+    static getColors()
+    {
+        let colors = 
+        [ [104, 225, 67],
+            [255, 255, 85], 
+            [239, 133, 51],
+            [234, 51, 36],
+            [140, 26, 76],
+            [140, 26, 76],      
+            [115, 20, 37],
+            [115, 20, 37],      
+        ];
+
+        return colors;
+    }
 
     //calculate Air Quality Index from PM 2.5 concentration
     static getAqiFromPm25(concentration)
@@ -79,8 +84,11 @@ class AirQuality
 
         let colorIndex = int(aqi/50);
 
-        let c0 = AirQuality.colors[colorIndex];
-        let c1 = AirQuality.colors[colorIndex + 1];
+//        let c0 = AirQuality.colors[colorIndex];
+//        let c1 = AirQuality.colors[colorIndex + 1];
+        let c0 = AirQuality.getColors()[colorIndex];
+        let c1 = AirQuality.getColors()[colorIndex + 1];
+
         let t = (aqi % 50) / 50.0;
 
         if (c0 == undefined || c1 == undefined)
