@@ -5,6 +5,8 @@
 
 Visualization of sensor data from [PurpleAir](https://purpleair.com/), leveraging [p5.js](https://p5js.org/), [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [Altair](https://altair-viz.github.io/).
 
-[![3D pan over the Peninsula](media/peninsula_pan.gif)](https://olwal.github.io/air/3d/)
-[![3D rotation over the Bay](media/bay_rotate.gif)](https://olwal.github.io/air/3d/)
-[![3D visualization of air quality sensor data](media/air_sensors_smaller.jpg)](https://olwal.github.io/air/3d/)
+[![Pan to San Francisco](media/sf_pan_to_320.gif)](https://olwal.github.io/air/3d/)
+[![Rotating around San Francisco](media/sf_rotate_320.gif)](https://olwal.github.io/air/3d/)
+[![Rotating around East Bay](media/east_bay_rotate_320.gif)](https://olwal.github.io/air/3d/)
+[![Approaching Silicon Valley](media/silicon_valley_approach.gif)](https://olwal.github.io/air/3d/)
+[![3D visualization of air quality sensor data](media/sensor_data_3d_bay_area.jpg)](https://olwal.github.io/air/3d/)
