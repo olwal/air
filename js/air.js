@@ -15,6 +15,7 @@ class Air
 
     selected = undefined; //tracking clicked object
 
+    FEATURE_OPACITY = 100;
     TIME_BETWEEN_REQUESTS_FIRST = 1; //the first round should update fast
     TIME_BETWEEN_REQUESTS = 10; //slower updates when we refresh the data
 
@@ -85,6 +86,8 @@ class Air
         let previousId = -1;
         if (this.selected != undefined)
             previousId = this.selected[0];
+
+        console.log(id + " " + previousId);
 
         let row = this.findRow(id); //find the row with all data
         if (row >= 0)
@@ -161,10 +164,14 @@ class Air
             if (aqi == undefined)
                 aqi = -1;
 
-            let row = self.findRow(id) //find row to update
+            let row = self.findRow(id); //find row to update
+
+            // let color = AirQuality.getColorHex(aqi);
+            let rgb = AirQuality.getColor(aqi);
+            let color = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + air.FEATURE_OPACITY + ")";
 
             self.sensors.set(row, "aqi", aqi);
-            self.sensors.set(row, "color", AirQuality.getColorHex(aqi));
+            self.sensors.set(row, "color", color);
             self.sensors.set(row, "label", results.Label);
             self.sensors.set(row, "temp_f", results.temp_f);
             self.sensors.set(row, "pressure", results.pressure);

@@ -32,6 +32,7 @@ function preload()
 {
     air = new Air();
     air.preload();
+    Features.preload();
 }
 
 function digit(number)
@@ -42,8 +43,14 @@ function digit(number)
 function setup() 
 {
     air.TIME_BETWEEN_REQUESTS = TIME_BETWEEN_REQUESTS;
+    air.TIME_BETWEEN_REQUESTS_FIRST = TIME_BETWEEN_REQUESTS_FIRST;
+    air.FEATURE_OPACITY = FEATURE_OPACITY;
+
     air.init(UPDATE_INTERVAL);    
     self = air;
+
+    //add city names overlays
+    Procedural.addOverlay(Features.getBayAreaFeatures());
 
     //callback for receiving updated sensor data
     air.onUpdateCallback = function(sensors) 
@@ -70,7 +77,7 @@ function setup()
         for (let r = 0; r < sensors.getRowCount(); r++) //add all rows from updates
             callbackData.push(sensors.rows[r].arr);     
     
-        //generate and add overlays
+        //generate and add sensor overlays
         let o = Features.buildFromData(callbackData, FEATURE_COLLECTION_NAME); 
         Procedural.addOverlay(o);
 

@@ -12,9 +12,11 @@ const DIV_GL = 'gl';
 const CANVAS_HEIGHT = 40;
 const UPDATE_INTERVAL = -1; //60000;
 const DATA_PATH = 'data/outside_sensors_bay_area.csv';
+const LANDMARKS_PATH = 'data/california_cities_selected.csv';
 const TIME_BETWEEN_REQUESTS = 100;
 const TIME_BETWEEN_REQUESTS_FIRST = 1;
 
+const FEATURE_OPACITY = 0.7; //0-1
 const FEATURE_COLLECTION_NAME = "sensors";
 
 var ORBIT_AFTER_FOCUS = true;
@@ -27,15 +29,15 @@ const MAP_TARGET = {
   
 const GL_CONFIGURATION = {
     // Minimum distance camera can approach scene
-  //  minDistance: 1000,
+    minDistance: 2000,
     // Maximum distance camera can move from scene
-    maxDistance: 50000,
+    maxDistance: 100000,
     // Maximum distance camera target can move from scene
     maxBounds: 7500000,
     // Minimum polar angle of camera
-  //  minPolarAngle: 0.25 * Math.PI,
+    minPolarAngle: 0.2 * Math.PI,
     // Maximum polar angle of camera
-  //  maxPolarAngle: 0.8 * Math.PI,
+    maxPolarAngle: 0.45 * Math.PI,
     // Set to true to disable panning
     noPan: false,
     // Set to true to disable rotating
