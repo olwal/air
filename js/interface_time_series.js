@@ -2,6 +2,8 @@
     Alex Olwal, 2020, www.olwal.com
 
     Application for 2D/3D visualization, playback and interaction with time series sensor data overlaid on geo maps.
+
+    Externally defined constants/global variables in config.js
 */
 
 var CANVAS_WIDTH = window.innerWidth; //borderless width

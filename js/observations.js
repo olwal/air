@@ -1,3 +1,13 @@
+/*
+    Alex Olwal, 2020, www.olwal.com
+
+    Class for sensor data and location index. 
+    Reads binary data, computes AQI color, and generates GeoJSON for overlays.
+
+    Externally defined constants/global variables in config.js
+*/
+
+
 class Observations
 {
     static preload(index) //load and return index file 
