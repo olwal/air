@@ -25,10 +25,11 @@ let timestamp; //keep track of time for animation
 let UPDATE_MS = 25; //inter-frame delay 
 
 let play = false;
+let showHelp = true;
 
 //Time intervals to load data, either these as default, or from urlParameters (start_date and end_date)
-let START_DATE_STRING = "2020-08-15";
-let END_DATE_STRING = "2020-08-25";
+let START_DATE_STRING = "2020-08-19";
+let END_DATE_STRING = "2020-09-15";
 let START_DATE = Date.parse(START_DATE_STRING);
 let END_DATE = Date.parse(END_DATE_STRING);
 
@@ -96,6 +97,7 @@ function setup()
                 {
                     Procedural.focusOnLocation(MAP_TARGET);
                     setObservation(0);
+                    play = true;
                 }    
             }    
         );
@@ -143,8 +145,13 @@ function keyPressed() //handle keyboard presses
 
     switch (key) 
     {
+        case 'p':
         case ' ': //play/pause
             play = !play;
+            break;
+
+        case 'o':
+            Procedural.orbitTarget(); //orbit around the current location
             break;
 
         //next observation
@@ -177,12 +184,15 @@ function keyPressed() //handle keyboard presses
             UPDATE_MS *= 2;     
             break;
 
+        case 'h':
+            showHelp = !showHelp;
+            break; 
 
         case 'r': //rewind to beginning
             current = 0;    
             break;
 
-        case 'o': //toggle whether a focus will trigger an immediate orbit to start
+        case 'O': //toggle whether a focus will trigger an immediate orbit to start
             ORBIT_AFTER_FOCUS = !ORBIT_AFTER_FOCUS;
             break;
 
@@ -230,6 +240,12 @@ function draw()
                 text(oj.month_text, x, CANVAS_HEIGHT/2);                       
             }
         }
+    }
+
+    if (showHelp)
+    {
+        textAlign(RIGHT)
+        text("[P]LAY/PAUSE   [O]RBIT START   [F]OCUS   [H]ELP ", CANVAS_WIDTH, CANVAS_HEIGHT/10 );
     }
 
     //draw a graph of the average values for all observations, and cursor for current
