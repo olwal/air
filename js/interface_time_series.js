@@ -104,6 +104,7 @@ function setup()
 
                         if (nLoaded == observations.length) //when completed, foucs on the desired map target
                         {
+                            Procedural.focusOnLocation(MAP_TARGET);
                             play = true;
                         }    
                     }    
