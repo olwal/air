@@ -59,4 +59,6 @@ Procedural.onLocationFocused =
 //use externally defined settings to set up camera, rendering and location
 Procedural.configureControls(GL_CONFIGURATION);
 Procedural.setEnvironment(GL_ENVIRONMENT);
+
 Procedural.displayLocation(MAP_TARGET);
+Procedural.focusOnLocation(MAP_TARGET);

@@ -22,7 +22,7 @@ let current = 0;
 let nLoaded = 0;
 
 let timestamp; //keep track of time for animation
-let UPDATE_MS = 25; //inter-frame delay 
+let UPDATE_MS = 100; //inter-frame delay 
 
 let play = false;
 let showHelp = true;
@@ -77,33 +77,41 @@ function setup()
     MAP_TARGET.latitude = 37.7591527514897;
     MAP_TARGET.distance = 20000;
 
-    for (b of binaries) //b is the filename (e.g., "2020-12-13_00.bin")
-    {
-        ms = Date.parse(b.slice(0, -7)); //extracts date portion and converts to UTC milliseconds
-
-        if (ms < START_DATE || ms > END_DATE || b.length == 0) //skips this file if it is too early or too late
-            continue;
-
-        data = PATH + b; //complete path for file to load
-
-        o = new Observations(); //create a new Observations object, which will load and preprocess the data and overlays
-        o.load(data, sensors, 
-            function(observation)
+    window.setTimeout(
+        function()
+        {
+            for (b of binaries) //b is the filename (e.g., "2020-12-13_00.bin")
             {
-//                console.log('Loaded ' + observation.filename + " " + observation.count + " sensors (" + observation.errors + " errors, " + observation.notInIndex + ")");
-                nLoaded++; //keep track of # of loaded Observations
+                let ms = Date.parse(b.slice(0, -7)); //extracts date portion and converts to UTC milliseconds
 
-                if (nLoaded == observations.length) //when completed, foucs on the desired map target
-                {
-                    Procedural.focusOnLocation(MAP_TARGET);
-                    setObservation(0);
-                    play = true;
-                }    
-            }    
-        );
+                if (ms < START_DATE || ms > END_DATE || b.length == 0) //skips this file if it is too early or too late
+                    continue;
 
-        observations.push(o); //add each Observation object 
-    }
+                let data = PATH + b; //complete path for file to load
+
+                o = new Observations(); //create a new Observations object, which will load and preprocess the data and overlays
+                o.load(data, sensors, 
+                    function(observation)
+                    {
+        //                console.log('Loaded ' + observation.filename + " " + observation.count + " sensors (" + observation.errors + " errors, " + observation.notInIndex + ")");
+                        nLoaded++; //keep track of # of loaded Observations
+
+                        if (nLoaded == 1)
+                        {
+                            Procedural.focusOnLocation(MAP_TARGET);
+                            setObservation(0);
+                        }
+
+                        if (nLoaded == observations.length) //when completed, foucs on the desired map target
+                        {
+                            play = true;
+                        }    
+                    }    
+                );
+
+                observations.push(o); //add each Observation object 
+            }
+        }, 1000);
 
     //add city names overlays
     Procedural.addOverlay(Features.getBayAreaFeatures(cities));
@@ -295,6 +303,9 @@ function draw()
 
         return;
     }
+
+    if (current >= observations.length)
+        return;
 
     let oc = observations[current]; //get current observation
 

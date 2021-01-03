@@ -25,11 +25,12 @@ const FEATURE_COLLECTION_NAME = "sensors";
 var ORBIT_AFTER_FOCUS = true;
 
 var MAP_TARGET = {
-    latitude: 37.512070759717645, longitude: -122.29158348430136,
-    distance: 50000,
+//    latitude: 37.512070759717645, longitude: -122.29158348430136,
+    latitude: 37.7591527514897, longitude: -122.44198789673219,
+    distance: 20000,
     angle: 35, bearing: -20
 };
-  
+
 const GL_CONFIGURATION = {
     // Minimum distance camera can approach scene
     minDistance: 2000,
