@@ -120,6 +120,8 @@ function setup()
     distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
     radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
 
+    console.log("date start: " + START_DATE_STRING);
+    
     console.log("longitude: " + longitude);
     console.log("latitude: " + latitude);
     console.log("radius: " + radius);
