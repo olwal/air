@@ -121,7 +121,7 @@ function setup()
     radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
 
     console.log("date start: " + START_DATE_STRING);
-    
+    console.log("date end: " + END_DATE_STRING);    
     console.log("longitude: " + longitude);
     console.log("latitude: " + latitude);
     console.log("radius: " + radius);
