@@ -75,33 +75,32 @@ function setup()
             END_DATE_STRING = end_string;
         }
     }
-    
+
+    //if city was specified, try to match it in city table
     if (city != undefined)
     {
-        city = city.replace(/%20/g, " ");
-        let rows = cities.findRows(city, "name");
-
+        city = city.replace(/%20/g, " "); //replace %20 characters from URL
+        let rows = cities.findRows(city, "name"); //look up all matches
         let row = undefined;
 
         for (r of rows)
         {
-            print(rows);
-            if (r.get("name") == city)
+            if (r.get("name") == city) //make sure that the whole string matches
             {
-                city = r.get("name");
                 row = r;
                 break;
             }
         }
 
-        print(row);
-
-        if (row != undefined)
+        //if exact match failed, use long/lat defaults or URL parameters
+        if (row != undefined) 
         {
             latitude = parseFloat(row.get("latitude"));
             longitude = parseFloat(row.get("longitude"));
         }
     }
+    //if no city specified, but long/lat specified, add them to the table, 
+    //to generate a label that can be shown
     else 
     {
         city = longitude.toFixed(2) + ", " + latitude.toFixed(2);
@@ -113,6 +112,7 @@ function setup()
         row.setNum('show', 2);
     }
 
+    //check if URL parameters were valid, otherwise use default value
     longitude = isNaN(longitude) ? DEFAULT_LONGITUDE : longitude;
     latitude = isNaN(latitude) ? DEFAULT_LATITUDE : latitude;
     distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
