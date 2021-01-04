@@ -105,15 +105,12 @@ function setup()
     else 
     {
         city = longitude.toFixed(2) + ", " + latitude.toFixed(2);
-//        city = "[ " + longitude.toFixed(2) + ", " + latitude.toFixed(2) + " ]";
 
         let row = cities.addRow();
         row.setString('name', city);
         row.setNum('longitude', longitude);
         row.setNum('latitude', latitude);
         row.setNum('show', 2);
-
-        print(city);
     }
 
     longitude = isNaN(longitude) ? DEFAULT_LONGITUDE : longitude;
