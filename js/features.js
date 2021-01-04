@@ -149,21 +149,24 @@ class Features
 
     for (let row of cities.rows)
     {
-/*      count += 1;
-      if (count > 10)
-        break;
-*/
-
       let name = row.arr[0];
       let show = row.arr[3];
 
-      if (row.arr[3] == '0' && (city == undefined || name != city))
+      if (show == '0' && (city == undefined || name != city))
         continue;
 
       let textColor = "rgba(255, 255, 255, 0.8)";
 
       if (city != undefined)
-        textColor = (name == city) ? "rgba(255, 255, 255, 0.8)" : "rgba(255, 255, 255, 0.5)";
+      {
+        textColor = (name == city) ? "rgba(255, 255, 255, 1)" : "rgba(240, 240, 240, 0.8)";
+        
+        if (name == city)
+        {
+          //name = "[ " + name + " ]";
+          //show = '1';
+        }      
+      }
       
       let latitude = parseFloat(row.arr[1]);
       let longitude = parseFloat(row.arr[2]);
