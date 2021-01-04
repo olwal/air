@@ -75,7 +75,7 @@ function setup()
             END_DATE_STRING = end_string;
         }
     }
-
+    
     if (city != undefined)
     {
         city = city.replace(/%20/g, " ");
@@ -101,13 +101,26 @@ function setup()
             latitude = parseFloat(row.get("latitude"));
             longitude = parseFloat(row.get("longitude"));
         }
-    }    
+    }
+    else 
+    {
+        city = longitude.toFixed(2) + ", " + latitude.toFixed(2);
+//        city = "[ " + longitude.toFixed(2) + ", " + latitude.toFixed(2) + " ]";
+
+        let row = cities.addRow();
+        row.setString('name', city);
+        row.setNum('longitude', longitude);
+        row.setNum('latitude', latitude);
+        row.setNum('show', 2);
+
+        print(city);
+    }
 
     longitude = isNaN(longitude) ? DEFAULT_LONGITUDE : longitude;
     latitude = isNaN(latitude) ? DEFAULT_LATITUDE : latitude;
     distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
     radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
-
+    
     console.log(radius + " " + distance + " " + binaries.length);
 
     //create p5.js canvas
@@ -159,7 +172,8 @@ function setup()
             }
         }, 1000);
 
-    //add city names overlays
+
+
     cityLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, cities, city)
     Procedural.addOverlay(cityLabels);
 
