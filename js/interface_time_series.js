@@ -243,7 +243,7 @@ function keyPressed() //handle keyboard presses
             return false;
 
         case 'l':
-            showLabels = !showLabels;
+            showLabels = !showLabels; 
             if (showLabels)
                 Procedural.addOverlay(cityLabels);
             else
