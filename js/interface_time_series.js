@@ -92,16 +92,21 @@ function setup()
             }
         }
 
-        //if exact match failed, use long/lat defaults or URL parameters
+        //if exact match succeeded, set long/lat (overwriting potential URL parameters)
         if (row != undefined) 
         {
             latitude = parseFloat(row.get("latitude"));
             longitude = parseFloat(row.get("longitude"));
         }
     }
-    //if no city specified, but long/lat specified, add them to the table, 
+
+    //check if URL parameters were valid, otherwise use default value
+    longitude = isNaN(longitude) ? DEFAULT_LONGITUDE : longitude;
+    latitude = isNaN(latitude) ? DEFAULT_LATITUDE : latitude;
+    
+    //if no city was specified, but long/lat was, then add them to the table, 
     //to generate a label that can be shown
-    else 
+    if (city == undefined)  
     {
         city = longitude.toFixed(2) + ", " + latitude.toFixed(2);
 
@@ -112,9 +117,6 @@ function setup()
         row.setNum('show', 2);
     }
 
-    //check if URL parameters were valid, otherwise use default value
-    longitude = isNaN(longitude) ? DEFAULT_LONGITUDE : longitude;
-    latitude = isNaN(latitude) ? DEFAULT_LATITUDE : latitude;
     distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
     radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
     
