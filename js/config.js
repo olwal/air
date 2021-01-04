@@ -21,6 +21,7 @@ const SHOW_CONTROLS = false;
 
 const FEATURE_OPACITY = 0.7; //0-1
 const FEATURE_COLLECTION_NAME = "sensors";
+const FEATURE_COLLECTION_NAME_LANDMARKS = "cities";
 
 var ORBIT_AFTER_FOCUS = true;
 

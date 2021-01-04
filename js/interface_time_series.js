@@ -12,6 +12,7 @@ const CONTAINER_P5 = document.getElementById(DIV_P5);
 const SENSOR_INDEX = SENSOR_INDEX_FILE;
 const PATH = BINARY_DATA_PATH;
 const BINARY_INDEX = BINARY_DATA_PATH + 'index.txt';
+const LABELS_NAME = FEATURE_COLLECTION_NAME_LANDMARKS;
 let binaries;
 
 let cities; //city data for labels
@@ -33,6 +34,15 @@ let END_DATE_STRING = "2020-09-15";
 let START_DATE = Date.parse(START_DATE_STRING);
 let END_DATE = Date.parse(END_DATE_STRING);
 
+let DEFAULT_LONGITUDE = -122.44198789673219;
+let DEFAULT_LATITUDE = 37.7591527514897;
+let DEFAULT_RADIUS = 7500; //m
+
+let DEFAULT_DISTANCE = 20000;
+
+let cityLabels = undefined;
+let showLabels = true;
+
 function preload()
 {
     sensors = Observations.preload(SENSOR_INDEX);
@@ -43,39 +53,74 @@ function preload()
 function setup()
 {
     //Attempt to parse URL parameters for start_date and end_date. If successful, load that interval, otherwise load default
-	let params = getURLParams();		
-    let nParams = Object.keys(params).length;
-    
-    if (nParams == 2)
+	let params = getURLParams();		    
+    let start_string = params['start_date'];
+    let end_string = params['end_date'];
+    let longitude = parseFloat(params['longitude']);
+    let latitude = parseFloat(params['latitude']);
+    let radius = parseFloat(params['radius']);    
+    let distance = parseFloat(params['distance']);
+    let city = params['city'];
+
+    let start = new Date(start_string);
+    let end = new Date(end_string);
+
+    if (isValidDate(start) && isValidDate(end))
     {
-        let start_string = params['start_date'];
-        let end_string = params['end_date'];
-
-        let start = new Date(start_string);
-        let end = new Date(end_string);
-
-        if (isValidDate(start) && isValidDate(end))
+        if (start.getTime() >= Date.parse("2020-01-01") && end.getTime() <= Date.parse("2021-01-01"))
         {
-            if (start.getTime() >= Date.parse("2020-01-01") && end.getTime() <= Date.parse("2021-01-01"))
-            {
-                START_DATE = start.getTime();
-                END_DATE = end.getTime();          
-                START_DATE_STRING = start_string;
-                END_DATE_STRING = end_string;
-            }
+            START_DATE = start.getTime();
+            END_DATE = end.getTime();          
+            START_DATE_STRING = start_string;
+            END_DATE_STRING = end_string;
         }
     }
 
-    console.log(binaries.length);
+    if (city != undefined)
+    {
+        city = city.replace(/%20/g, " ");
+        let rows = cities.findRows(city, "name");
+
+        let row = undefined;
+
+        for (r of rows)
+        {
+            print(rows);
+            if (r.get("name") == city)
+            {
+                city = r.get("name");
+                row = r;
+                break;
+            }
+        }
+
+        print(row);
+
+        if (row != undefined)
+        {
+            latitude = parseFloat(row.get("latitude"));
+            longitude = parseFloat(row.get("longitude"));
+        }
+    }    
+
+    longitude = isNaN(longitude) ? DEFAULT_LONGITUDE : longitude;
+    latitude = isNaN(latitude) ? DEFAULT_LATITUDE : latitude;
+    distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
+    radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
+
+    console.log(radius + " " + distance + " " + binaries.length);
 
     //create p5.js canvas
     let can = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
     can.parent(CONTAINER_P5);
 
     //set the map target to San Francisco
-    MAP_TARGET.longitude = -122.44198789673219;
-    MAP_TARGET.latitude = 37.7591527514897;
-    MAP_TARGET.distance = 20000;
+    MAP_TARGET.longitude = longitude; //-122.44198789673219;
+    MAP_TARGET.latitude = latitude; //37.7591527514897;
+    MAP_TARGET.distance = distance; //20000;
+
+    Procedural.displayLocation(MAP_TARGET);
+    Procedural.focusOnLocation(MAP_TARGET);
 
     window.setTimeout(
         function()
@@ -89,7 +134,7 @@ function setup()
 
                 let data = PATH + b; //complete path for file to load
 
-                o = new Observations(); //create a new Observations object, which will load and preprocess the data and overlays
+                o = new Observations(longitude, latitude, radius); //create a new Observations object, which will load and preprocess the data and overlays
                 o.load(data, sensors, 
                     function(observation)
                     {
@@ -105,7 +150,7 @@ function setup()
                         if (nLoaded == observations.length) //when completed, foucs on the desired map target
                         {
                             Procedural.focusOnLocation(MAP_TARGET);
-                            play = true;
+                            //play = true;
                         }    
                     }    
                 );
@@ -115,7 +160,19 @@ function setup()
         }, 1000);
 
     //add city names overlays
-    Procedural.addOverlay(Features.getBayAreaFeatures(cities));
+    cityLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, cities, city)
+    Procedural.addOverlay(cityLabels);
+
+    Procedural.onFeatureClicked = function (id) //clicking on a feature 
+    {
+        let o = observations[current];
+        if (o)
+        {
+            let p = o.observations[id];
+            if (p)
+                print(id + " " + p[0] + " " + p[1] + " " + p[2]);
+        }
+    }
 
     //set the text size to 1/4 of the height to fit 2 lines + progress bar
     textFont("Inter");
@@ -184,6 +241,13 @@ function keyPressed() //handle keyboard presses
         case 'm': 
             changeObservation(delta);
             return false;
+
+        case 'l':
+            showLabels = !showLabels;
+            if (showLabels)
+                Procedural.addOverlay(cityLabels);
+            else
+                Procedural.removeOverlay(FEATURE_COLLECTION_NAME_LANDMARKS);
 
         case 'x': 
             UPDATE_MS /= 2;
@@ -254,7 +318,7 @@ function draw()
     if (showHelp)
     {
         textAlign(RIGHT)
-        text("[P]LAY/PAUSE   [O]RBIT START   [F]OCUS   [H]ELP ", CANVAS_WIDTH, CANVAS_HEIGHT/10 );
+        text("[P]LAY/PAUSE   [O]RBIT START   [F]OCUS   [L]ABELS   [H]ELP ", CANVAS_WIDTH, CANVAS_HEIGHT/10 );
     }
 
     //draw a graph of the average values for all observations, and cursor for current

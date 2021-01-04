@@ -32,7 +32,7 @@ class Observations
     }
 
     //default bounding box around SF
-    constructor(west = -122.516370, east = -122.380372, north = 37.817024, south = 37.616488)
+    constructor(longitude, latitude, radius)//west = -122.516370, east = -122.380372, north = 37.817024, south = 37.616488)
     {       
 		this.FEATURE_OPACITY = 0.7;
         this.observations = {};
@@ -46,12 +46,19 @@ class Observations
         this.cancelLoading = false;
         this.ERROR_VALUE = 65535; //should be static
 
+        //limit which sensors to read based on distance from this longitude, latitude and radius in m
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.radius = radius;
+
         //bounding box to limit which sensors to load
+        /*
         this.EAST = east;
         this.WEST = west;
         this.NORTH = north;
         this.SOUTH = south;
-        
+        */
+
         //should be static, but that's not supported by Safari, so OK to duplicate per object, given small array
         this.MONTHS = [ "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" ];
     }
@@ -61,9 +68,34 @@ class Observations
         let row = sensors.findRow(id, 'id');
         
         if (row && row.arr.length == 3)
-            return [ row.arr[1], row.arr[2] ];
+            return [ row.arr[1], row.arr[2] ]; //longitude, latitude
         else
             return false;
+    }
+
+    getDistanceM(longitude1, latitude1, longitude2 = undefined, latitude2 = undefined)
+    {
+        if (longitude2 == undefined)
+            longitude2 = this.longitude;
+
+        if (latitude2 == undefined)
+            latitude2 = this.latitude;
+                
+        let R = 6371; //earth's radius (km)
+
+        let PI_180 = PI/180;
+
+        let deltaLatitude = (latitude2-latitude1) * PI_180;
+        let deltaLongitude = (longitude2-longitude1) * PI_180;
+
+        let a = pow(sin(deltaLatitude/2), 2) +
+                cos(latitude1 * PI_180) * cos(latitude2 * (PI_180)) *
+                pow(sin(deltaLongitude/2), 2);;
+
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        let d = R * c;
+        
+        return d*1000;
     }
 
     load(filename, sensors, callback) //load binary data, preprocess and compute AQI color and generate JSON for overlay geometry
@@ -141,10 +173,20 @@ class Observations
                         continue;
                     }
 
+                    //limit sensors to load based on distance to location
+
+                    let distance = self.getDistanceM(location[0], location[1]);
+
+                    if (distance > self.radius)
+						continue;	
+
+
                     //limit sensors to load based on this bounding box
+                    /*
                     if (location[0] > self.EAST || location[0] < self.WEST || 
                         location[1] < self.SOUTH || location[1] > self.NORTH)
 						continue;					
+                    */
 
 					self.count++;
 					self.aqiSum += aqi;

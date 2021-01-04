@@ -14,17 +14,30 @@ const container = document.getElementById(DIV_GL);
 //preview of tile servers: https://leaflet-extras.github.io/leaflet-providers/preview/
 
 //configure data sources for elevation and map imagery
- var datasource = {
+ var datasourceMapTiler = {
   elevation: {
     apiKey: API_KEY_ELEVATION
   },
-  /*
+  
   imagery: {
     apiKey: API_KEY_MAP_TILER,
     urlFormat: 'https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key={apiKey}',
     attribution: '<a href="https://www.maptiler.com/copyright/">Maptiler</a> <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
   }
-  */
+  /*
+  imagery: {   
+    urlFormat: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+  }*/
+
+}
+
+//configure data sources for elevation and map imagery
+var datasource = {
+  elevation: {
+    apiKey: API_KEY_ELEVATION
+  },
+  
   imagery: {   
     urlFormat: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
     attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
