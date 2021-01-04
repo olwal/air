@@ -119,8 +119,13 @@ function setup()
 
     distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
     radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
-    
-    console.log(radius + " " + distance + " " + binaries.length);
+
+    console.log("longitude: " + longitude);
+    console.log("latitude: " + latitude);
+    console.log("radius: " + radius);
+    console.log("distance: " + distance);
+    console.log("city: " + city);
+    console.log("# of files to load: " + binaries.length);
 
     //create p5.js canvas
     let can = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
