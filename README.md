@@ -3,7 +3,7 @@
 # Interactive Air Quality in 3D: A Year of Hourly Sensor Data
 This project visualizes air quality data overlaid onto a 3D geographical map. The map shows hourly data from thousands of sensors and allows interaction and playback of air quality pattern across various locations. The application allows specification of location in California, start and end dates and the radius of the area for the sensors area to include. These visualizations particularly highglight the significant impact that the 2020 Bay Area fires had on air quality, but can be used to explore patterns throughout the full year. 
 
-[Live 3D demo with real-time sensor data](https://olwal.github.io/air/3d/)
+[Live 3D demo with time-series sensor data](https://olwal.github.io/air/3d/)
 
 [![Pan SF to San Mateo](media/sf_pan.gif)](https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-08&end_date=2020-09-12&radius=30000) [![Pan to SF](media/sf_pan_2.gif)](https://olwal.github.io/air/3d?location=San%20Francisco&start_date=2020-09-08&end_date=2020-09-12&radius=30000)
 
