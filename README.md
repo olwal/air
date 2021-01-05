@@ -10,7 +10,7 @@ Links to interactive visualizations:
 [![Napa](media/napa.gif)](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03) [![Santa Cruz](media/santa_cruz.gif)](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23) [![Santa Clara](media/santa_clara.gif)](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03)
 
 ## 2020 Bay Area fires
-Links to real-time 3D visualization of air quality sensor data within a certain radius from the location.
+Real-time 3D visualization of air quality sensor data within a certain radius from the location, references to 3rd party material, and time lapse videos of the 3D visualizations.
 
 [LNU Lightning Complex Fires](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03) | Aug 17 to Oct 02
 - Locations: [Napa](https://olwal.github.io/air/3d?location=Napa&start_date=2020-08-16&end_date=2020-10-11), Lake, [Sonoma](https://olwal.github.io/air/3d?location=Sonoma&start_date=2020-08-16&end_date=2020-10-11), [Yolo](https://olwal.github.io/air/3d?location=Yolo&start_date=2020-08-16&end_date=2020-10-11), Solano
@@ -26,6 +26,10 @@ Links to real-time 3D visualization of air quality sensor data within a certain 
 - Locations: [Santa Clara](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03), [Alameda](http://olwal.github.io/air/3d?location=Alameda&start_date=2020-08-15&end_date=2020-10-03), Contra Costa, [San Joaquin](http://olwal.github.io/air/3d?location=San%20Joaquin&start_date=2020-08-15&end_date=2020-10-03), Stanislaus
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-cnu-august-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7056/), [Wikipedia](https://en.wikipedia.org/wiki/SCU_Lightning_Complex_fires)
 - [Santa Clara Video](https://youtu.be/gJdsuwGUNYg)
+
+## 2020 | Timelapse 1-year
+- [San Francisco | 2020 Jan-Dec](https://youtu.be/-bVvzHcI12I)
+- [Santa Cruz | 2020 Jan-Dec](https://youtu.be/fsbrf3rNnMg)
 
 ## 3D views
 
