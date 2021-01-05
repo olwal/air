@@ -1,9 +1,9 @@
 # Air Quality Visualizations
-2D and 3D visualization of air quality sensor data.
+Interactive 3D visualization of air quality sensor data time series.
 
 [Live 3D demo with real-time sensor data](https://olwal.github.io/air/3d/)
 
-Time series visualization of sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/).
+Time series 3D visualization of sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/).
 
 [![Napa](media/napa.gif)](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03) [![Santa Cruz](media/santa_cruz.gif)](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23) [![Santa Clara](media/santa_clara.gif)](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03)
 
