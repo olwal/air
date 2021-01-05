@@ -15,7 +15,7 @@ const BINARY_INDEX = BINARY_DATA_PATH + 'index.txt';
 const LABELS_NAME = FEATURE_COLLECTION_NAME_LANDMARKS;
 let binaries;
 
-let cities; //city data for labels
+let locations; //location data for labels
 let sensors; //sensor index
 
 let observations = [];
@@ -40,36 +40,21 @@ let DEFAULT_RADIUS = 7500; //m
 
 let DEFAULT_DISTANCE = 20000;
 
-let landmarkLabels = undefined;
+let locationLabels = undefined;
 let showLabels = true;
 
-/*
-https://en.wikipedia.org/wiki/LNU_Lightning_Complex_fires
-https://www.sfchronicle.com/projects/california-fire-map/2020-lnu-lightning-complex
-https://inciweb.nwcg.gov/incident/7027/
-38.549 latitude, -122.506 longitude 
-http://localhost:8000/air/time_series.htm?city=LNU%20Lightning%20Complex%20Fires
-
-https://en.wikipedia.org/wiki/CZU_Lightning_Complex_fires
-37.262 latitude, -122.223 longitude 
-http://localhost:8000/air/time_series.htm?city=CZU%20Lightning%20Complex%20Fires
-
-https://en.wikipedia.org/wiki/SCU_Lightning_Complex_fires
-http://localhost:8000/air/time_series.htm?latitude=37.439437&longitude=-121.30435
-37.882 latitude, -121.777 longitude 
-http://localhost:8000/air/time_series.htm?city=SCU%20Lightning%20Complex%20Fires
-*/
+let showGraph = true;
 
 function preload()
 {
     sensors = Observations.preload(SENSOR_INDEX);
     binaries = loadStrings(BINARY_INDEX);
-    cities = Features.preload();
+    locations = Features.preload();
 }
 
-function addLandmark(name, longitude, latitude, show)
+function addLocation(name, longitude, latitude, show)
 {
-    let row = cities.addRow();
+    let row = locations.addRow();
     row.setString('name', name);
     row.setNum('longitude', longitude);
     row.setNum('latitude', latitude);
@@ -86,17 +71,17 @@ function setup()
     let latitude = parseFloat(params['latitude']);
     let radius = parseFloat(params['radius']);    
     let distance = parseFloat(params['distance']);
-    let landmark = params['landmark'];
-    if (landmark == undefined && params['city'])
-        landmark = params['city'];
+    let location = params['location'];
+    if (location == undefined && params['city'])
+        location = params['city'];
 
     let start = new Date(start_string);
     let end = new Date(end_string);
 
     show = 1;
-    addLandmark("LNU Lightning Complex Fires", -122.506, 38.549, show);
-    addLandmark("CZU Lightning Complex Fires", -122.223, 37.262, show);
-    addLandmark("SCU Lightning Complex Fires", -121.777, 37.882, show);
+    addLocation("LNU Lightning Complex Fires", -122.506, 38.549, show);
+    addLocation("CZU Lightning Complex Fires", -122.223, 37.262, show);
+    addLocation("SCU Lightning Complex Fires", -121.777, 37.882, show);
 
     if (isValidDate(start) && isValidDate(end))
     {
@@ -109,16 +94,16 @@ function setup()
         }
     }
 
-    //if city was specified, try to match it in city table
-    if (landmark != undefined)
+    //if location was specified, try to match it in location table
+    if (location != undefined)
     {
-        landmark = landmark.replace(/%20/g, " "); //replace %20 characters from URL
-        let rows = cities.findRows(landmark, "name"); //look up all matches
+        location = location.replace(/%20/g, " "); //replace %20 characters from URL
+        let rows = locations.findRows(location, "name"); //look up all matches
         let row = undefined;
 
         for (r of rows)
         {
-            if (r.get("name") == landmark) //make sure that the whole string matches
+            if (r.get("name") == location) //make sure that the whole string matches
             {
                 row = r;
                 break;
@@ -137,17 +122,12 @@ function setup()
     longitude = isNaN(longitude) ? DEFAULT_LONGITUDE : longitude;
     latitude = isNaN(latitude) ? DEFAULT_LATITUDE : latitude;
     
-    //if no city was specified, but long/lat was, then add them to the table, 
+    //if no location was specified, but long/lat was, then add them to the table, 
     //to generate a label that can be shown
-    if (landmark == undefined)  
+    if (location == undefined)  
     {
-        landmark = longitude.toFixed(2) + ", " + latitude.toFixed(2);
-
-        let row = cities.addRow();
-        row.setString('name', landmark);
-        row.setNum('longitude', longitude);
-        row.setNum('latitude', latitude);
-        row.setNum('show', 2);
+        location = longitude.toFixed(2) + ", " + latitude.toFixed(2);
+        addLocation(location, longitude, latitude, 2);
     }
 
     distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
@@ -159,7 +139,7 @@ function setup()
     console.log("latitude: " + latitude);
     console.log("radius: " + radius);
     console.log("distance: " + distance);
-    console.log("city: " + landmark);
+    console.log("location: " + location);
     console.log("# of files to load: " + binaries.length);
 
     //create p5.js canvas
@@ -213,8 +193,8 @@ function setup()
 
 
 
-    landmarkLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, cities, landmark)
-    Procedural.addOverlay(landmarkLabels);
+    locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
+    Procedural.addOverlay(locationLabels);
 
     Procedural.onFeatureClicked = function (id) //clicking on a feature 
     {
@@ -298,7 +278,7 @@ function keyPressed() //handle keyboard presses
         case 'l':
             showLabels = !showLabels; 
             if (showLabels)
-                Procedural.addOverlay(landmarkLabels);
+                Procedural.addOverlay(locationLabels);
             else
                 Procedural.removeOverlay(FEATURE_COLLECTION_NAME_LANDMARKS);
 
@@ -314,6 +294,10 @@ function keyPressed() //handle keyboard presses
             showHelp = !showHelp;
             break; 
 
+        case 'g':
+            showGraph = !showGraph;
+            break; 
+    
         case 'r': //rewind to beginning
             current = 0;    
             break;
@@ -388,9 +372,12 @@ function draw()
             line(x, maxHeight * 2, x, 0);
         }
 
-        noStroke();
-        fill(o.rgb[0], o.rgb[1], o.rgb[2]); //colors based on precomputed AQI color
-        rect(x, maxHeight * 2, CANVAS_WIDTH/(observations.length - 1), -y);
+        if (showGraph)
+        {
+            noStroke();
+            fill(o.rgb[0], o.rgb[1], o.rgb[2]); //colors based on precomputed AQI color
+            rect(x, maxHeight * 2, CANVAS_WIDTH/(observations.length - 1), -y);
+        }
 
         i += 1;
     }
@@ -445,6 +432,7 @@ function draw()
         text(oc.count + " sensor" + (oc.count == 1 ? "" : "s"), CANVAS_WIDTH - pad, CANVAS_HEIGHT/10 + pad);
     }
 
+    textAlign(LEFT);
     //year, right-centered to the left
     let yw = textWidth("2020");
     text(oc.year_string, centerX - dw/2 - yw - pad * 2, ty + pad);    
