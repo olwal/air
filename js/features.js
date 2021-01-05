@@ -119,7 +119,7 @@ class Features
     return o;
   }
 
-  static getBayAreaFeatures(featureCollectionName, cities, city = undefined)
+  static getBayAreaFeatures(featureCollectionName, landmarks, landmark = undefined)
   {   
     let o = {};
     o.type = "FeatureCollection";
@@ -145,26 +145,27 @@ class Features
 
     o.features = [];
 
-    console.log("length: " + cities.rows.length);    
+    console.log("length: " + landmarks.rows.length);    
 
-    for (let row of cities.rows)
+    for (let row of landmarks.rows)
     {
       let name = row.arr[0];
       let show = row.arr[3];
 
-      if (show == '0' && (city == undefined || name != city))
+      if (show == '0' && (landmark == undefined || name != landmark))
         continue;
 
       let textColor = "rgba(255, 255, 255, 0.8)";
 
-      if (city != undefined)
+      if (landmark != undefined)
       {
-        textColor = (name == city) ? "rgba(255, 255, 255, 1)" : "rgba(240, 240, 240, 0.8)";
+        textColor = (name == landmark) ? "rgba(255, 255, 255, 1)" : "rgba(240, 240, 240, 0.8)";
         
-        if (name == city)
+        if (name == landmark)
         {
           //name = "[ " + name + " ]";
-          //show = '1';
+          if (show != '1')
+            show = '2';
         }      
       }
       
