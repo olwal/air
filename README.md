@@ -28,8 +28,9 @@ Real-time 3D visualization of air quality sensor data within a certain radius fr
 - [Santa Clara Video](https://youtu.be/gJdsuwGUNYg)
 
 ## 2020 | Timelapse 1-year
-- [San Francisco | 2020 Jan-Dec](https://youtu.be/-bVvzHcI12I)
-- [Santa Cruz | 2020 Jan-Dec](https://youtu.be/fsbrf3rNnMg)
+- [Oakland | 2020 Jan-Dec](https://olwal.github.io/air/3d/?location=Oakland&start_date=2020-01-01&end_date=2021-01-01) [Video](https://youtu.be/jxLtuF0n3hA)
+- [Santa Cruz | 2020 Jan-Dec](https://olwal.github.io/air/3d/?location=Santa Cruz&start_date=2020-01-01&end_date=2021-01-01) [Video](https://youtu.be/fsbrf3rNnMg)
+- [San Francisco | 2020 Jan-Dec](https://olwal.github.io/air/3d/?location=San Francisco&start_date=2020-01-01&end_date=2021-01-01) [Video](https://youtu.be/-bVvzHcI12I)
 
 ## 3D views
 
