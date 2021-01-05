@@ -1,5 +1,5 @@
 # Air Quality Visualizations
-Interactive 3D visualization of air quality sensor data time series.
+Interactive 3D visualizations of air quality sensor data time series.
 
 [Live 3D demo with real-time sensor data](https://olwal.github.io/air/3d/)
 
