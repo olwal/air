@@ -29,10 +29,10 @@ Links to real-time 3D visualization of air quality sensor data within a certain 
 
 ## 3D views
 
-![Pan to San Francisco](media/sf_pan_to_320.gif)
+![Pan to San Francisco](media/sf_pan_to_320.gif) 
 ![Rotating around San Francisco](media/sf_rotate_320.gif)
 
-![Rotating around East Bay](media/east_bay_rotate_320.gif)
+![Rotating around East Bay](media/east_bay_rotate_320.gif) 
 ![Approaching Silicon Valley](media/silicon_valley_approach_320.gif)
 
 ![3D visualization of air quality sensor data](media/sensor_data_3d_bay_area.jpg)
