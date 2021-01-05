@@ -3,9 +3,7 @@
 
 [Live 3D demo with real-time sensor data](https://olwal.github.io/air/3d/)
 
-Visualization of sensor data from [PurpleAir](https://purpleair.com/), leveraging [p5.js](https://p5js.org/), [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js). 
-
-[// and [Altair](https://altair-viz.github.io/).]: #
+Visualization of sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/).
 
 ## 2020 Bay Area fires
 The lightning complex fires or cities links load and show a 3D visualization of relevant air quality sensor data within a certain radius from the location.
@@ -30,8 +28,8 @@ The lightning complex fires or cities links load and show a 3D visualization of 
 
 ## 3D views
 
-[![Pan to San Francisco](media/sf_pan_to_320.gif)](https://olwal.github.io/air/3d/)
-[![Rotating around San Francisco](media/sf_rotate_320.gif)](https://olwal.github.io/air/3d/)
-[![Rotating around East Bay](media/east_bay_rotate_320.gif)](https://olwal.github.io/air/3d/)
-[![Approaching Silicon Valley](media/silicon_valley_approach_320.gif)](https://olwal.github.io/air/3d/)
-[![3D visualization of air quality sensor data](media/sensor_data_3d_bay_area.jpg)](https://olwal.github.io/air/3d/)
+![Pan to San Francisco](media/sf_pan_to_320.gif)
+![Rotating around San Francisco](media/sf_rotate_320.gif)
+![Rotating around East Bay](media/east_bay_rotate_320.gif)
+![Approaching Silicon Valley](media/silicon_valley_approach_320.gif)
+![3D visualization of air quality sensor data](media/sensor_data_3d_bay_area.jpg)
