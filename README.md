@@ -6,7 +6,7 @@
 Visualization of sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/).
 
 ## 2020 Bay Area fires
-The lightning complex fires or cities links load and show a 3D visualization of relevant air quality sensor data within a certain radius from the location.
+The links and animations link to real-time 3D visualization of air quality sensor data within a certain radius from the location.
 
 [LNU Lightning Complex Fires | Aug 17 to Oct 02](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03)
 - Locations: [Napa](https://olwal.github.io/air/3d?location=Napa&start_date=2020-08-16&end_date=2020-10-03), Lake, [Sonoma](https://olwal.github.io/air/3d?location=Sonoma&start_date=2020-08-16&end_date=2020-10-03), [Yolo](https://olwal.github.io/air/3d?location=Yolo&start_date=2020-08-16&end_date=2020-10-03), Solano
