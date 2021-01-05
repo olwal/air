@@ -27,10 +27,10 @@ Real-time 3D visualization of air quality sensor data within a certain radius fr
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-cnu-august-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7056/), [Wikipedia](https://en.wikipedia.org/wiki/SCU_Lightning_Complex_fires)
 - [Santa Clara Video](https://youtu.be/gJdsuwGUNYg)
 
-## 2020 | Timelapse 1-year
-- [Oakland | 2020 Jan-Dec](https://olwal.github.io/air/3d/?location=Oakland&start_date=2020-01-01&end_date=2021-01-01) | [Video](https://youtu.be/jxLtuF0n3hA)
-- [Santa Cruz | 2020 Jan-Dec](https://olwal.github.io/air/3d/?location=Santa%20Cruz&start_date=2020-01-01&end_date=2021-01-01) | [Video](https://youtu.be/fsbrf3rNnMg)
-- [San Francisco | 2020 Jan-Dec](https://olwal.github.io/air/3d/?location=San%20Francisco&start_date=2020-01-01&end_date=2021-01-01) | [Video](https://youtu.be/-bVvzHcI12I)
+## 2020 | 1-year Time Series
+- [Oakland | 2020 Jan-Dec](https://olwal.github.io/air/3d/?location=Oakland&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/jxLtuF0n3hA)
+- [Santa Cruz | 2020 Jan-Dec](https://olwal.github.io/air/3d/?location=Santa%20Cruz&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/fsbrf3rNnMg)
+- [San Francisco | 2020 Jan-Dec](https://olwal.github.io/air/3d/?location=San%20Francisco&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/-bVvzHcI12I)
 
 ## 3D views
 
