@@ -5,6 +5,8 @@ This project visualizes air quality data overlaid onto a 3D geographical map. Th
 
 [Live 3D demo with real-time sensor data](https://olwal.github.io/air/3d/)
 
+[![Pan SF to San Mateo](media/sf_pan.gif)](https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-08&end_date=2020-09-12&radius=30000) [![Pan to SF](media/sf_pan_2.gif)](https://olwal.github.io/air/3d?location=San%20Francisco&start_date=2020-09-08&end_date=2020-09-12&radius=30000)
+
 Time series 3D visualization of sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/).
 
 ## 2020 Bay Area fires
