@@ -26,7 +26,6 @@ let timestamp; //keep track of time for animation
 let UPDATE_MS = 100; //inter-frame delay 
 
 let play = false;
-let showHelp = false;
 
 //Time intervals to load data, either these as default, or from urlParameters (start_date and end_date)
 let START_DATE_STRING = "2020-08-19";
@@ -41,8 +40,9 @@ let DEFAULT_RADIUS = 7500; //m
 let DEFAULT_DISTANCE = 20000;
 
 let locationLabels = undefined;
-let showLabels = true;
 
+let showLabels = true;
+let showHelp = true;
 let showGraph = true;
 
 function preload()
@@ -154,6 +154,8 @@ function setup()
     Procedural.displayLocation(MAP_TARGET);
     Procedural.focusOnLocation(MAP_TARGET);
 
+    let count = 0;
+
     window.setTimeout(
         function()
         {
@@ -164,35 +166,40 @@ function setup()
                 if (ms < START_DATE || ms > END_DATE || b.length == 0) //skips this file if it is too early or too late
                     continue;
 
+                count += 1;
+
                 let data = PATH + b; //complete path for file to load
 
                 o = new Observations(longitude, latitude, radius); //create a new Observations object, which will load and preprocess the data and overlays
-                o.load(data, sensors, 
-                    function(observation)
-                    {
-        //                console.log('Loaded ' + observation.filename + " " + observation.count + " sensors (" + observation.errors + " errors, " + observation.notInIndex + ")");
-                        nLoaded++; //keep track of # of loaded Observations
-
-                        if (nLoaded == 1)
+/*
+                window.setTimeout(
+                        function()
                         {
-                            Procedural.focusOnLocation(MAP_TARGET);
-                            setObservation(0);
-                        }
+  */                          o.load(data, sensors, 
+                                function(observation)
+                                {
+                    //                console.log('Loaded ' + observation.filename + " " + observation.count + " sensors (" + observation.errors + " errors, " + observation.notInIndex + ")");
+                                    nLoaded++; //keep track of # of loaded Observations
 
-                        if (nLoaded == observations.length) //when completed, foucs on the desired map target
-                        {
-                            ORBIT_AFTER_FOCUS = true;
-                            Procedural.focusOnLocation(MAP_TARGET);
-                            //play = true;
-                        }    
-                    }    
-                );
+                                    if (nLoaded == 1)
+                                    {
+                                        Procedural.focusOnLocation(MAP_TARGET);
+                                        setObservation(0);
+                                    }
+
+                                    if (nLoaded == observations.length) //when completed, foucs on the desired map target
+                                    {
+                                        ORBIT_AFTER_FOCUS = true;
+                                        Procedural.focusOnLocation(MAP_TARGET);
+                                        //play = true;
+                                    }    
+                                }    
+                            );
+    //                    }, 0); //(count / 100) * 1000);
 
                 observations.push(o); //add each Observation object 
             }
         }, 1000);
-
-
 
     locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
     Procedural.addOverlay(locationLabels);
