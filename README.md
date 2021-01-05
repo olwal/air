@@ -5,6 +5,8 @@
 
 Visualization of sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/).
 
+[![Napa](media/napa.gif)](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03) [![Santa Cruz](media/santa_cruz.gif)](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23) [![Santa Clara](media/santa_clara.gif)](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03)
+
 ## 2020 Bay Area fires
 The links and animations link to real-time 3D visualization of air quality sensor data within a certain radius from the location.
 
@@ -13,21 +15,15 @@ The links and animations link to real-time 3D visualization of air quality senso
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-lnu-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7027/), [Wikipedia](https://en.wikipedia.org/wiki/LNU_Lightning_Complex_fires)
 - [Napa Video](https://youtu.be/sms1VZ-AS3k)
 
-[![Napa](media/napa.gif)](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03)
-
 [CZU August Lightning Complex Fires](http://olwal.github.io/air/3d?location=CZU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-09-23) | Aug 17 to Sep 22
 - Locations: [Santa Cruz](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23), [San Mateo](https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-08-16&end_date=2020-09-23)
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-cnu-august-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7028/), [Wikipedia](https://en.wikipedia.org/wiki/CZU_Lightning_Complex_fires)
 - [San Mateo Video](https://youtu.be/mKirhChPaWU)
 
-[![Napa](media/santa_cruz.gif)](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23)
-
 [SCU August Lightning Complex Fires](http://olwal.github.io/air/3d?location=SCU%20Lightning%20Complex%20Fires&start_date=2020-08-15&end_date=2020-10-03) | Aug 16 to Oct 02
 - Locations: [Santa Clara](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03), [Alameda](http://olwal.github.io/air/3d?location=Alameda&start_date=2020-08-15&end_date=2020-10-03), Contra Costa, [San Joaquin](http://olwal.github.io/air/3d?location=San%20Joaquin&start_date=2020-08-15&end_date=2020-10-03), Stanislaus
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-cnu-august-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7056/), [Wikipedia](https://en.wikipedia.org/wiki/SCU_Lightning_Complex_fires)
 - [Santa Clara Video](https://youtu.be/gJdsuwGUNYg)
-
-[![Napa](media/santa_clara.gif)](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03)
 
 ## 3D views
 
