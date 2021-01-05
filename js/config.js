@@ -23,7 +23,7 @@ const FEATURE_OPACITY = 0.7; //0-1
 const FEATURE_COLLECTION_NAME = "sensors";
 const FEATURE_COLLECTION_NAME_LANDMARKS = "cities";
 
-var ORBIT_AFTER_FOCUS = true;
+var ORBIT_AFTER_FOCUS = false;
 
 var MAP_TARGET = {
 //    latitude: 37.512070759717645, longitude: -122.29158348430136,

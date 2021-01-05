@@ -181,6 +181,7 @@ function setup()
 
                         if (nLoaded == observations.length) //when completed, foucs on the desired map target
                         {
+                            ORBIT_AFTER_FOCUS = true;
                             Procedural.focusOnLocation(MAP_TARGET);
                             //play = true;
                         }    
@@ -414,6 +415,9 @@ function draw()
 
     let oc = observations[current]; //get current observation
 
+    if (!oc)
+        return;
+
     //display the current date in center
     text(oc.date_string, centerX - dw/2, ty + pad);
 
@@ -449,8 +453,12 @@ function draw()
 
 function setObservation(index) //set current observation
 {
-    current = (index) % observations.length;
-    Procedural.addOverlay(observations[current].json);
+    index = index.toFixed() % observations.length;
+    if (!isNaN(index) && index >= 0 && index < observations.length)
+    {
+        current = index;
+        Procedural.addOverlay(observations[current].json);
+    }
 }
 
 function changeObservation(delta = 1) //change observations with +/- delta

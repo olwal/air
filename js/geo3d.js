@@ -14,35 +14,32 @@ const container = document.getElementById(DIV_GL);
 //preview of tile servers: https://leaflet-extras.github.io/leaflet-providers/preview/
 
 //configure data sources for elevation and map imagery
- var datasourceMapTiler = {
-  elevation: {
-    apiKey: API_KEY_ELEVATION
-  },
-  
-  imagery: {
-    apiKey: API_KEY_MAP_TILER,
-    urlFormat: 'https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key={apiKey}',
-    attribution: '<a href="https://www.maptiler.com/copyright/">Maptiler</a> <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-  }
-  /*
-  imagery: {   
-    urlFormat: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
-  }*/
+let useEsri = true;
 
-}
-
-//configure data sources for elevation and map imagery
+if (useEsri)
+{
 var datasource = {
-  elevation: {
-    apiKey: API_KEY_ELEVATION
-  },
-  
-  imagery: {   
-    urlFormat: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
-    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    elevation: {
+      apiKey: API_KEY_ELEVATION
+    },  
+    imagery: {   
+      urlFormat: 'https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', 
+      attribution: 'Tiles &copy; Esri &mdash; Source: Esri, i-cubed, USDA, USGS, AEX, GeoEye, Getmapping, Aerogrid, IGN, IGP, UPR-EGP, and the GIS User Community'
+    }
   }
-
+}
+else
+{
+  var datasource = {
+    elevation: {
+      apiKey: API_KEY_ELEVATION
+    },
+    imagery: {
+      apiKey: API_KEY_MAP_TILER,
+      urlFormat: 'https://api.maptiler.com/tiles/satellite/{z}/{x}/{y}.jpg?key={apiKey}',
+      attribution: '<a href="https://www.maptiler.com/copyright/">Maptiler</a> <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+    }
+  }
 }
 
 //initialize with container and data sources
@@ -72,6 +69,3 @@ Procedural.onLocationFocused =
 //use externally defined settings to set up camera, rendering and location
 Procedural.configureControls(GL_CONFIGURATION);
 Procedural.setEnvironment(GL_ENVIRONMENT);
-
-Procedural.displayLocation(MAP_TARGET);
-Procedural.focusOnLocation(MAP_TARGET);
