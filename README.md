@@ -32,4 +32,5 @@ The links and animations link to real-time 3D visualization of air quality senso
 
 ![Rotating around East Bay](media/east_bay_rotate_320.gif)
 ![Approaching Silicon Valley](media/silicon_valley_approach_320.gif)
+
 ![3D visualization of air quality sensor data](media/sensor_data_3d_bay_area.jpg)
