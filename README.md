@@ -22,7 +22,7 @@ The lightning complex fires or cities links load and show a 3D visualization of 
 - Locations: [Santa Clara](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03), [Alameda](http://olwal.github.io/air/3d?location=Alameda&start_date=2020-08-15&end_date=2020-10-03), Contra Costa, [San Joaquin](http://olwal.github.io/air/3d?location=San%20Joaquin&start_date=2020-08-15&end_date=2020-10-03), Stanislaus
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-cnu-august-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7056/), [Wikipedia](https://en.wikipedia.org/wiki/SCU_Lightning_Complex_fires)
 
-## 3D views of 
+## 3D views
 
 [![Pan to San Francisco](media/sf_pan_to_320.gif)](https://olwal.github.io/air/3d/)
 [![Rotating around San Francisco](media/sf_rotate_320.gif)](https://olwal.github.io/air/3d/)
