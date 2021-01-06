@@ -3,7 +3,7 @@
 # Interactive Air Quality in 3D | 2020: Air Quality Year in Review
 This project visualizes air quality data overlaid onto a 3D geographical map. The map shows hourly data from thousands of sensors and allows interaction and playback of air quality pattern across various locations. These visualizations particularly highlight the significant impact that the 2020 Bay Area fires had on air quality, but can be used to explore patterns throughout the full year. 
 
-The live demos work best on your desktop/laptop browser. Tested on macOS and Windows with Firefox and Chrome. Android also works for the smaller datasets, whereas iOS is currently not supported. Given the potential large amount of sensor data that is loaded for a specific location/radius, the interface does not dynamically load new data as the user pans the map. 
+The live demos work best on your desktop/laptop browser. Tested on macOS and Windows with Firefox and Chrome. Android also works for the smaller datasets, whereas iOS is currently not supported. Click a location label to load the sensor data for that location within specified (or default) radius. Given the potential large amount of sensor data at a specific location/radius, the interface does not dynamically load new data as the map is panned. 
 
 [Live 3D demo with time-series sensor data](https://olwal.github.io/air/3d/)
 
@@ -59,7 +59,7 @@ Firefox seems most stable in loading these.
 ![Rotating around East Bay](media/east_bay_rotate_320.gif) 
 ![Approaching Silicon Valley](media/silicon_valley_approach_320.gif)
 
-## Key controls
+## Input controls
 
 ### Navigation
 | key     | command       | description                                              |
@@ -89,6 +89,18 @@ Firefox seems most stable in loading these.
 |---------|---------------|----------------------------------------------------------|
 | h       | help          | Show/hide instruction hint                               |
 | ESC     | abort loading | Abort loading data, useful when loading large datasets   |
+
+### Mouse motion
+| action     | description   |
+|---------|---------------|
+| Right button + move | Rotate          | 
+| Shift + Left button + move | Rotate |
+| Left button + move | Pan |
+| Center button + move | Zoom |
+| Scroll wheel | Zoom |
+| Click on location | Load data for the location |
+| Click on data point | Focus on that data point |
+
 
 ## URL parameters
 
