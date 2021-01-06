@@ -21,7 +21,7 @@ Real-time 3D visualization of air quality sensor data within a certain radius fr
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-lnu-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7027/), [Wikipedia](https://en.wikipedia.org/wiki/LNU_Lightning_Complex_fires)
 - [Napa Video](https://youtu.be/sms1VZ-AS3k)
 
-Interactive demo: 
+Interactive demo | Napa | Aug 16-Oct 03: 
 
 [![Napa](media/napa.gif)](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03)
 
@@ -30,7 +30,7 @@ Interactive demo:
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-cnu-august-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7028/), [Wikipedia](https://en.wikipedia.org/wiki/CZU_Lightning_Complex_fires)
 - [San Mateo Video](https://youtu.be/mKirhChPaWU)
 
-Interactive demo: 
+Interactive demo | Santa Cruz | Aug 16-Sep 23: 
 
 [![Santa Cruz](media/santa_cruz.gif)](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23)
 
@@ -39,7 +39,7 @@ Interactive demo:
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-cnu-august-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7056/), [Wikipedia](https://en.wikipedia.org/wiki/SCU_Lightning_Complex_fires)
 - [Santa Clara Video](https://youtu.be/gJdsuwGUNYg)
 
-Interactive demo: 
+Interactive demo | Santa Clara | Aug 15-Oct 03: 
 
 [![Santa Clara](media/santa_clara.gif)](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03)
 
@@ -47,9 +47,9 @@ Interactive demo:
 These full-year datasets take quite some time to load.
 Firefox seems most stable in loading these.
 
-- [Oakland](https://olwal.github.io/air/3d/?location=Oakland&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/jxLtuF0n3hA) | 2020 Jan-Dec
-- [Santa Cruz](https://olwal.github.io/air/3d/?location=Santa%20Cruz&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/fsbrf3rNnMg) | 2020 Jan-Dec
-- [San Francisco](https://olwal.github.io/air/3d/?location=San%20Francisco&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/-bVvzHcI12I) | 2020 Jan-Dec
+- [Oakland](https://olwal.github.io/air/3d/?location=Oakland&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/jxLtuF0n3hA) (15:29) | 2020 Jan-Dec
+- [Santa Cruz](https://olwal.github.io/air/3d/?location=Santa%20Cruz&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/fsbrf3rNnMg) (15:40) | 2020 Jan-Dec
+- [San Francisco](https://olwal.github.io/air/3d/?location=San%20Francisco&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/-bVvzHcI12I) (17:11) | 2020 Jan-Dec
 
 ## 3D views
 
