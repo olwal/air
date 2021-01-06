@@ -9,7 +9,7 @@ The live demos work best on your desktop/laptop browser. Tested on macOS and Win
 
 [![Pan SF to San Mateo](media/sf_pan.gif)](https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-08&end_date=2020-09-12&radius=30000) [![Pan to SF](media/sf_pan_2.gif)](https://olwal.github.io/air/3d?location=San%20Francisco&start_date=2020-09-08&end_date=2020-09-12&radius=30000)
 
-The application allows specification of location in California, start and end dates and the radius of the area for the sensors area to include. 
+The application allows specification of location in California, start and end dates and other parameters for the visualization. (see URL parameters, below, for full list)
 
 Time series 3D visualization of sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/).
 
