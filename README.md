@@ -102,6 +102,6 @@ Firefox seems most stable in loading these.
 | end_date      | YYYY-MM-DD for time series end. 2020-01-01 <= end_date <= 2021-01-01.     | end_date=2020-11-25   | 2020-09-15 |
 
 Examples: 
-- San Mateo, Aug 15-Oct 13 | http://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-25&end_date=2020-10-03
-- Speficic Longitude/Latitude, default dates | http://olwal.github.io/air/3d?longitude=-122.08&latitude&latitude=37.4
+- San Mateo, Sep 30-Oct 03 | http://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-30&end_date=2020-10-03
+- Longitude/Latitude (), default dates | http://olwal.github.io/air/3d?longitude=-122.08&latitude&latitude=37.4
 - Default location and dates, but 50km radius | http://olwal.github.io/air/3d?radius=50000
