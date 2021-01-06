@@ -10,8 +10,8 @@ var CANVAS_WIDTH = window.innerWidth; //borderless width
 const CONTAINER_P5 = document.getElementById(DIV_P5);
 
 const SENSOR_INDEX = SENSOR_INDEX_FILE;
-const PATH = BINARY_DATA_PATH;
-const BINARY_INDEX = BINARY_DATA_PATH + 'index.txt';
+let PATH = BINARY_DATA_PATH;
+let BINARY_INDEX = PATH + 'index.txt';
 const LABELS_NAME = FEATURE_COLLECTION_NAME_LANDMARKS;
 let binaries;
 
@@ -33,12 +33,6 @@ let END_DATE_STRING = "2020-09-15";
 let START_DATE = Date.parse(START_DATE_STRING);
 let END_DATE = Date.parse(END_DATE_STRING);
 
-let DEFAULT_LONGITUDE = -122.44198789673219;
-let DEFAULT_LATITUDE = 37.7591527514897;
-let DEFAULT_RADIUS = 7500; //m
-
-let DEFAULT_DISTANCE = 20000;
-
 let locationLabels = undefined;
 
 let showLabels = true;
@@ -47,6 +41,22 @@ let showGraph = true;
 
 function preload()
 {
+    let params = getURLParams();
+
+    let dataset = params['dataset'];
+    let landmarks = params['landmarks'];
+
+    console.log(dataset + " " + landmarks);
+
+    if (DATASETS.includes(dataset))
+    {
+        PATH = DATASET_PATH + dataset + "/";
+        BINARY_INDEX = PATH + 'index.txt';
+    }
+
+    if (LANDMARKS.includes(landmarks))
+        LANDMARKS_PATH = "data/" + landmarks + ".csv";
+
     sensors = Observations.preload(SENSOR_INDEX);
     binaries = loadStrings(BINARY_INDEX);
     locations = Features.preload();
@@ -78,10 +88,14 @@ function setup()
     let start = new Date(start_string);
     let end = new Date(end_string);
 
-    show = 1;
+    /*
+    Example on how to add new location to locations table
+
+    let show = 1;
     addLocation("LNU Lightning Complex Fires", -122.506, 38.549, show);
     addLocation("CZU Lightning Complex Fires", -122.223, 37.262, show);
     addLocation("SCU Lightning Complex Fires", -121.777, 37.882, show);
+    */
 
     if (isValidDate(start) && isValidDate(end))
     {
@@ -317,6 +331,12 @@ function keyPressed() //handle keyboard presses
         case 'f': //focus on default location
             Procedural.focusOnLocation(MAP_TARGET);
             break;
+
+        case 'u': //focus on default location
+            ORBIT_AFTER_FOCUS = false;
+            console.log(MAP_TARGET_0);
+            Procedural.focusOnLocation(MAP_TARGET_0);
+            break;            
     }
 }
 
