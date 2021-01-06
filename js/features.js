@@ -189,7 +189,7 @@ class Features
           "coordinates": [longitude, latitude]
         },
         "type": "Feature",
-        "id": count,
+        "id": name, //count,
         "properties": {
           "fontSize": 10 + (50 / (show * show)),
           "color": textColor,        

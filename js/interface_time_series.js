@@ -220,13 +220,34 @@ function setup()
 
     Procedural.onFeatureClicked = function (id) //clicking on a feature 
     {
+
         let o = observations[current];
+        let p; 
+
         if (o)
         {
-            let p = o.observations[id];
+            p = o.observations[id];
             if (p)
+            {
                 print(id + " " + p[0] + " " + p[1] + " " + p[2]);
+                ORBIT_AFTER_FOCUS = false;
+                focusOn(p[1], p[2]);
+                return;
+            }
         }
+
+        if (!p || (!o && isNaN(id)))
+        {
+            console.log("Clicked: " + id);
+            window.open('https://olwal.github.io/air/3d/?' +
+                'start_date=' + START_DATE_STRING + 
+                '&end_date=' + END_DATE_STRING + 
+                '&radius=' + radius +
+                '&distance=' + distance + 
+                '&location=' + id, 
+                "_self");
+        }
+
     }
 
     //set the text size to 1/4 of the height to fit 2 lines + progress bar
@@ -239,8 +260,9 @@ function focusOn(longitude, latitude)
 {
     let target = {
         latitude: latitude, longitude: longitude,
-        distance: 50000,
-        angle: 35, bearing: -20
+        distance: 10000,
+        angle: 75, bearing: -20,
+        animationDuration: 2
     };    
 
     Procedural.focusOnLocation(target);
