@@ -149,8 +149,11 @@ class Features
 
     for (let row of locations.rows)
     {
-      let name = row.arr[0];
-      let show = row.arr[3];
+      let name = row.get("name"); //.arr[0];
+      let show = row.get("show"); //row.arr[3];
+
+      if (show == '' || show == undefined)
+        show = '1';
 
       if (show == '0' && (location == undefined || name != location))
         continue;
@@ -164,13 +167,19 @@ class Features
         if (name == location)
         {
           //name = "[ " + name + " ]";
-          if (show != '1')
+          if (show != '1' && show != 1)
             show = '2';
         }      
       }
       
-      let latitude = parseFloat(row.arr[1]);
-      let longitude = parseFloat(row.arr[2]);
+      let latitude = parseFloat(row.get("latitude")); //parseFloat(row.arr[1]);
+      let longitude = parseFloat(row.get("longitude")); //parseFloat(row.arr[2]);
+
+      if (isNaN(latitude) || isNaN(longitude))
+      {
+        console.log("NaN: " + name + " " + longitude + ""  + latitude + " " + show);
+        continue;
+      }
 
       let feature = {
         "geometry": {
