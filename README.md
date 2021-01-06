@@ -1,11 +1,15 @@
 ![3D visualization of air quality sensor data](media/sensor_data_3d_bay_area.jpg)
 
-# Interactive Air Quality in 3D: A Year of Hourly Sensor Data
-This project visualizes air quality data overlaid onto a 3D geographical map. The map shows hourly data from thousands of sensors and allows interaction and playback of air quality pattern across various locations. The application allows specification of location in California, start and end dates and the radius of the area for the sensors area to include. These visualizations particularly highglight the significant impact that the 2020 Bay Area fires had on air quality, but can be used to explore patterns throughout the full year. 
+# Interactive Air Quality in 3D:  A Year of Hourly Sensor Data
+This project visualizes air quality data overlaid onto a 3D geographical map. The map shows hourly data from thousands of sensors and allows interaction and playback of air quality pattern across various locations. These visualizations particularly highglight the significant impact that the 2020 Bay Area fires had on air quality, but can be used to explore patterns throughout the full year. 
+
+The live demos work best on your desktop/laptop browser. Tested on macOS and Windows with Firefox and Chrome. Android also works for the smaller datasets, whereas iOS is currently not supported.
 
 [Live 3D demo with time-series sensor data](https://olwal.github.io/air/3d/)
 
 [![Pan SF to San Mateo](media/sf_pan.gif)](https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-08&end_date=2020-09-12&radius=30000) [![Pan to SF](media/sf_pan_2.gif)](https://olwal.github.io/air/3d?location=San%20Francisco&start_date=2020-09-08&end_date=2020-09-12&radius=30000)
+
+The application allows specification of location in California, start and end dates and the radius of the area for the sensors area to include. 
 
 Time series 3D visualization of sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/).
 
@@ -40,6 +44,9 @@ Interactive demo:
 [![Santa Clara](media/santa_clara.gif)](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03)
 
 ## 2020 | 1-year Time Series
+These full-year datasets take quite some time to load.
+Firefox seems most stable in loading these.
+
 - [Oakland](https://olwal.github.io/air/3d/?location=Oakland&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/jxLtuF0n3hA) | 2020 Jan-Dec
 - [Santa Cruz](https://olwal.github.io/air/3d/?location=Santa%20Cruz&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/fsbrf3rNnMg) | 2020 Jan-Dec
 - [San Francisco](https://olwal.github.io/air/3d/?location=San%20Francisco&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/-bVvzHcI12I) | 2020 Jan-Dec
@@ -52,4 +59,49 @@ Interactive demo:
 ![Rotating around East Bay](media/east_bay_rotate_320.gif) 
 ![Approaching Silicon Valley](media/silicon_valley_approach_320.gif)
 
+## Key controls
 
+### Navigation
+| key     | command       | description                                              |
+|---------|---------------|----------------------------------------------------------|
+| o ENTER | orbit         | Start orbiting around location, click with mouse to stop |
+| f       | focus         | Focus on specific location                               |
+
+### Rendering
+| key     | command       | description                                              |
+|---------|---------------|----------------------------------------------------------|
+| l       | labels        | Show/hide location labels                                |
+| g       | graph         | Show/hide graph                                          |
+
+### Playback
+| key     | command       | description                                              |
+|---------|---------------|----------------------------------------------------------|
+| p SPACE | play/pause    | Start/stop playback                                      |
+| r       | rewind        | Rewind to beginning                                      |
+| x/X     | speed         | Increase/decrease playback speed                         |
+| { N <   | 10 back       | Step back 10 frames                                      |
+| [ n ,   | 1 back        | Step back 1 frame                                        |
+| ] m .   | 1 forward     | Step forward 1 frame                                     |
+| } M >   | 10 forward    | Step forward 10 frames                                   |
+
+### Interface
+| key     | command       | description                                              |
+|---------|---------------|----------------------------------------------------------|
+| h       | help          | Show/hide instruction hint                               |
+| ESC     | abort loading | Abort loading data, useful when loading large datasets   |
+
+## URL parameters
+
+| parameter | description                                                                   | example               | default    |
+|---------------|---------------------------------------------------------------------------|-----------------------|------------|
+| location      | Bay area cities or one of the 3 lightning complex fires (see above).      | location=Santa Cruz   |            |
+| longitude     | Longitude for location. Not used if location parameter is specified.      | longitude=-122.08     | -122.4194  |
+| latitude      | Latitude for location. Not used if location parameter is specified.       | latitude=37.4         | 37.7749    |
+| radius        | Radius (m) of area from the location to load sensor data for.             | radius=10000          | 7500       |
+| start_date    | YYYY-MM-DD for time series start. 2020-01-01 <= start_date <= 2021-01-01. | start_date=2020-10-01 | 2020-08-19 |
+| end_date      | YYYY-MM-DD for time series end. 2020-01-01 <= end_date <= 2021-01-01.     | end_date=2020-11-25   | 2020-09-15 |
+
+Examples: 
+- San Mateo, Aug 15-Oct 13 | http://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-25&end_date=2020-10-03
+- Speficic Longitude/Latitude, default dates | http://olwal.github.io/air/3d?longitude=-122.08&latitude&latitude=37.4
+- Default location and dates, but 50km radius | http://olwal.github.io/air/3d?radius=50000
