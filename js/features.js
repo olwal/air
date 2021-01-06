@@ -181,6 +181,8 @@ class Features
         continue;
       }
 
+//      console.log("adding: " + name + " " + longitude + " "  + latitude + " " + show);
+
       let feature = {
         "geometry": {
           "type": "Point",
