@@ -11,26 +11,44 @@ const DIV_P5 = 'p5';
 const DIV_GL = 'gl';
 const CANVAS_HEIGHT = 80;
 const UPDATE_INTERVAL = -1; //60000;
-const DATA_PATH = 'data/outside_sensors_bay_area.csv';
-const SENSOR_INDEX_FILE = 'data/outside_sensors.csv';//'data/outside_sensors_bay_area.csv';
-const BINARY_DATA_PATH = 'data/binary/california/'; //bay_area/';
-const LANDMARKS_PATH = 'data/california_cities_selected.csv';
+const DATA_PATH = 'data/outside_sensors_bay_area.csv'; 
+const SENSOR_INDEX_FILE = 'data/outside_sensors.csv';// 'data/outside_sensors_bay_area.csv';//'data/outside_sensors.csv';//
+let LANDMARKS_PATH = 'data/california_cities_selected.csv';
 const TIME_BETWEEN_REQUESTS = 100;
 const TIME_BETWEEN_REQUESTS_FIRST = 1;
 const SHOW_CONTROLS = false;
+const DATASETS = [ 'bay_area', 'europe', 'eurasia', 'california' ];
+const DATASET_PATH = 'data/binary/';
+const BINARY_DATA_PATH = DATASET_PATH + 'bay_area/';
+const LANDMARKS = [ 'california_cities_selected', 'world_capitals'];
 
 const FEATURE_OPACITY = 0.7; //0-1
 const FEATURE_COLLECTION_NAME = "sensors";
 const FEATURE_COLLECTION_NAME_LANDMARKS = "cities";
+
+const DEFAULT_LONGITUDE = -122.44198789673219;
+const DEFAULT_LATITUDE = 37.7591527514897;
+const DEFAULT_RADIUS = 15000; //m
+
+let DEFAULT_DISTANCE = 50000;
 
 var ORBIT_AFTER_FOCUS = false;
 
 var MAP_TARGET = {
 //    latitude: 37.512070759717645, longitude: -122.29158348430136,
     latitude: 37.7591527514897, longitude: -122.44198789673219,
-    distance: 20000,
-    angle: 35, bearing: -20
+    distance: 50000,
+    angle: 35, bearing: 70
 };
+
+var MAP_TARGET_0 = {
+    //    latitude: 37.512070759717645, longitude: -122.29158348430136,
+        latitude: 37.7749, longitude: -122.4194,
+        distance: 10000,
+        //angle: 17, bearing: 100
+        angle: 17, bearing: 50
+    };
+    
 
 const GL_CONFIGURATION = {
     // Minimum distance camera can approach scene
