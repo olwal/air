@@ -11,7 +11,7 @@ The live demos work best on your desktop/laptop browser. Tested on macOS and Win
 
 The application allows specification of location in California, start and end dates and other parameters for the visualization. (see URL parameters, below, for full list)
 
-Time series 3D visualization of sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/).
+The animated 3D visualizations are based on sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/). 
 
 ## 2020 Bay Area fires
 Real-time 3D visualization of air quality sensor data within a certain radius from the location, references to 3rd party material, and timelapse videos of the 3D visualizations.
