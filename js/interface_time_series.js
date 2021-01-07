@@ -37,8 +37,9 @@ let END_DATE = Date.parse(END_DATE_STRING);
 let locationLabels = undefined;
 
 let showLabels = true;
-let showHelp = true;
+let showHelp = false;
 let showGraph = true;
+let showControls = SHOW_CONTROLS;
 
 function preload()
 {
@@ -62,6 +63,134 @@ function preload()
     binaries = loadStrings(BINARY_INDEX);
     locations = Features.preload();
 }
+
+function setup()
+{
+    //create p5.js canvas
+    let can = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    can.parent(CONTAINER_P5);
+
+    Procedural.displayLocation(MAP_TARGET);
+    Procedural.focusOnLocation(MAP_TARGET);
+
+    enableControls(showControls);
+
+    //Attempt to parse URL parameters for start_date and end_date. If successful, load that interval, otherwise load default
+	let params = getURLParams();		    
+    let start_string = params['start_date'];
+    let end_string = params['end_date'];
+    let longitude = parseFloat(params['longitude']);
+    let latitude = parseFloat(params['latitude']);
+    let radius = parseFloat(params['radius']);    
+    let distance = parseFloat(params['distance']);
+    let location = params['location'];
+    if (location == undefined && params['city'])
+        location = params['city'];
+        
+    loadData(start_string, end_string, longitude, latitude, radius, distance, location);
+
+    locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
+    Procedural.addOverlay(locationLabels);
+
+    Procedural.onFeatureClicked = function (id) //clicking on a feature 
+    {
+
+        let o = observations[current];
+        let p; 
+
+        if (o)
+        {
+            p = o.observations[id];
+            if (p)
+            {
+                print(id + " " + p[0] + " " + p[1] + " " + p[2]);
+                ORBIT_AFTER_FOCUS = false;
+                focusOn(p[1], p[2]);
+                return;
+            }
+        }
+
+        if (!p || (!o && isNaN(id)))
+        {
+            console.log("Clicked: " + id);
+/*            window.open('https://olwal.github.io/air/3d/?' +
+                'start_date=' + START_DATE_STRING + 
+                '&end_date=' + END_DATE_STRING + 
+                '&radius=' + radius +
+                '&distance=' + distance + 
+                '&location=' + id, 
+                "_self");
+*/
+            loadingText = id; 
+            location = id;
+
+            loadData(START_DATE_STRING, END_DATE_STRING, longitude, latitude, radius, distance, location);                
+        }
+
+    }
+
+    //set the text size to 1/4 of the height to fit 2 lines + progress bar
+    textFont("Inter");
+
+    timestamp = millis();
+
+    addButtons();
+}
+
+function addButtons()
+{
+    let w = 24;
+    let h = 24;
+    let n = 4;
+
+    let offsetX = 0; //CANVAS_WIDTH - n * w * 1.1;
+    let x = offsetX + 5; 
+    let y = 7;
+
+    let button = createImg('data/images/play_arrow-24px.svg', 'Play');
+    button.size(w, h);
+    button.position(x, y);
+    button.mousePressed(
+        function() {
+            play = !play;
+            buttons['play'].hide();
+            buttons['pause'].show();
+        }
+    );
+    buttons['play'] = button;
+
+    button = createImg('data/images/pause-24px.svg', 'Pause');
+    button.size(w, h);
+    button.position(x, y);    
+    button.mousePressed(
+        function() {
+            play = !play;
+            buttons['pause'].hide();
+            buttons['play'].show();
+        }
+    );
+
+    button.hide();
+    buttons['pause'] = button;
+
+/*
+    x += w * 1.1;
+
+
+    button = createButton('ORBIT');
+    button.size(w, h);
+    button.position(x, y);
+    button.mousePressed(
+        function() {
+            Procedural.orbitTarget(); 
+        }
+    );*/
+}
+
+function togglePlay() 
+{  console.log(play); play = !play;   };
+
+let buttons = {};
 
 function addLocation(name, longitude, latitude, show)
 {
@@ -203,75 +332,6 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
     );
 }
 
-function setup()
-{
-    //create p5.js canvas
-    let can = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-    can.parent(CONTAINER_P5);
-
-    Procedural.displayLocation(MAP_TARGET);
-    Procedural.focusOnLocation(MAP_TARGET);
-
-    //Attempt to parse URL parameters for start_date and end_date. If successful, load that interval, otherwise load default
-	let params = getURLParams();		    
-    let start_string = params['start_date'];
-    let end_string = params['end_date'];
-    let longitude = parseFloat(params['longitude']);
-    let latitude = parseFloat(params['latitude']);
-    let radius = parseFloat(params['radius']);    
-    let distance = parseFloat(params['distance']);
-    let location = params['location'];
-    if (location == undefined && params['city'])
-        location = params['city'];
-        
-    loadData(start_string, end_string, longitude, latitude, radius, distance, location);
-
-    locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
-    Procedural.addOverlay(locationLabels);
-
-    Procedural.onFeatureClicked = function (id) //clicking on a feature 
-    {
-
-        let o = observations[current];
-        let p; 
-
-        if (o)
-        {
-            p = o.observations[id];
-            if (p)
-            {
-                print(id + " " + p[0] + " " + p[1] + " " + p[2]);
-                ORBIT_AFTER_FOCUS = false;
-                focusOn(p[1], p[2]);
-                return;
-            }
-        }
-
-        if (!p || (!o && isNaN(id)))
-        {
-            console.log("Clicked: " + id);
-/*            window.open('https://olwal.github.io/air/3d/?' +
-                'start_date=' + START_DATE_STRING + 
-                '&end_date=' + END_DATE_STRING + 
-                '&radius=' + radius +
-                '&distance=' + distance + 
-                '&location=' + id, 
-                "_self");
-*/
-            loadingText = id; 
-            location = id;
-
-            loadData(START_DATE_STRING, END_DATE_STRING, longitude, latitude, radius, distance, location);                
-        }
-
-    }
-
-    //set the text size to 1/4 of the height to fit 2 lines + progress bar
-    textFont("Inter");
-
-    timestamp = millis();
-}
-
 function focusOn(longitude, latitude)
 {
     let target = {
@@ -362,6 +422,11 @@ function keyPressed() //handle keyboard presses
             current = 0;    
             break;
 
+        case 'c': //show/hide controls
+            showControls = !showControls;
+            enableControls(showControls);
+            break;
+
         case 'O': //toggle whether a focus will trigger an immediate orbit to start
             ORBIT_AFTER_FOCUS = !ORBIT_AFTER_FOCUS;
             break;
@@ -432,17 +497,17 @@ function draw()
         let x = CANVAS_WIDTH * i/(observations.length - 1);
         let y = maxHeight * min(o.aqiAverage, 600)/600;
 
-        if (i == current) //cursor for current value
-        {
-            stroke(200);
-            line(x, maxHeight * 2, x, 0);
-        }
-
         if (showGraph)
         {
             noStroke();
             fill(o.rgb[0], o.rgb[1], o.rgb[2]); //colors based on precomputed AQI color
             rect(x, maxHeight * 2, CANVAS_WIDTH/(observations.length - 1), -y);
+        }
+
+        if (i == current) //cursor for current value
+        {
+            stroke(200, 100);
+            line(x, maxHeight, x, maxHeight * 2);
         }
 
         i += 1;
@@ -544,6 +609,17 @@ function getObservation(x) //get observation for a given X value
         return -1;
 }
 
+function enableControls(show)
+{
+    //User interface controls
+    Procedural.setCameraModeControlVisible(show);
+    Procedural.setRotationControlVisible(show);
+    Procedural.setZoomControlVisible(show);
+    Procedural.setUserLocationControlVisible(show);
+
+    Procedural.setCompassVisible(false);
+}
+
 function setObservationFromX(x) //set observation given X value (e.g, from mouse/touch)
 {
     let c = getObservation(x);
@@ -554,7 +630,7 @@ function setObservationFromX(x) //set observation given X value (e.g, from mouse
 
 function mousePressed() //update observation based on timeline click
 {
-    if (mouseY > CANVAS_HEIGHT)
+    if (mouseY < CANVAS_HEIGHT/2 || mouseY > CANVAS_HEIGHT)
         return;
 
     setObservationFromX(mouseX);
@@ -562,7 +638,7 @@ function mousePressed() //update observation based on timeline click
 
 function mouseDragged() //update observation based on timeline drag
 {
-    if (mouseY > CANVAS_HEIGHT)
+    if (mouseY < CANVAS_HEIGHT/2 || mouseY > CANVAS_HEIGHT)
         return;
 
     setObservationFromX(mouseX);
@@ -570,7 +646,7 @@ function mouseDragged() //update observation based on timeline drag
 
 function mouseWheel(event) //update observation based on scroll events
 {
-    if (mouseY > CANVAS_HEIGHT)
+    if (mouseY < CANVAS_HEIGHT/2 || mouseY > CANVAS_HEIGHT)
         return;
 
     changeObservation(event.delta);
