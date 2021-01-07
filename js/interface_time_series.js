@@ -21,6 +21,7 @@ let sensors; //sensor index
 let observations = [];
 let current = 0;
 let nLoaded = 0;
+let loadingText = "Prepared";
 
 let timestamp; //keep track of time for animation
 let UPDATE_MS = 100; //inter-frame delay 
@@ -71,22 +72,11 @@ function addLocation(name, longitude, latitude, show)
     row.setNum('show', show);
 }
 
-function setup()
+function loadData(start_string, end_string, longitude, latitude, radius, distance, location)
 {
-    //Attempt to parse URL parameters for start_date and end_date. If successful, load that interval, otherwise load default
-	let params = getURLParams();		    
-    let start_string = params['start_date'];
-    let end_string = params['end_date'];
-    let longitude = parseFloat(params['longitude']);
-    let latitude = parseFloat(params['latitude']);
-    let radius = parseFloat(params['radius']);    
-    let distance = parseFloat(params['distance']);
-    let location = params['location'];
-    if (location == undefined && params['city'])
-        location = params['city'];
-
-    let start = new Date(start_string);
-    let end = new Date(end_string);
+    observations = [];
+    current = 0;
+    nLoaded = 0;
 
     /*
     Example on how to add new location to locations table
@@ -96,6 +86,9 @@ function setup()
     addLocation("CZU Lightning Complex Fires", -122.223, 37.262, show);
     addLocation("SCU Lightning Complex Fires", -121.777, 37.882, show);
     */
+
+   let start = new Date(start_string);
+   let end = new Date(end_string);    
 
     if (isValidDate(start) && isValidDate(end))
     {
@@ -156,17 +149,10 @@ function setup()
     console.log("location: " + location);
     console.log("# of files to load: " + binaries.length);
 
-    //create p5.js canvas
-    let can = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-    can.parent(CONTAINER_P5);
-
     //set the map target to San Francisco
     MAP_TARGET.longitude = longitude; //-122.44198789673219;
     MAP_TARGET.latitude = latitude; //37.7591527514897;
-    MAP_TARGET.distance = distance; //20000;
-
-    Procedural.displayLocation(MAP_TARGET);
-    Procedural.focusOnLocation(MAP_TARGET);
+    MAP_TARGET.distance = distance; //20000;    
 
     let count = 0;
 
@@ -203,7 +189,7 @@ function setup()
 
                                     if (nLoaded == observations.length) //when completed, foucs on the desired map target
                                     {
-                                        ORBIT_AFTER_FOCUS = true;
+//                                        ORBIT_AFTER_FOCUS = true;
                                         Procedural.focusOnLocation(MAP_TARGET);
                                         //play = true;
                                     }    
@@ -213,7 +199,32 @@ function setup()
 
                 observations.push(o); //add each Observation object 
             }
-        }, 1000);
+        }, 1000
+    );
+}
+
+function setup()
+{
+    //create p5.js canvas
+    let can = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    can.parent(CONTAINER_P5);
+
+    Procedural.displayLocation(MAP_TARGET);
+    Procedural.focusOnLocation(MAP_TARGET);
+
+    //Attempt to parse URL parameters for start_date and end_date. If successful, load that interval, otherwise load default
+	let params = getURLParams();		    
+    let start_string = params['start_date'];
+    let end_string = params['end_date'];
+    let longitude = parseFloat(params['longitude']);
+    let latitude = parseFloat(params['latitude']);
+    let radius = parseFloat(params['radius']);    
+    let distance = parseFloat(params['distance']);
+    let location = params['location'];
+    if (location == undefined && params['city'])
+        location = params['city'];
+        
+    loadData(start_string, end_string, longitude, latitude, radius, distance, location);
 
     locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
     Procedural.addOverlay(locationLabels);
@@ -239,13 +250,18 @@ function setup()
         if (!p || (!o && isNaN(id)))
         {
             console.log("Clicked: " + id);
-            window.open('https://olwal.github.io/air/3d/?' +
+/*            window.open('https://olwal.github.io/air/3d/?' +
                 'start_date=' + START_DATE_STRING + 
                 '&end_date=' + END_DATE_STRING + 
                 '&radius=' + radius +
                 '&distance=' + distance + 
                 '&location=' + id, 
                 "_self");
+*/
+            loadingText = id; 
+            location = id;
+
+            loadData(START_DATE_STRING, END_DATE_STRING, longitude, latitude, radius, distance, location);                
         }
 
     }
@@ -260,7 +276,7 @@ function focusOn(longitude, latitude)
 {
     let target = {
         latitude: latitude, longitude: longitude,
-        distance: 10000,
+        distance: 5000,
         angle: 75, bearing: -20,
         animationDuration: 2
     };    
@@ -450,7 +466,7 @@ function draw()
     
         textAlign(CENTER, CENTER);        
         //Percentage of loaded observations
-        text("Prepared " + (100 * nLoaded/observations.length).toFixed() + "%", centerX, ty);
+        text(loadingText + " " + (100 * nLoaded/observations.length).toFixed() + "%", centerX, ty);
         //Second line that shows the time span to load        
         textSize(ts * 0.75);
         fill(150);
