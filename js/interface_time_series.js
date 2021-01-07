@@ -92,7 +92,7 @@ function setup()
     if (location == undefined && params['city'])
         location = params['city'];
 
-    if (location == undefined && (longitude == undefined || latitude == undefined))
+    if (location == undefined && (isNaN(longitude) || isNaN(latitude)))
         location = DEFAULT_LOCATION;
         
     loadData(start_string, end_string, longitude, latitude, radius, distance, location);
