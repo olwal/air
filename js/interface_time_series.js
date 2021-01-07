@@ -21,7 +21,8 @@ let sensors; //sensor index
 let observations = [];
 let current = 0;
 let nLoaded = 0;
-let loadingText = "Prepared";
+let loadingText = "Loaded";
+let radius = DEFAULT_RADIUS;
 
 let timestamp; //keep track of time for animation
 let UPDATE_MS = 100; //inter-frame delay 
@@ -29,10 +30,11 @@ let UPDATE_MS = 100; //inter-frame delay
 let play = false;
 
 //Time intervals to load data, either these as default, or from urlParameters (start_date and end_date)
-let START_DATE_STRING = "2020-08-19";
-let END_DATE_STRING = "2020-09-15";
+let START_DATE_STRING = "2020-09-08";
+let END_DATE_STRING = "2020-09-10";
 let START_DATE = Date.parse(START_DATE_STRING);
 let END_DATE = Date.parse(END_DATE_STRING);
+let DEFAULT_LOCATION = "San Francisco";
 
 let locationLabels = undefined;
 
@@ -81,11 +83,17 @@ function setup()
     let end_string = params['end_date'];
     let longitude = parseFloat(params['longitude']);
     let latitude = parseFloat(params['latitude']);
-    let radius = parseFloat(params['radius']);    
+    
+    radius = parseFloat(params['radius']);    
+    radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
+
     let distance = parseFloat(params['distance']);
     let location = params['location'];
     if (location == undefined && params['city'])
         location = params['city'];
+
+    if (location == undefined && (longitude == undefined || latitude == undefined))
+        location = DEFAULT_LOCATION;
         
     loadData(start_string, end_string, longitude, latitude, radius, distance, location);
 
@@ -267,7 +275,6 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
     }
 
     distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
-    radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
 
     console.log("date start: " + START_DATE_STRING);
     console.log("date end: " + END_DATE_STRING);    
@@ -563,7 +570,7 @@ function draw()
     {
     //    text(oc.count + " sensor" + (oc.count == 1 ? "" : "s"), centerX + dw + 4 * pad, ty + pad);    
         textAlign(RIGHT)
-        text(oc.count + " sensor" + (oc.count == 1 ? "" : "s"), CANVAS_WIDTH - pad, CANVAS_HEIGHT/10 + pad);
+        text(loadingText + ": " + oc.count + " sensor" + (oc.count == 1 ? "" : "s") + " (" + radius/1000 + " km)", CANVAS_WIDTH - pad, CANVAS_HEIGHT/10 + pad);
     }
 
     textAlign(LEFT);
