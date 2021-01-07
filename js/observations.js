@@ -34,7 +34,7 @@ class Observations
     //default bounding box around SF
     constructor(longitude, latitude, radius)//west = -122.516370, east = -122.380372, north = 37.817024, south = 37.616488)
     {       
-		this.FEATURE_OPACITY = 0.7;
+		this.FEATURE_OPACITY = 0.5;
         this.observations = {};
 		this.data = undefined;
 		this.loaded = false;
@@ -210,13 +210,10 @@ class Observations
         let o = {};
         o.type = "FeatureCollection";
         o.name = "sensors";
-    
-        let count = 0;
-    
+        
         o.features = [];
     
         let ids = Object.keys(this.observations);
-        let opacity = 0.2;
 
         for (let id of ids)
         {
@@ -239,19 +236,12 @@ class Observations
                 "type": "Feature",
                 "id": id,
                 "properties": {
-                    "fontSize": 20 + 150 * min(5000, Math.pow(aqi, 1.5))/5000,
-                    "color": colorAqi,       
-                    "name": "|",
-                    "anchorOffset": {
-                        "y": 0,
-                        "x": 0
-                        },
+                    "image": "_",
+                    "width": 0,                    
+                    "height": 20 + 150 * min(5000, Math.pow(aqi, 1.5))/5000,
+                    "background": colorAqi,       
+                    "padding": 2,
                     "anchor": "bottom",
-                    "borderRadius": 0,
-                    "padding": 0,
-                    "borderWidth": 0,
-                    "fadeDistance": 100000,
-                    "anchorOffset": { x: 0, y: 0 }
                     }
                 };
             
