@@ -6,7 +6,7 @@ This project visualizes air quality data overlaid onto a 3D geographical map. Th
 Tested platforms:
 - macOS/Windows: Works best. Tested with Firefox, Chrome, Safari. 
 - Android: Works for smaller datasets.
-- iOS: Some rendering issues (flickering) and appears frozen until all data is loaded. 
+- iOS (iPhone/iPad): Some rendering issues (flickering) and appears frozen until all data is loaded. Not recommended.
 
 Click a location label to load the sensor data for that location within specified (or default) radius. Given the potential large amount of sensor data at a specific location/radius, the interface does not dynamically load new data as the map is panned. 
 
