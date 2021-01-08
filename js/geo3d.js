@@ -45,16 +45,7 @@ else
 //initialize with container and data sources
 Procedural.init( {container, datasource} );
 
-//User interface controls
-if (SHOW_CONTROLS)
-{
-  Procedural.setCameraModeControlVisible(true);
-  Procedural.setCompassVisible(true);
-  Procedural.setRotationControlVisible(true);
-  Procedural.setZoomControlVisible(true);
-}
-else
-  Procedural.setCompassVisible(false);
+
 
 window.Procedural = Procedural;
 

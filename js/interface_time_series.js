@@ -1,7 +1,7 @@
 /*
     Alex Olwal, 2020, www.olwal.com
 
-    Application for 2D/3D visualization, playback and interaction with time series sensor data overlaid on geo maps.
+    Application for 3D visualization, playback and interaction with time series sensor data overlaid on geo maps.
 
     Externally defined constants/global variables in config.js
 */
@@ -43,7 +43,257 @@ let showHelp = false;
 let showGraph = true;
 let showControls = SHOW_CONTROLS;
 
+let focusOnClick = false;
+
+showLive = false;
+let lastUpdated = -1;
+let timestampLive;
+
 function preload()
+{
+    let params = getURLParams();
+
+    let live = int(params['realtime']);
+    if (live && !isNaN(live) && live >= 60) //minimum 60s delay
+    {
+        UPDATE_INTERVAL = live * 1000;
+        showLive = true;
+    }
+
+    if (showLive)
+        preloadLive();
+    else
+        preloadTimeSeries();
+
+}
+
+function setup()
+{
+    //create p5.js canvas
+    let can = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
+    can.parent(CONTAINER_P5);
+
+    Procedural.displayLocation(MAP_TARGET);
+    Procedural.focusOnLocation(MAP_TARGET);
+
+    enableControls(showControls);
+
+    if (showLive)
+        setupLive();
+    else
+        setupTimeSeries();
+}
+
+function draw()
+{
+    if (showLive)
+        drawLive();
+    else
+        drawTimeSeries();
+}
+
+let air;
+
+function preloadLive() 
+{
+    air = new ObservationsRemote();
+    air.preload();
+    locations = Features.preload();
+}
+
+function digit(number)
+{
+    return ('0' + number).slice(-2);
+}
+
+function setupLive() 
+{
+    //set the text size to 1/4 of the height to fit 2 lines + progress bar
+    textSize(CANVAS_HEIGHT * 0.25);
+    textFont("Inter");
+    textAlign(LEFT);
+
+    air.TIME_BETWEEN_REQUESTS = TIME_BETWEEN_REQUESTS;
+    air.TIME_BETWEEN_REQUESTS_FIRST = TIME_BETWEEN_REQUESTS_FIRST;
+    air.FEATURE_OPACITY = FEATURE_OPACITY;
+
+    air.init(UPDATE_INTERVAL);    
+    self = air;
+
+    //add city names overlays
+    locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
+    Procedural.addOverlay(locationLabels);
+
+    timestampLive = year() + " " + digit(month()) + " " + digit(day()) + " "  + digit(hour()) + ":"  + digit(minute()); //zero-padded YYYY-MM-DD hh:mm
+
+    //callback for receiving updated sensor data
+    air.onUpdateCallback = function(sensors) 
+    {       
+        if (!self.initialized) //first update
+        {
+            timestampLive = year() + " " + digit(month()) + " " + digit(day()) + " "  + digit(hour()) + ":"  + digit(minute()); //zero-padded YYYY-MM-DD hh:mm
+
+            Procedural.focusOnLocation(MAP_TARGET); //focus on target position, which will also trigger a camera adjustment
+
+            Procedural.onFeatureClicked = function (id) //clicking on a feature 
+            {
+                let changed = self.updateSelected(id);
+
+                if (changed && focusOnClick)
+                    focusOn(air.selected[1], air.selected[2]);
+            }
+        }
+
+        if (self.selected != undefined) // Check for a valid selection
+            self.updateSelected(self.selected[0]);
+        /*
+        let callbackData = [] //clear data for overlays
+        for (let r = 0; r < sensors.getRowCount(); r++) //add all rows from updates
+            callbackData.push(sensors.rows[r].arr);     
+        */
+
+        //generate and add sensor overlays
+        // let o = Features.buildFromData(callbackData, FEATURE_COLLECTION_NAME);
+        let o = Observations.getFeaturesJson(self.observations, FEATURE_OPACITY);
+        Procedural.addOverlay(o);
+
+        lastUpdated = millis();
+    }
+}
+
+function drawLive() 
+{
+    background("#666666");
+
+    let textString = "Preparing data...";
+    let i = 0;
+    let keys = Object.keys(air.observations);
+
+    noStroke();
+    fill(255);
+
+    let ts = CANVAS_HEIGHT/4; //text size 25% of canvas height
+    let ty = CANVAS_HEIGHT/6; //text position close to top
+    let centerX = CANVAS_WIDTH/2; //text centered
+    textSize(ts);
+    textAlign(LEFT, CENTER);
+    let dw = textWidth("DEC 30"); //use a representative long date, since we want a stable offset (otherwise will be jittering)
+    fill(255);
+    let pad = 10;
+
+    if (air.updatingSensors) //if updating, show percentage and progress bar
+    {
+        fraction = air.nSensorsUpdated/air.nSensors;
+        let ts = CANVAS_HEIGHT/6; //smaller font size to fit two lines
+        textSize(ts);
+    
+        textAlign(CENTER, CENTER);        
+        //Percentage of loaded observations
+        text(loadingText + " " + (100 * fraction).toFixed() + "%", centerX, ty);
+
+    }
+    else  //if not updating, show seconds since last update
+    {
+        if (lastUpdated >= 0 && air.updateInterval >= 0)
+            textString = ((millis() - lastUpdated)/1000).toFixed(0) + "s ago";
+        else
+            textString = timestampLive.slice(-5); //get hours + minutes
+
+        //display current date
+        let month = int(timestampLive.slice(5, 7))
+        let date_string = Observations.getMonth(month) + " " + timestampLive.slice(7, 10)
+        text(date_string, centerX - dw/2, ty + pad);
+
+        //smaller text for year and time
+        textSize(ts * 2/3);
+
+        //hour, left-centered to the right
+        textAlign(LEFT, CENTER);
+        fill(200);
+        text(textString, centerX + dw/2 + pad, ty + pad);    
+        
+        textAlign(RIGHT)
+        text(keys.length + " sensor" + (keys.length == 1 ? "" : "s"), CANVAS_WIDTH - pad, CANVAS_HEIGHT/10 + pad);
+
+        let year_string = timestampLive.slice(0, 4);
+
+        textAlign(LEFT);
+        //year, right-centered to the left
+        let yw = textWidth(year_string);
+        text(year_string, centerX - dw/2 - yw - pad * 2, ty + pad);   
+    }
+
+    //draw a graph of the average values for all observations, and cursor for current
+    for (id of keys)
+    {
+        let aqi = air.observations[id][0];
+        let rgb = air.observations[id][3];
+        if (!rgb)
+            rgb = [ 0, 0, 0 ];
+
+        let maxHeight = CANVAS_HEIGHT/2;
+        let x = CANVAS_WIDTH * i/(keys.length - 1);
+        let y = maxHeight * min(aqi, 600)/600;
+
+        if (showGraph)
+        {
+            noStroke();
+            fill(rgb[0], rgb[1], rgb[2]); //colors based on precomputed AQI color
+            rect(x, maxHeight * 2, CANVAS_WIDTH/(keys.length - 1), -y);
+        }
+
+        i += 1;
+    }
+}
+
+function drawLiveClassic() 
+{
+    background("#666666");
+
+    let textString = "Preparing data...";
+
+    noStroke();
+    fill(255, 100);
+
+    if (air.updatingSensors) //if updating, show percentage and progress bar
+    {
+        fraction = air.nSensorsUpdated/air.nSensors;
+        rect(0, height * 0.8, width * fraction, height);
+        textString = "Real-time air quality sensor data | " + (100 * fraction).toFixed(0) + "%";
+    }
+    else  //if not updating, show seconds since last update
+    {
+        rect(0, height * 0.8, width, height);
+
+        if (lastUpdated >= 0 && air.updateInterval >= 0)
+            textString = "Real-time air quality sensor data | " + ((millis() - lastUpdated)/1000).toFixed(0) + "s ago";
+        else
+            textString = "Air quality sensor data | " + timestampLive; 
+    }
+
+    fill(255);
+    text(textString, textSize()/4, textSize() * 1.3);
+
+    if (air.selected != undefined) //show additional info in bar when sensor is selected (clicked)
+    {
+        //draw a circle filled with the AQI color
+        radius = 10;
+        fill(air.selected[8]); 
+        ellipse(radius, textSize() * 2.3, radius);
+
+        //show additional text for the current sensor
+        let info = "AQI " + air.selected[3] + "     " + air.selected[4] + String.fromCharCode(176) + "F     " + 
+        //air.selected[5] + " " + air.selected[6] + " " + 
+        air.selected[7] + 
+        "     longitude " + air.selected[1].toFixed(4) + ", latitude " + air.selected[2].toFixed(4);
+        
+        fill(255);
+        text(info, radius * 2.5 + textSize()/4, textSize() * 2.7);        
+    }
+}
+
+
+function preloadTimeSeries()
 {
     let params = getURLParams();
 
@@ -66,17 +316,8 @@ function preload()
     locations = Features.preload();
 }
 
-function setup()
+function setupTimeSeries()
 {
-    //create p5.js canvas
-    let can = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
-    can.parent(CONTAINER_P5);
-
-    Procedural.displayLocation(MAP_TARGET);
-    Procedural.focusOnLocation(MAP_TARGET);
-
-    enableControls(showControls);
-
     //Attempt to parse URL parameters for start_date and end_date. If successful, load that interval, otherwise load default
 	let params = getURLParams();		    
     let start_string = params['start_date'];
@@ -327,6 +568,7 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
                                     {
 //                                        ORBIT_AFTER_FOCUS = true;
                                         Procedural.focusOnLocation(MAP_TARGET);
+                                        setObservation(0);
                                         //play = true;
                                     }    
                                 }    
@@ -450,7 +692,7 @@ function keyPressed() //handle keyboard presses
     }
 }
 
-function draw()
+function drawTimeSeries()
 {
     background("#666666");
 

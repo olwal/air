@@ -63,6 +63,13 @@ class Observations
         this.MONTHS = [ "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" ];
     }
 
+    static getMonth(month)
+    {
+        let MONTHS = [ "JAN", "FEB", "MAR", "APR", "MAY", "JUN", "JUL", "AUG", "SEP", "OCT", "NOV", "DEC" ];
+        
+        return MONTHS[month-1];
+    }
+
     getLocation(id, sensors) //look up longitude/latitude based on sensor id
     {
         let row = sensors.findRow(id, 'id');
@@ -189,14 +196,16 @@ class Observations
                     */
 
 					self.count++;
-					self.aqiSum += aqi;
-                    self.observations[id] = [ aqi, location[0], location[1] ]; //key-value store
+                    self.aqiSum += aqi;
+                    
+                    //key-value store: [ aqi, longitude, latitude ]
+                    self.observations[id] = [ aqi, location[0], location[1] ]; 
 
                     self.aqiAverage = self.aqiSum/self.count; //update average for all sensors
                     self.rgb = AirQuality.getColor(self.aqiAverage); //update AQI color
                 }
 
-                self.json = self.getFeaturesJson(); //generate GeoJSON for overlays
+                self.json = Observations.getFeaturesJsonClickable(self.observations, self.FEATURE_OPACITY); //generate GeoJSON for overlays
 				self.loaded = true;
 
                 if (self.callbackFunction) //callback when completed
@@ -205,7 +214,7 @@ class Observations
         );
     }
 
-    getFeaturesJson()
+    static getFeaturesJson(observations, opacity = 0.5)
     {
         let o = {};
         o.type = "FeatureCollection";
@@ -213,20 +222,19 @@ class Observations
         
         o.features = [];
     
-        let ids = Object.keys(this.observations);
+        let ids = Object.keys(observations);
 
         for (let id of ids)
         {
-            let aqi = this.observations[id][0];
+            let aqi = observations[id][0];
 
-            let longitude = this.observations[id][1];
-            let latitude = this.observations[id][2];
+            let longitude = observations[id][1];
+            let latitude = observations[id][2];
 
 //            let colorAqi = 'rgba(255,255,255,' + opacity + ")";
 	  
 			let rgb = AirQuality.getColor(aqi);
-            let colorAqi = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + this.FEATURE_OPACITY + ")";
-
+            let colorAqi = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + opacity + ")";
 
             let feature = {
                 "geometry": {
@@ -249,7 +257,50 @@ class Observations
         }         
 
         return o;
+    }
 
+    static getFeaturesJsonClickable(observations, opacity = 0.5)
+    {
+        let o = {};
+        o.type = "FeatureCollection";
+        o.name = "sensors";
+        
+        o.features = [];
+    
+        let ids = Object.keys(observations);
+
+        for (let id of ids)
+        {
+            let aqi = observations[id][0];
+
+            let longitude = observations[id][1];
+            let latitude = observations[id][2];
+
+//            let colorAqi = 'rgba(255,255,255,' + opacity + ")";
+	  
+			let rgb = AirQuality.getColor(aqi);
+            let colorAqi = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + opacity + ")";
+
+            let feature = {
+                "geometry": {
+                    "type": "Point",
+                    "coordinates": [longitude, latitude]
+                    },
+                "type": "Feature",
+                "id": id,
+                "properties": {
+                    "name": "|",
+                    "width": 3,                    
+                    "fontSize": 20 + 150 * min(5000, Math.pow(aqi, 1.5))/5000,
+                    "color": colorAqi,       
+                    "anchor": "bottom",
+                    }
+                };
+            
+            o.features.push(feature);
+        }         
+
+        return o;
     }
 
     cancel() //external modules can call to try halt the loading of data

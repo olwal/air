@@ -4,7 +4,7 @@
     Class to manage sensor data and updates using remote data.
 */
 
-class Air 
+class ObservationsRemote 
 {
     constructor()
     {
@@ -13,7 +13,7 @@ class Air
 
         this.selected = undefined; //tracking clicked object
 
-        this.FEATURE_OPACITY = 100;
+        this.FEATURE_OPACITY = 0.5;
         this.TIME_BETWEEN_REQUESTS_FIRST = 1; //the first round should update fast
         this.TIME_BETWEEN_REQUESTS = 10; //slower updates when we refresh the data
 
@@ -26,6 +26,8 @@ class Air
     {
         self = this;
         this.sensors = loadTable(DATA_PATH, 'csv', 'header');   
+
+        this.observations = {};
     }
 
     init(updateInterval, limitSensorsToLoad = -1) 
@@ -33,28 +35,40 @@ class Air
         self.updateInterval = updateInterval; //time between updates
 
         for (let r = 0; r < self.sensors.getRowCount(); r++)
+        {
+            let id = self.sensors.getNum(r, "id");
+            let longitude = self.sensors.getNum(r, "longitude");
+            let latitude = self.sensors.getNum(r, "latitude");
+            let aqi = -1;
+
+            //store min, max for longitude and latitude
+            if (longitude < this.longitudes[0])
+                this.longitudes[0] = longitude;
+
+            if (longitude > this.longitudes[1])
+                this.longitudes[1] = longitude;
+            
+            if (latitude < this.latitudes[0])
+                this.latitudes[0] = latitude;
+            
+            if (latitude > this.latitudes[1])
+                this.latitudes[1] = latitude;
+
+            //key-value store: [ aqi, longitude, latitude ]
+            self.observations[id] = [ aqi, longitude, latitude ];
+
+            //convert read IDs, longitudes and latitudes to numbers
+            self.sensors.set(r, "id", id);
+            self.sensors.set(r, "longitude", longitude);
+            self.sensors.set(r, "latitude", latitude);
+/*
             for (let c = 0; c < self.sensors.getColumnCount(); c++)
             {
                 //convert read IDs, longitudes and latitudes to numbers
                 let num = self.sensors.getNum(r, c);
                 self.sensors.set(r, c, num);
-
-                //store min, max for longitude and latitude
-                if (c == 1) //longitude
-                {
-                    if (num < this.longitudes[0])
-                        this.longitudes[0] = num;
-                    else if (num > this.longitudes[1])
-                        this.longitudes[1] = num;
-                }
-                else if (c == 2) //latitude
-                {
-                    if (num < this.latitudes[0])
-                        this.latitudes[0] = num;
-                    else if (num > this.latitudes[1])
-                        this.latitudes[1] = num;
-                }
-            }
+            }*/
+        }
                 
         //store min, max as JSON object
         this.bounds = {
@@ -69,7 +83,7 @@ class Air
         self.sensors.addColumn('humidity');
         self.sensors.addColumn('label');
         //add column for calculated color
-        self.sensors.addColumn('color');        
+        self.sensors.addColumn('color'); 
 
         if (limitSensorsToLoad > 0) //loading fewer sensors for debug/test
             self.nSensors = limitSensorsToLoad
@@ -118,7 +132,7 @@ class Air
             //start each request slightly offset to avoid many simultaneous requests
             timeout *= i;
 
-            let sensorId = air.sensors.rows[i].arr[0]; //id
+            let sensorId = self.sensors.rows[i].arr[0]; //id
             let url = "https://www.purpleair.com/json?show=" + sensorId;
 
             setTimeout(function() { 
@@ -136,8 +150,7 @@ class Air
                     console.log("fetchData: throwing error");
                     console.log(err);
                 }                 
-                }
-                , timeout ); //when to start this request
+            }, timeout ); //when to start this request
         }
     }
 
@@ -167,7 +180,7 @@ class Air
 
             // let color = AirQuality.getColorHex(aqi);
             let rgb = AirQuality.getColor(aqi);
-            let color = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + air.FEATURE_OPACITY + ")";
+            let color = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + self.FEATURE_OPACITY + ")";
 
             self.sensors.set(row, "aqi", aqi);
             self.sensors.set(row, "color", color);
@@ -175,6 +188,9 @@ class Air
             self.sensors.set(row, "temp_f", results.temp_f);
             self.sensors.set(row, "pressure", results.pressure);
             self.sensors.set(row, "humidity", results.humidity);            
+
+            let values = self.observations[id];
+            self.observations[id] = [ aqi, values[1], values[2], rgb ];
 
             //console.log(id + " " + aqi + " " + self.nSensorsUpdated + " " + self.nSensors);
         }
