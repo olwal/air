@@ -456,17 +456,14 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
     current = 0;
     nLoaded = 0;
 
-    /*
-    Example on how to add new location to locations table
-
-    let show = 1;
+    //Add specific locations to the locations table
+    let show = 2;
     addLocation("LNU Lightning Complex Fires", -122.506, 38.549, show);
     addLocation("CZU Lightning Complex Fires", -122.223, 37.262, show);
     addLocation("SCU Lightning Complex Fires", -121.777, 37.882, show);
-    */
 
-   let start = new Date(start_string);
-   let end = new Date(end_string);    
+    let start = new Date(start_string);
+    let end = new Date(end_string);    
 
     if (isValidDate(start) && isValidDate(end))
     {
