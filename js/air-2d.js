@@ -4,22 +4,6 @@
     Application logic for retrieving air quality sensor data and displaying it on a 3D map
 */
 
-/*
-Externally defined constants:
-Example:
-const DIV_P5 = 'p5';
-const CANVAS_HEIGHT = 40;
-const UPDATE_INTERVAL = 30000;
-const TIME_BETWEEN_REQUESTS = 100;
-const TIME_BETWEEN_REQUESTS_FIRST = 1;
-const FEATURE_COLLECTION_NAME = "sensors";
-const MAP_TARGET = {
-    latitude: 37.512070759717645, longitude: -122.29158348430136,
-    distance: 50000,
-    angle: 35, bearing: -20
-};
-*/
-
 const CANVAS_WIDTH = window.innerWidth; //borderless width
 const CONTAINER_P5 = document.getElementById(DIV_P5);
 
