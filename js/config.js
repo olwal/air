@@ -41,6 +41,12 @@ var MAP_TARGET = {
     angle: 35, bearing: 70
 };
 
+var MAP_TARGET_NEUTRAL = {
+    //    latitude: 37.512070759717645, longitude: -122.29158348430136,
+        latitude: 37.7591527514897, longitude: -122.44198789673219,
+    //distance: 50000,
+    };
+
 var MAP_TARGET_0 = {
     //    latitude: 37.512070759717645, longitude: -122.29158348430136,
         latitude: 37.7749, longitude: -122.4194,

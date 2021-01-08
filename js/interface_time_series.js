@@ -23,6 +23,8 @@ let current = 0;
 let nLoaded = 0;
 let loadingText = "Loaded";
 let radius = DEFAULT_RADIUS;
+let distance = DEFAULT_DISTANCE;
+let initialized = false;
 
 let timestamp; //keep track of time for animation
 let UPDATE_MS = 100; //inter-frame delay 
@@ -328,7 +330,7 @@ function setupTimeSeries()
     radius = parseFloat(params['radius']);    
     radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
 
-    let distance = parseFloat(params['distance']);
+    distance = parseFloat(params['distance']);
     let location = params['location'];
     if (location == undefined && params['city'])
         location = params['city'];
@@ -373,6 +375,9 @@ function setupTimeSeries()
             loadingText = id; 
             location = id;
 
+            for (o of observations) //cancel any on-going loading
+                o.cancel();
+
             loadData(START_DATE_STRING, END_DATE_STRING, longitude, latitude, radius, distance, location);                
         }
 
@@ -384,6 +389,23 @@ function setupTimeSeries()
     timestamp = millis();
 
     addButtons();
+}
+
+let buttons = {};
+
+function togglePlay()
+{
+    play = !play;
+    if (play)
+    {
+        buttons['play'].hide();
+        buttons['pause'].show();
+    }
+    else
+    {
+        buttons['pause'].hide();
+        buttons['play'].show();
+    }
 }
 
 function addButtons()
@@ -399,25 +421,13 @@ function addButtons()
     let button = createImg('data/images/play_arrow-24px.svg', 'Play');
     button.size(w, h);
     button.position(x, y);
-    button.mousePressed(
-        function() {
-            play = !play;
-            buttons['play'].hide();
-            buttons['pause'].show();
-        }
-    );
+    button.mousePressed(togglePlay);
     buttons['play'] = button;
 
     button = createImg('data/images/pause-24px.svg', 'Pause');
     button.size(w, h);
     button.position(x, y);    
-    button.mousePressed(
-        function() {
-            play = !play;
-            buttons['pause'].hide();
-            buttons['play'].show();
-        }
-    );
+    button.mousePressed(togglePlay);
 
     button.hide();
     buttons['pause'] = button;
@@ -435,11 +445,6 @@ function addButtons()
         }
     );*/
 }
-
-function togglePlay() 
-{  console.log(play); play = !play;   };
-
-let buttons = {};
 
 function addLocation(name, longitude, latitude, show)
 {
@@ -530,6 +535,13 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
 
     let count = 0;
 
+    if (initialized)
+    {
+        MAP_TARGET_NEUTRAL.longitude = longitude;
+        MAP_TARGET_NEUTRAL.latitude = latitude;    
+        Procedural.focusOnLocation(MAP_TARGET_NEUTRAL);
+    }
+
     window.setTimeout(
         function()
         {
@@ -542,7 +554,7 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
 
                 count += 1;
 
-                let data = PATH + b; //complete path for file to load
+                let data = PATH + b; //complete path for file to load                                      
 
                 o = new Observations(longitude, latitude, radius); //create a new Observations object, which will load and preprocess the data and overlays
 /*
@@ -557,15 +569,19 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
 
                                     if (nLoaded == 1)
                                     {
-                                        Procedural.focusOnLocation(MAP_TARGET);
+                                        if (!initialized)
+                                            Procedural.focusOnLocation(MAP_TARGET);                                          
                                         setObservation(0);
                                     }
 
                                     if (nLoaded == observations.length) //when completed, foucs on the desired map target
                                     {
 //                                        ORBIT_AFTER_FOCUS = true;
-                                        Procedural.focusOnLocation(MAP_TARGET);
+                                        //Procedural.focusOnLocation(MAP_TARGET);
+                                        if (!initialized)
+                                            Procedural.focusOnLocation(MAP_TARGET);
                                         setObservation(0);
+                                        initialized = true;
                                         //play = true;
                                     }    
                                 }    
@@ -580,12 +596,17 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
 
 function focusOn(longitude, latitude)
 {
+    /*
     let target = {
         latitude: latitude, longitude: longitude,
-        distance: 5000,
-        angle: 75, bearing: -20,
+        distance: distance,
+        angle: 35, bearing: 70,
         animationDuration: 2
-    };    
+    };    */
+
+    let target = MAP_TARGET;
+    target.longitude = longitude;
+    target.latitude = latitude;
 
     Procedural.focusOnLocation(target);
 }
@@ -612,7 +633,7 @@ function keyPressed() //handle keyboard presses
     {
         case 'p':
         case ' ': //play/pause
-            play = !play;
+            togglePlay();
             break;
 
         case 'o':
