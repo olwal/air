@@ -346,24 +346,32 @@ function setupTimeSeries()
     Procedural.onFeatureClicked = function (id) //clicking on a feature 
     {
 
+        console.log("---------------------")
+        console.log("[ Clicked " + id + " ]");
+
         let o = observations[current];
         let p; 
 
-        if (o)
+        if (o) //Ensure that an observation is loaded
         {
-            p = o.observations[id];
+            p = o.observations[id]; //Ensure that this sensor exists 
             if (p)
             {
                 print(id + " " + p[0] + " " + p[1] + " " + p[2]);
+
+                //look up the ID for sensor metadata
+                let row = sensors.findRow(parseInt(id), "id");
+                console.log(row);        
+
                 ORBIT_AFTER_FOCUS = false;
-                focusOn(p[1], p[2]);
+                //focusOn(p[1], p[2]);
                 return;
             }
         }
 
         if (!p || (!o && isNaN(id)))
         {
-            console.log("Clicked: " + id);
+            console.log("Loading : " + id);
 /*            window.open('https://olwal.github.io/air/3d/?' +
                 'start_date=' + START_DATE_STRING + 
                 '&end_date=' + END_DATE_STRING + 
@@ -372,6 +380,12 @@ function setupTimeSeries()
                 '&location=' + id, 
                 "_self");
 */
+            if (location == id)
+            {
+                console.log("Already loaded")
+                return;
+            }
+
             loadingText = id; 
             location = id;
 
@@ -854,7 +868,16 @@ function setObservation(index) //set current observation
     if (!isNaN(index) && index >= 0 && index < observations.length)
     {
         current = index;
-        Procedural.addOverlay(observations[current].json);
+        let json = observations[current].json;
+        if (!json)
+            console.log("setObservation(index): broken json: " + current);
+        try{
+        Procedural.addOverlay(json);
+        }
+        catch (err)
+        {
+            console.log(err);
+        }
     }
 }
 

@@ -205,7 +205,7 @@ class Observations
                     self.rgb = AirQuality.getColor(self.aqiAverage); //update AQI color
                 }
 
-                self.json = Observations.getFeaturesJsonClickable(self.observations, self.FEATURE_OPACITY); //generate GeoJSON for overlays
+                self.json = Observations.getFeaturesJson(self.observations, self.FEATURE_OPACITY); //generate GeoJSON for overlays
 				self.loaded = true;
 
                 if (self.callbackFunction) //callback when completed
@@ -248,7 +248,7 @@ class Observations
                     "width": 0,                    
                     "height": 20 + 150 * min(5000, Math.pow(aqi, 1.5))/5000,
                     "background": colorAqi,       
-                    "padding": 2,
+                    "padding": 3,
                     "anchor": "bottom",
                     }
                 };
