@@ -1,4 +1,4 @@
-![3D visualization of air quality sensor data](media/sensor_data_3d_bay_area.jpg)
+[![3D visualization of air quality sensor data](media/sensor_data_3d_bay_area.jpg)](https://olwal.github.io/air/3d/)
 
 # Interactive Air Quality in 3D | 2020: Air Quality Year in Review
 This project visualizes air quality data overlaid onto a 3D geographical map. The map shows hourly data from thousands of sensors and allows interaction and playback of air quality pattern across various locations. These visualizations particularly highlight the significant impact that the 2020 Bay Area fires had on air quality, but can be used to explore patterns throughout the full year. 
@@ -58,11 +58,11 @@ Firefox seems most stable in loading these.
 
 ## 3D views
 
-![Pan to San Francisco](media/sf_pan_to_320.gif) 
-![Rotating around San Francisco](media/sf_rotate_320.gif)
+[![Pan to San Francisco](media/sf_pan_to_320.gif)](https://olwal.github.io/air/3d/)
+[![Rotating around San Francisco](media/sf_rotate_320.gif)](https://olwal.github.io/air/3d/)
 
-![Rotating around East Bay](media/east_bay_rotate_320.gif) 
-![Approaching Silicon Valley](media/silicon_valley_approach_320.gif)
+[![Rotating around East Bay](media/east_bay_rotate_320.gif)](https://olwal.github.io/air/3d/)
+[![Approaching Silicon Valley](media/silicon_valley_approach_320.gif)](https://olwal.github.io/air/3d/)
 
 ## Input controls
 
