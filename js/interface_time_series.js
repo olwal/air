@@ -570,12 +570,14 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
 
                 let data = PATH + b; //complete path for file to load                                      
 
-                o = new Observations(longitude, latitude, radius); //create a new Observations object, which will load and preprocess the data and overlays
-/*
+                let o = new Observations(longitude, latitude, radius); //create a new Observations object, which will load and preprocess the data and overlays
+
+                let i = count;
+
                 window.setTimeout(
                         function()
                         {
-  */                          o.load(data, sensors, 
+                            o.load(data, sensors, 
                                 function(observation)
                                 {
                     //                console.log('Loaded ' + observation.filename + " " + observation.count + " sensors (" + observation.errors + " errors, " + observation.notInIndex + ")");
@@ -600,7 +602,7 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
                                     }    
                                 }    
                             );
-    //                    }, 0); //(count / 100) * 1000);
+                        }, count * 10); //(count / 100) * 1000);
 
                 observations.push(o); //add each Observation object 
             }
