@@ -207,64 +207,9 @@ class Features
           }
         };
 
-      let feature2 =
-        {
-          "geometry": {
-            "type": "Point",
-            "coordinates": [ -122.0839, 37.3861 ]
-          },
-          "type": "Feature",
-          "id": count,
-          "properties": {
-            "fontSize": 24,
-            "color": "white",        
-            "name": "Mountain View",
-          }
-        }
-
       count += 1;
       o.features.push(feature);
     } 
-
-      
-
-
-
-/*
-      node.id = "#" + row.arr[0] + " bar";
-      node.properties.fontSize = 2;
-      node.properties.name = "|";
-
-      o.features.push(node);      
-   */   
-    //}
-
-    /*
-    let feature = 
-    {
-    "type": "FeatureCollection",
-    "features": [ {
-      "geometry": {
-        "type": "Point",
-        "coordinates": [ -122.0839, 37.3861 ]
-      },
-      "type": "Feature",
-      "id": 0,
-      "properties": {
-        "fontSize": 24,
-        "color": "white",        
-        "name": "Mountain View",
-        "anchorOffset": {
-          "y": 70,
-          "x": 0
-        },
-        "borderRadius": 25,
-        "padding": 10,
-        "borderWidth": 0,
-        "background": "rgba(33, 00, 00, 200)"
-        }
-      } ]
-    };*/
 
     return o;
   }
