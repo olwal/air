@@ -770,7 +770,7 @@ function drawTimeSeries()
     {
         textSize(CANVAS_HEIGHT/6);
         textAlign(RIGHT)
-        text("[P]LAY/PAUSE   [O]RBIT   [F]OCUS   [L]ABELS   [H]ELP ", CANVAS_WIDTH, CANVAS_HEIGHT/10 );
+        text("[P]LAY/PAUSE   [O]RBIT   [F]OCUS   [L]ABELS   olwal.com | 2021 | 00.01 ", CANVAS_WIDTH, CANVAS_HEIGHT/10 );
     }
 
     //draw a graph of the average values for all observations, and cursor for current
