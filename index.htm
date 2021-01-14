@@ -11,7 +11,7 @@
         <link href="https://fonts.googleapis.com/css2?family=B612+Mono&family=Inter:wght@100;200;300;400;500;600&family=Major+Mono+Display&family=Syne+Mono&display=swap" rel="stylesheet">
 
         <!-- JQuery for Date picker -->
-        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.4/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.0/themes/base/jquery-ui.css">
         <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
         <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 
@@ -51,7 +51,12 @@
 
     <style>
 
-        body /* Required for proper anchoring of overlays in procedural-gl.js */
+        html 
+        {
+          overflow: hidden;
+        }
+
+        html, body /* Required for proper anchoring of overlays in procedural-gl.js */
         {
           background: #666666;
           color: #ffffff;
