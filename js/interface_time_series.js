@@ -337,7 +337,7 @@ function setupTimeSeries()
 
     if (location == undefined && (isNaN(longitude) || isNaN(latitude)))
         location = DEFAULT_LOCATION;
-        
+
     loadData(start_string, end_string, longitude, latitude, radius, distance, location);
 
     locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
@@ -531,6 +531,8 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
         location = longitude.toFixed(2) + ", " + latitude.toFixed(2);
         addLocation(location, longitude, latitude, 2);
     }
+
+    loadingText = location;   
 
     distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
 
@@ -851,7 +853,9 @@ function drawTimeSeries()
         textSize(CANVAS_HEIGHT/10);
     //    text(oc.count + " sensor" + (oc.count == 1 ? "" : "s"), centerX + dw + 4 * pad, ty + pad);    
         textAlign(RIGHT)
-        text(loadingText + ": " + oc.count + " sensor" + (oc.count == 1 ? "" : "s") + " (" + radius/1000 + " km)", CANVAS_WIDTH - pad, CANVAS_HEIGHT/10 + pad);
+        text(oc.count + " sensor" + (oc.count == 1 ? "" : "s") + " (" + radius/1000 + " km)", CANVAS_WIDTH - pad, 2.2 * CANVAS_HEIGHT/10 + pad);    
+        text(loadingText, CANVAS_WIDTH - pad, CANVAS_HEIGHT/10 + pad);
+
     }
 
     textSize(ts * 2/3);
