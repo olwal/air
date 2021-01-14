@@ -10,6 +10,43 @@
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css2?family=B612+Mono&family=Inter:wght@100;200;300;400;500;600&family=Major+Mono+Display&family=Syne+Mono&display=swap" rel="stylesheet">
 
+        <!-- JQuery for Date picker -->
+        <link rel="stylesheet" href="//code.jquery.com/ui/1.12.4/themes/base/jquery-ui.css">
+        <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+        <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
+        <script>
+
+          $( function() {
+            $( "#start_date" ).datepicker(
+              { 
+                dateFormat: "yy-mm-dd",
+                defaultDate: "2020-09-08",
+                minDate: new Date(2020, 0, 1), 
+                maxDate: new Date(2021, 0, 1)
+              }
+            );
+          } );
+
+          $( function() {
+            $( "#end_date" ).datepicker(
+              { 
+                dateFormat: "yy-mm-dd",
+                defaultDate: "2020-09-10",
+                minDate: new Date(2020, 0, 1), 
+                maxDate: new Date(2021, 0, 1)
+              }
+            );
+          } );
+
+          window.onload = function()
+          {
+            (new URL(window.location.href)).searchParams.forEach((value, parameter) =>
+              document.getElementById(parameter).value = value.replace(/\+/g, " "))
+          }
+          
+        </script>
+
     </head>
 
     <style>
@@ -17,8 +54,30 @@
         body /* Required for proper anchoring of overlays in procedural-gl.js */
         {
           background: #666666;
+          color: #ffffff;
           font-family: 'Inter', sans-serif;
         }
+
+        table, input, option, select /* Required for proper anchoring of overlays in procedural-gl.js */
+        {
+          font-family: 'Inter', sans-serif;
+          font-size: small;
+          padding: 0px;
+          margin: 0;
+          padding: 0;
+        }        
+
+        .button /* Required for proper anchoring of overlays in procedural-gl.js */
+        {
+          font-size: medium;
+          background-color: #49ad40;
+          color: #ffffff;
+          padding: 5px;
+          border: 0;
+          box-shadow: none;
+          border-radius: 0px;
+          -webkit-appearance: none;
+        }   
 
         * /* border-to-border rendering on page */
         {
@@ -29,19 +88,119 @@
         #gl /* div for GLSL canvas */
         {
           width: 100%;
-          height: 75%;
+          height: 65%;
           position: relative;
         }
         #p5  /* div for p5.js canvas */
         {
           position: relative;
         }
+        
+        table, tr {
+          padding: 0px;
+        }
+
+        th, td {
+          padding: 5px;
+        }
+
+        select, input
+        {
+          padding: 2px 2px;
+          box-sizing: border-box;      
+          margin: 0px;
+          border: none;
+        }        
 
     </style>
 
     <body>
         <div id ="p5"></div>                
         <div id ="gl"></div>
+
+            <form action="/air/" target="_self" method="get">
+              &nbsp;&nbsp;
+
+              <table>
+                <tr>
+                  <td>
+                    <!-- Location<br -->
+                    <select id="location" name="location">
+                      <option value='Alameda'>Alameda</option>
+                      <option value='Berkeley'>Berkeley</option>
+                      <option value='Boulder Creek'>Boulder Creek</option>
+                      <option value='Brookdale'>Brookdale</option>
+                      <option value='Campbell'>Campbell</option>
+                      <option value='Cupertino'>Cupertino</option>
+                      <option value='Daly City'>Daly City</option>
+                      <option value='El Cerrito'>El Cerrito</option>
+                      <option value='El Granada'>El Granada</option>
+                      <option value='Fremont'>Fremont</option>
+                      <option value='Half Moon Bay'>Half Moon Bay</option>
+                      <option value='Hayward'>Hayward</option>
+                      <option value='La Honda'>La Honda</option>
+                      <option value='Larkspur'>Larkspur</option>
+                      <option value='Los Altos'>Los Altos</option>
+                      <option value='Los Gatos town'>Los Gatos town</option>
+                      <option value='Mill Valley'>Mill Valley</option>
+                      <option value='Milpitas'>Milpitas</option>
+                      <option value='Mountain View'>Mountain View</option>
+                      <option value='Newark'>Newark</option>
+                      <option value='Oakland'>Oakland</option>
+                      <option value='Pacifica'>Pacifica</option>
+                      <option value='Palo Alto'>Palo Alto</option>
+                      <option value='Pescadero'>Pescadero</option>
+                      <option value='Redwood City'>Redwood City</option>
+                      <option value='Richmond'>Richmond</option>
+                      <option value='San Bruno'>San Bruno</option>
+                      <option value='San Francisco'>San Francisco</option>
+                      <option value='San Jose'>San Jose</option>
+                      <option value='San Leandro'>San Leandro</option>
+                      <option value='San Mateo'>San Mateo</option>
+                      <option value='San Pablo'>San Pablo</option>
+                      <option value='San Rafael'>San Rafael</option>
+                      <option value='Santa Clara'>Santa Clara</option>
+                      <option value='Santa Cruz'>Santa Clara</option>
+                      <option value='Saratoga'>Saratoga</option>
+                      <option value='South San Francisco'>South San Francisco</option>
+                      <option value='Stinson Beach'>Stinson Beach</option>
+                      <option value='Union City'>Union City</option>
+                      <option value='CZU Lightning Complex Fires'>CZU Lightning Complex Fires</option>
+                      <option value='LNU Lightning Complex Fires'>LNU Lightning Complex Fires</option>
+                      <option value='SCU Lightning Complex Fires'>SCU Lightning Complex Fires</option>
+                    </select>
+                    <select id="radius" name="radius">
+                      <option value=""></option>
+                      <option value="10000">5km</option>
+                      <option value="10000">10km</option>
+                      <option value="20000">20km</option>
+                      <option value="30000">30km</option>
+                      <option value="40000">40km</option>
+                      <option value="50000">50km</option>
+<!--                      <option value="60000">60km</option>
+                      <option value="70000">70km</option>
+                      <option value="80000">80km</option>
+                      <option value="90000">90km</option>
+                      <option value="100000">100km</option>
+ -->                   </select>
+                    radius
+                  </td>
+                  <td rowspan="2">
+                    <input class="button" type="submit" value="->">    
+                  </td>                                   
+                </tr>
+                <tr>
+                  <td>
+                    From <input name="start_date" type="text" id="start_date" size="11"> to <input name="end_date" type="text" id="end_date" size="11">
+                  </td>
+                </tr>
+              </table>              
+
+
+        </form>
+
+
+
     </body>
 
     <!-- Configuration -->    
