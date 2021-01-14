@@ -191,7 +191,7 @@ class Features
         "type": "Feature",
         "id": name, //count,
         "properties": {
-          "fontSize": 10 + (50 / (show * show)),
+          "fontSize": 10 + (10 / (show * show)),
           "color": textColor,        
           "name": name,
           "anchorOffset": {
