@@ -499,6 +499,7 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
     if (location != undefined)
     {
         location = location.replace(/%20/g, " "); //replace %20 characters from URL
+        location = location.replace(/\+/g, " "); //replace + characters from URL
         let rows = locations.findRows(location, "name"); //look up all matches
         let row = undefined;
 
@@ -751,17 +752,20 @@ function drawTimeSeries()
             if (first) // month + day
             {
                 textAlign(LEFT, TOP); //left-centered and (x + 5) to not get cut off at left edge
-                text(oj.month_text + " " + oj.day_string, x + 5, CANVAS_HEIGHT/2);
+                if (oj.month_text != undefined && oj.day_string != undefined)
+                    text(oj.month_text + " " + oj.day_string, x + 5, CANVAS_HEIGHT/2);
             }
             else if (last) // month + day
             {
                 textAlign(RIGHT, TOP); //right-centered and (x - 5) to not get cut off at right edge
-                text(oj.month_text + " " + oj.day_string, x - 5, CANVAS_HEIGHT/2);
+                if (oj.month_text != undefined && oj.day_string != undefined)
+                    text(oj.month_text + " " + oj.day_string, x - 5, CANVAS_HEIGHT/2);
             }
             else // month
             {
                 textAlign(CENTER, TOP); //centered
-                text(oj.month_text, x, CANVAS_HEIGHT/2);                       
+                if (oj.month_text != undefined)
+                    text(oj.month_text, x, CANVAS_HEIGHT/2);                       
             }
         }
     }
@@ -770,7 +774,7 @@ function drawTimeSeries()
     {
         textSize(CANVAS_HEIGHT/6);
         textAlign(RIGHT)
-        text("[P]LAY/PAUSE   [O]RBIT   [F]OCUS   [L]ABELS   olwal.com | 2021 | 00.01 ", CANVAS_WIDTH, CANVAS_HEIGHT/10 );
+        text("[P]LAY/PAUSE   [O]RBIT   [F]OCUS   [L]ABELS   olwal.com | 2021 | 00.02 ", CANVAS_WIDTH, CANVAS_HEIGHT/10 );
     }
 
     //draw a graph of the average values for all observations, and cursor for current
@@ -844,11 +848,13 @@ function drawTimeSeries()
     
     if (oc.count && !showHelp)
     {
+        textSize(CANVAS_HEIGHT/10);
     //    text(oc.count + " sensor" + (oc.count == 1 ? "" : "s"), centerX + dw + 4 * pad, ty + pad);    
         textAlign(RIGHT)
         text(loadingText + ": " + oc.count + " sensor" + (oc.count == 1 ? "" : "s") + " (" + radius/1000 + " km)", CANVAS_WIDTH - pad, CANVAS_HEIGHT/10 + pad);
     }
 
+    textSize(ts * 2/3);
     textAlign(LEFT);
     //year, right-centered to the left
     let yw = textWidth("2020");
