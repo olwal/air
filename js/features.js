@@ -204,6 +204,7 @@ class Features
           "borderWidth": 0,
 //          "background": "rgba(255, 255, 255, 0.5)"
           "fadeDistance": 250000,
+          "clipping": "pixel"
           }
         };
 

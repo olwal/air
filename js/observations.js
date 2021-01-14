@@ -244,6 +244,7 @@ class Observations
                 "type": "Feature",
                 "id": id,
                 "properties": {
+                    "clipping": "pixel",
                     "image": "_",
                     "width": 0,                    
                     "height": 20 + 150 * min(5000, Math.pow(aqi, 1.5))/5000,
