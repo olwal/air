@@ -25,7 +25,7 @@
                 minDate: new Date(2020, 0, 1), 
                 maxDate: new Date(2021, 0, 1)
               }
-            );
+            ).attr('readonly','readonly');
           } );
 
           $( function() {
@@ -36,7 +36,7 @@
                 minDate: new Date(2020, 0, 1), 
                 maxDate: new Date(2021, 0, 1)
               }
-            );
+            ).attr('readonly','readonly'); //disable mobile keyboard
           } );
 
           window.onload = function()
@@ -66,11 +66,16 @@
         table, input, option, select /* Required for proper anchoring of overlays in procedural-gl.js */
         {
           font-family: 'Inter', sans-serif;
-          font-size: small;
+          font-size: x-small;
           padding: 0px;
           margin: 0;
           padding: 0;
         }        
+
+        input
+        {
+          text-align: center;
+        }
 
         .button /* Required for proper anchoring of overlays in procedural-gl.js */
         {
@@ -124,12 +129,9 @@
         <div id ="gl"></div>
 
             <form action="/air/" target="_self" method="get">
-              &nbsp;&nbsp;
-
               <table>
                 <tr>
                   <td>
-                    <!-- Location<br -->
                     <select id="location" name="location">
                       <option value='Alameda'>Alameda</option>
                       <option value='Berkeley'>Berkeley</option>
@@ -165,7 +167,7 @@
                       <option value='San Pablo'>San Pablo</option>
                       <option value='San Rafael'>San Rafael</option>
                       <option value='Santa Clara'>Santa Clara</option>
-                      <option value='Santa Cruz'>Santa Clara</option>
+                      <option value='Santa Cruz'>Santa Cruz</option>
                       <option value='Saratoga'>Saratoga</option>
                       <option value='South San Francisco'>South San Francisco</option>
                       <option value='Stinson Beach'>Stinson Beach</option>
@@ -176,18 +178,12 @@
                     </select>
                     <select id="radius" name="radius">
                       <option value=""></option>
-                      <option value="10000">5km</option>
+                      <option value="5000">5km</option>
                       <option value="10000">10km</option>
                       <option value="20000">20km</option>
                       <option value="30000">30km</option>
                       <option value="40000">40km</option>
                       <option value="50000">50km</option>
-<!--                      <option value="60000">60km</option>
-                      <option value="70000">70km</option>
-                      <option value="80000">80km</option>
-                      <option value="90000">90km</option>
-                      <option value="100000">100km</option>
- -->                   </select>
                     radius
                   </td>
                   <td rowspan="2">
@@ -214,6 +210,7 @@
     <!-- GL SL -->
     <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.3/css/font-awesome.min.css" rel="stylesheet">
     <script type="text/javascript" src="https://unpkg.com/procedural-gl/build/procedural-gl.js"></script>
+    
     <script type="text/javascript" src="js/geo3d.js"></script>
 
     <!-- script type="module" src="js/geo3d_module.js"></script -->
