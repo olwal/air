@@ -76,7 +76,6 @@ function setup()
     can.parent(CONTAINER_P5);
 
     Procedural.displayLocation(MAP_TARGET);
-    Procedural.focusOnLocation(MAP_TARGET);
 
     enableControls(showControls);
 
@@ -409,7 +408,12 @@ let buttons = {};
 
 function togglePlay()
 {
-    play = !play;
+    setPlay(!play);
+}
+
+function setPlay(state)
+{
+    play = state;
     if (play)
     {
         buttons['play'].hide();
@@ -421,6 +425,7 @@ function togglePlay()
         buttons['play'].show();
     }
 }
+
 
 function addButtons()
 {
@@ -550,13 +555,18 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
     MAP_TARGET.latitude = latitude; //37.7591527514897;
     MAP_TARGET.distance = distance; //20000;    
 
+    document.getElementById("location").value = location;
+    document.getElementById("start_date").value = START_DATE_STRING;
+    document.getElementById("end_date").value = END_DATE_STRING;
+    document.getElementById("radius").value = radius;
+
     let count = 0;
 
     if (initialized)
     {
-        MAP_TARGET_NEUTRAL.longitude = longitude;
-        MAP_TARGET_NEUTRAL.latitude = latitude;    
-        Procedural.focusOnLocation(MAP_TARGET_NEUTRAL);
+        MAP_TARGET.longitude = longitude;
+        MAP_TARGET.latitude = latitude;    
+        //Procedural.focusOnLocation(MAP_TARGET);
     }
 
     window.setTimeout(
@@ -588,20 +598,20 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
 
                                     if (nLoaded == 1)
                                     {
-                                        if (!initialized)
-                                            Procedural.focusOnLocation(MAP_TARGET);                                          
+//                                        if (!initialized)
+//                                            Procedural.focusOnLocation(MAP_TARGET);                                          
                                         setObservation(0);
                                     }
 
                                     if (nLoaded == observations.length) //when completed, foucs on the desired map target
                                     {
 //                                        ORBIT_AFTER_FOCUS = true;
-                                        //Procedural.focusOnLocation(MAP_TARGET);
+                                        
                                         if (!initialized)
                                             Procedural.focusOnLocation(MAP_TARGET);
                                         setObservation(0);
                                         initialized = true;
-                                        //play = true;
+                                        setPlay(true);
                                     }    
                                 }    
                             );
@@ -703,7 +713,11 @@ function keyPressed() //handle keyboard presses
         case 'g':
             showGraph = !showGraph;
             break; 
-    
+
+        case 'e':
+            Procedural.environmentEditor();
+            break; 
+                
         case 'r': //rewind to beginning
             current = 0;    
             break;
@@ -785,22 +799,42 @@ function drawTimeSeries()
         let maxHeight = CANVAS_HEIGHT/2;
         let x = CANVAS_WIDTH * i/(observations.length - 1);
         let y = maxHeight * min(o.aqiAverage, 600)/600;
+        let cursorWidth = CANVAS_WIDTH/(observations.length - 1);
 
         if (showGraph)
         {
             noStroke();
             fill(o.rgb[0], o.rgb[1], o.rgb[2]); //colors based on precomputed AQI color
-            rect(x, maxHeight * 2, CANVAS_WIDTH/(observations.length - 1), -y);
+            rect(x, maxHeight * 2, cursorWidth, -y);
+        }
+
+        if (false && i == current) //cursor for current value
+        {
+//           stroke(200, 100);
+           stroke(o.rgb[0], o.rgb[1], o.rgb[2]);
+           strokeWeight(5);
+           noFill();
+            line(x + cursorWidth/2, maxHeight, x + cursorWidth/2, maxHeight * 2);
+ //           noStroke();
+//            fill(255, 200);
+ //           rect(x, maxHeight * 2, cursorWidth, -maxHeight);
         }
 
         if (i == current) //cursor for current value
         {
-            stroke(200, 100);
-            line(x, maxHeight, x, maxHeight * 2);
+           stroke(200, 100);
+           line(x + cursorWidth/2, maxHeight, x + cursorWidth/2, maxHeight * 2);
+           noStroke();
+           fill(o.rgb[0], o.rgb[1], o.rgb[2]);
+           ellipse(x + cursorWidth/2, maxHeight, cursorWidth/4);           
         }
+
+
 
         i += 1;
     }
+    strokeWeight(1);
+    noStroke();
 
     fill(255);
 
@@ -853,8 +887,8 @@ function drawTimeSeries()
         textSize(CANVAS_HEIGHT/10);
     //    text(oc.count + " sensor" + (oc.count == 1 ? "" : "s"), centerX + dw + 4 * pad, ty + pad);    
         textAlign(RIGHT)
-        text(oc.count + " sensor" + (oc.count == 1 ? "" : "s") + " (" + radius/1000 + " km)", CANVAS_WIDTH - pad, 2.2 * CANVAS_HEIGHT/10 + pad);    
-        text(loadingText, CANVAS_WIDTH - pad, CANVAS_HEIGHT/10 + pad);
+        text(loadingText, CANVAS_WIDTH - pad/2, CANVAS_HEIGHT/10 + pad);
+        text(oc.count + " sensor" + (oc.count == 1 ? "" : "s") + " (" + radius/1000 + " km)", CANVAS_WIDTH - pad/2, 2.2 * CANVAS_HEIGHT/10 + pad);    
 
     }
 
