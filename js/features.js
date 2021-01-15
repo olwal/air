@@ -199,8 +199,8 @@ class Features
             "x": 0
           },
           "anchor": "bottom",
-          "borderRadius": 25,
-          "padding": 10,
+          "borderRadius": 0,
+          "padding": 0,
           "borderWidth": 0,
 //          "background": "rgba(255, 255, 255, 0.5)"
           "fadeDistance": 250000,
