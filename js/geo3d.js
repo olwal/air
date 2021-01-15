@@ -45,14 +45,22 @@ else
 //initialize with container and data sources
 Procedural.init( {container, datasource} );
 
-
-
 window.Procedural = Procedural;
+
+//doesn't seem to fire
+Procedural.onLocationLoaded = 
+  function()
+  {
+    console.log("Location loaded");
+    Procedural.focusOnLocation(MAP_TARGET);
+  };
 
 //start orbiting after location is focused
 Procedural.onLocationFocused = 
   function () 
   {
+    console.log("Location focused");
+
     if (ORBIT_AFTER_FOCUS)
       Procedural.orbitTarget();
   };
