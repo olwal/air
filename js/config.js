@@ -37,8 +37,10 @@ var ORBIT_AFTER_FOCUS = false;
 var MAP_TARGET = {
 //    latitude: 37.512070759717645, longitude: -122.29158348430136,
     latitude: 37.7591527514897, longitude: -122.44198789673219,
-    distance: 50000,
-    angle: 35, bearing: 70
+    distance: 1000,
+    angle: 45, bearing: 0,
+    animationDuration: 2
+ //   angle: 35, bearing: 70
 };
 
 var MAP_TARGET_NEUTRAL = {
@@ -58,11 +60,11 @@ var MAP_TARGET_0 = {
 
 const GL_CONFIGURATION = {
     // Minimum distance camera can approach scene
-    minDistance: 2000,
+    minDistance: 1000,
     // Maximum distance camera can move from scene
     maxDistance: 100000,
     // Maximum distance camera target can move from scene
-    maxBounds: 7500000,
+    maxBounds: 75000,
     // Minimum polar angle of camera
     minPolarAngle: 0.2 * Math.PI,
     // Maximum polar angle of camera
