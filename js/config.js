@@ -7,19 +7,24 @@
 const API_KEY_ELEVATION = '13113dc2a0362476bb6131a8eddcfb084';
 const API_KEY_MAP_TILER = 'rlkd5TJAOOZNiBLdSkPY';
 
+const BACKGROUND_COLOR = "#222222"; //#666666
 const DIV_P5 = 'p5';
 const DIV_GL = 'gl';
 const CANVAS_HEIGHT = 80;
 let UPDATE_INTERVAL = 60000;
 const DATA_PATH = 'data/outside_sensors_bay_area.csv'; 
-const SENSOR_INDEX_FILE = 'data/outside_sensors.csv';// 'data/outside_sensors_bay_area.csv';//'data/outside_sensors.csv';//
+//const SENSOR_INDEX_FILE = 'data/outside_sensors.csv';// 'data/outside_sensors_bay_area.csv';//'data/outside_sensors.csv';//
+//const SENSOR_INDEX_FILE = 'data/sensors/california_cities_selected.csv';
+const SENSOR_INDEX_FILE = 'data/outside_sensors_bay_area.csv';
 let LANDMARKS_PATH = 'data/california_cities_selected.csv';
 const TIME_BETWEEN_REQUESTS = 100;
 const TIME_BETWEEN_REQUESTS_FIRST = 1;
 const SHOW_CONTROLS = true;
-const DATASETS = [ 'bay_area', 'europe', 'eurasia', 'california' ];
+const DATASETS = [ 'bay_area', 'europe', 'eurasia', 'california', 'bay_area_selected' ];
 const DATASET_PATH = 'data/binary/';
+//const DATASET_PATH = 'data/binary_averages/';
 const BINARY_DATA_PATH = DATASET_PATH + 'bay_area/';
+//const BINARY_DATA_PATH = DATASET_PATH + 'bay_area_selected/';
 const LANDMARKS = [ 'california_cities_selected', 'world_capitals'];
 
 const FEATURE_OPACITY = 0.7; //0-1
@@ -37,7 +42,7 @@ var ORBIT_AFTER_FOCUS = false;
 var MAP_TARGET = {
 //    latitude: 37.512070759717645, longitude: -122.29158348430136,
     latitude: 37.7591527514897, longitude: -122.44198789673219,
-    distance: 1000,
+    distance: 10000,
     angle: 45, bearing: 0,
     animationDuration: 2
  //   angle: 35, bearing: 70
