@@ -162,7 +162,7 @@ class Features
 
       if (location != undefined)
       {
-        textColor = (name == location) ? "rgba(255, 255, 255, 1)" : "rgba(240, 240, 240, 0.8)";
+        textColor = (name == location) ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.7)";
         
         if (name == location)
         {
@@ -199,11 +199,11 @@ class Features
             "x": 0
           },
           "anchor": "bottom",
-          "borderRadius": 0,
-          "padding": 0,
+          /*"borderRadius": 25,
+          "padding": 20,
           "borderWidth": 0,
-//          "background": "rgba(255, 255, 255, 0.5)"
-          "fadeDistance": 250000,
+          "background": "rgba(100, 100, 100, 1)",*/
+          "fadeDistance": 1000000,
           "clipping": "pixel"
           }
         };
