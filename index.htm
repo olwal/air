@@ -1,6 +1,8 @@
 <html>
 
     <head>
+        <title>Interactive Air Quality in 3D | Alex Olwal | www.olwal.com</title>
+
         <meta name="viewport" content="user-scalable=no, width=device-width, height=device-height, maximum-scale=1.0, minimum-scale=1.0, initial-scale=1.0">
 
         <!-- p5.js for main logic -->
@@ -45,6 +47,26 @@
               document.getElementById(parameter).value = value.replace(/\+/g, " "))
           }
           
+          function reloadData(event)
+          {
+            event.preventDefault(); 
+            var start_date = document.getElementById("start_date").value;
+            var end_date = document.getElementById("end_date").value;
+            var location = document.getElementById("location").value;
+            var radius = document.getElementById("radius").value;
+            
+            console.log(start_date + " " + end_date + " " + location + " " + radius);
+
+            long = NaN;
+            lat = NaN;
+            distance = NaN
+            doFocus = true;
+
+            loadData(start_date, end_date, long, lat, radius, distance, location, doFocus);
+
+            return false;
+          }
+
         </script>
 
     </head>
@@ -58,7 +80,7 @@
 
         html, body /* Required for proper anchoring of overlays in procedural-gl.js */
         {
-          background: #666666;
+          background: #222222;
           color: #ffffff;
           font-family: 'Inter', sans-serif;
         }
@@ -98,7 +120,7 @@
         #gl /* div for GLSL canvas */
         {
           width: 100%;
-          height: 65%;
+          height: 73%;
           position: relative;
         }
         #p5  /* div for p5.js canvas */
@@ -128,7 +150,8 @@
         <div id ="p5"></div>                
         <div id ="gl"></div>
 
-            <form action="/air/" target="_self" method="get">
+            <!-- form action="/air/" target="_self" method="get" -->
+            <form onsubmit="reloadData(event);">
               <table>
                 <tr>
                   <td>
@@ -185,6 +208,7 @@
                       <option value="40000">40km</option>
                       <option value="50000">50km</option>
                     radius
+                    </select>
                   </td>
                   <td rowspan="2">
                     <input class="button" type="submit" value="->">    
