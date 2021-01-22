@@ -14,22 +14,28 @@ let PATH = BINARY_DATA_PATH;
 let BINARY_INDEX = PATH + 'index.txt';
 const LABELS_NAME = FEATURE_COLLECTION_NAME_LANDMARKS;
 let binaries;
+let binariesAggregate;
 
 let locations; //location data for labels
 let sensors; //sensor index
+let sensorsAggregate; 
 
 let observations = [];
+let observationsAggregate = [];
 let current = 0;
 let nLoaded = 0;
+let nLoadedAggregate = 0;
 let loadingText = "Loaded";
 let radius = DEFAULT_RADIUS;
 let distance = DEFAULT_DISTANCE;
 let initialized = false;
+let autoplay = true;
 
 let timestamp; //keep track of time for animation
 let UPDATE_MS = 100; //inter-frame delay 
 
 let play = false;
+let buttons = {};
 
 //Time intervals to load data, either these as default, or from urlParameters (start_date and end_date)
 let START_DATE_STRING = "2020-09-08";
@@ -50,6 +56,9 @@ let focusOnClick = false;
 showLive = false;
 let lastUpdated = -1;
 let timestampLive;
+
+let SENSORS_NAME = "$";
+let AVERAGE_NAME = "%";
 
 function preload()
 {
@@ -164,7 +173,7 @@ function setupLive()
 
 function drawLive() 
 {
-    background("#666666");
+    background(BACKGROUND_COLOR);
 
     let textString = "Preparing data...";
     let i = 0;
@@ -249,7 +258,7 @@ function drawLive()
 
 function drawLiveClassic() 
 {
-    background("#666666");
+    background(BACKGROUND_COLOR);
 
     let textString = "Preparing data...";
 
@@ -293,7 +302,6 @@ function drawLiveClassic()
     }
 }
 
-
 function preloadTimeSeries()
 {
     let params = getURLParams();
@@ -301,7 +309,7 @@ function preloadTimeSeries()
     let dataset = params['dataset'];
     let landmarks = params['landmarks'];
 
-    console.log(dataset + " " + landmarks);
+    console.log("dataset: " + dataset + ", landmarks: " + landmarks);
 
     if (DATASETS.includes(dataset))
     {
@@ -312,20 +320,34 @@ function preloadTimeSeries()
     if (LANDMARKS.includes(landmarks))
         LANDMARKS_PATH = "data/" + landmarks + ".csv";
 
+    locations = Features.preload();
+
     sensors = Observations.preload(SENSOR_INDEX);
     binaries = loadStrings(BINARY_INDEX);
-    locations = Features.preload();
+
+    sensorsAggregate = Observations.preload('data/sensors/california_cities_selected_ids.csv');
+    binariesAggregate = loadStrings('data/binary_averages/bay_area_selected/index.txt');
 }
 
 function setupTimeSeries()
 {
+    //Add specific locations to the locations table
+    let show = 2;
+    addLocation("LNU Lightning Complex Fires", -122.506, 38.549, show);
+    addLocation("CZU Lightning Complex Fires", -122.223, 37.262, show);
+    addLocation("SCU Lightning Complex Fires", -121.777, 37.882, show);
+
     //Attempt to parse URL parameters for start_date and end_date. If successful, load that interval, otherwise load default
 	let params = getURLParams();		    
     let start_string = params['start_date'];
     let end_string = params['end_date'];
     let longitude = parseFloat(params['longitude']);
     let latitude = parseFloat(params['latitude']);
-    
+    let playParam = params['play'];
+    autoplay = (playParam == undefined || playParam == "false") ? autoplay : true;
+
+    console.log("autoplay: " + autoplay + " [" + playParam + "]");
+
     radius = parseFloat(params['radius']);    
     radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
 
@@ -339,130 +361,91 @@ function setupTimeSeries()
 
     loadData(start_string, end_string, longitude, latitude, radius, distance, location);
 
-    locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
-    Procedural.addOverlay(locationLabels);
-
     Procedural.onFeatureClicked = function (id) //clicking on a feature 
     {
 
         console.log("---------------------")
         console.log("[ Clicked " + id + " ]");
 
-        let o = observations[current];
-        let p; 
+        let isSensor = id.startsWith(SENSORS_NAME);
+        let isAverage = id.startsWith(AVERAGE_NAME);
 
-        if (o) //Ensure that an observation is loaded
+        if (isSensor || isAverage)
+            id = int(id.substr(1, id.length)); //extract id (assuming single character)
+
+        let isLandmark = isNaN(id);
+        let locationName = undefined;
+
+        if (isSensor)
         {
-            p = o.observations[id]; //Ensure that this sensor exists 
-            if (p)
+            let o = observations[current];
+            let p; 
+
+            if (o) //Ensure that an observation is loaded
             {
-                print(id + " " + p[0] + " " + p[1] + " " + p[2]);
+                p = o.observations[id]; //Ensure that this sensor exists 
+                if (p)
+                {
+                    print(id + " " + p[0] + " " + p[1] + " " + p[2]);
 
-                //look up the ID for sensor metadata
-                let row = sensors.findRow(parseInt(id), "id");
-                console.log(row);        
+                    //look up the ID for sensor metadata
+                    let row = sensors.findRow(parseInt(id), "id");
+                    console.log(row);        
 
-                ORBIT_AFTER_FOCUS = false;
-                //focusOn(p[1], p[2]);
-                return;
+                    ORBIT_AFTER_FOCUS = false;
+                    //focusOn(p[1], p[2]);
+                    return;
+                }
             }
+
+            console.log("Error: Could not find sensor " + id);
+            return;
+        }
+        else if (isAverage)
+        {
+            if (locations.rows[id])
+                locationName = locations.rows[id].arr[0];
+    
+            if (!locationName)
+                return;
+            else    
+                isLandmark = true;
+        }
+        else if (isLandmark)
+        {
+            locationName = id;
         }
 
-        if (!p || (!o && isNaN(id)))
+        if (location == locationName)
         {
-            console.log("Loading : " + id);
+            console.log("Already loaded")
+            return;
+        }
+
+        console.log("Loading : " + id);
 /*            window.open('https://olwal.github.io/air/3d/?' +
-                'start_date=' + START_DATE_STRING + 
-                '&end_date=' + END_DATE_STRING + 
-                '&radius=' + radius +
-                '&distance=' + distance + 
-                '&location=' + id, 
-                "_self");
+            'start_date=' + START_DATE_STRING + 
+            '&end_date=' + END_DATE_STRING + 
+            '&radius=' + radius +
+            '&distance=' + distance + 
+            '&location=' + id, 
+            "_self");
 */
-            if (location == id)
-            {
-                console.log("Already loaded")
-                return;
-            }
 
-            loadingText = id; 
-            location = id;
+        loadingText = locationName; 
+        location = locationName;
 
-            for (o of observations) //cancel any on-going loading
-                o.cancel();
+        for (o of observations) //cancel any on-going loading
+            o.cancel();
 
-            loadData(START_DATE_STRING, END_DATE_STRING, longitude, latitude, radius, distance, location);                
-        }
-
+        loadData(START_DATE_STRING, END_DATE_STRING, longitude, latitude, radius, distance, location);
     }
 
-    //set the text size to 1/4 of the height to fit 2 lines + progress bar
     textFont("Inter");
 
     timestamp = millis();
 
     addButtons();
-}
-
-let buttons = {};
-
-function togglePlay()
-{
-    setPlay(!play);
-}
-
-function setPlay(state)
-{
-    play = state;
-    if (play)
-    {
-        buttons['play'].hide();
-        buttons['pause'].show();
-    }
-    else
-    {
-        buttons['pause'].hide();
-        buttons['play'].show();
-    }
-}
-
-
-function addButtons()
-{
-    let w = 24;
-    let h = 24;
-    let n = 4;
-
-    let offsetX = 0; //CANVAS_WIDTH - n * w * 1.1;
-    let x = offsetX + 5; 
-    let y = 7;
-
-    let button = createImg('data/images/play_arrow-24px.svg', 'Play');
-    button.size(w, h);
-    button.position(x, y);
-    button.mousePressed(togglePlay);
-    buttons['play'] = button;
-
-    button = createImg('data/images/pause-24px.svg', 'Pause');
-    button.size(w, h);
-    button.position(x, y);    
-    button.mousePressed(togglePlay);
-
-    button.hide();
-    buttons['pause'] = button;
-
-/*
-    x += w * 1.1;
-
-
-    button = createButton('ORBIT');
-    button.size(w, h);
-    button.position(x, y);
-    button.mousePressed(
-        function() {
-            Procedural.orbitTarget(); 
-        }
-    );*/
 }
 
 function addLocation(name, longitude, latitude, show)
@@ -474,17 +457,16 @@ function addLocation(name, longitude, latitude, show)
     row.setNum('show', show);
 }
 
-function loadData(start_string, end_string, longitude, latitude, radius, distance, location)
+function loadData(start_string, end_string, longitude, latitude, _radius, distance, location, doFocus = false)
 {
     observations = [];
+    observationsAggregate = [];
+
     current = 0;
     nLoaded = 0;
+    nLoadedAggregate = 0;
 
-    //Add specific locations to the locations table
-    let show = 2;
-    addLocation("LNU Lightning Complex Fires", -122.506, 38.549, show);
-    addLocation("CZU Lightning Complex Fires", -122.223, 37.262, show);
-    addLocation("SCU Lightning Complex Fires", -121.777, 37.882, show);
+    radius = _radius;
 
     let start = new Date(start_string);
     let end = new Date(end_string);    
@@ -537,6 +519,9 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
         addLocation(location, longitude, latitude, 2);
     }
 
+    locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
+    Procedural.addOverlay(locationLabels);
+
     loadingText = location;   
 
     distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
@@ -562,6 +547,9 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
 
     let count = 0;
 
+    if (doFocus)
+        initialized = false;
+
     if (initialized)
     {
         MAP_TARGET.longitude = longitude;
@@ -583,7 +571,8 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
 
                 let data = PATH + b; //complete path for file to load                                      
 
-                let o = new Observations(longitude, latitude, radius); //create a new Observations object, which will load and preprocess the data and overlays
+                let o = new Observations(SENSORS_NAME, longitude, latitude, radius); //create a new Observations object, which will load and preprocess the data and overlays
+                o.FEATURE_WIDTH = 1;
 
                 let i = count;
 
@@ -598,20 +587,19 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
 
                                     if (nLoaded == 1)
                                     {
-//                                        if (!initialized)
-//                                            Procedural.focusOnLocation(MAP_TARGET);                                          
-                                        setObservation(0);
+                                        if (!initialized)
+                                            Procedural.focusOnLocation(MAP_TARGET);                                          
+                                       setObservation(0, observations);
                                     }
 
-                                    if (nLoaded == observations.length) //when completed, foucs on the desired map target
+                                    if (!initialized && nLoaded == observations.length && 
+                                        nLoadedAggregate == observationsAggregate.length) //when completed, foucs on the desired map target
                                     {
-//                                        ORBIT_AFTER_FOCUS = true;
-                                        
-                                        if (!initialized)
-                                            Procedural.focusOnLocation(MAP_TARGET);
-                                        setObservation(0);
+                                        setObservations(0);
                                         initialized = true;
-                                        setPlay(true);
+                                        
+                                        if (autoplay)
+                                            setPlay(true);
                                     }    
                                 }    
                             );
@@ -619,8 +607,58 @@ function loadData(start_string, end_string, longitude, latitude, radius, distanc
 
                 observations.push(o); //add each Observation object 
             }
-        }, 1000
+        }, 100
     );
+
+    window.setTimeout(
+        function()
+        {
+            for (b of binariesAggregate) //b is the filename (e.g., "2020-12-13_00.bin")
+            {
+                let ms = Date.parse(b.slice(0, -7)); //extracts date portion and converts to UTC milliseconds
+
+                if (ms < START_DATE || ms > END_DATE || b.length == 0) //skips this file if it is too early or too late
+                    continue;
+
+                count += 1;
+
+                let PATH = 'data/binary_averages/bay_area_selected/';
+
+                let data = PATH + b; //complete path for file to load   
+                
+                let o = new Observations(AVERAGE_NAME, longitude, latitude); //create a new Observations object, which will load and preprocess the data and overlays
+                o.FEATURE_WIDTH = 4;
+                
+                let i = count;
+
+                window.setTimeout(
+                        function()
+                        {
+                            o.load(data, sensorsAggregate, 
+                                function(observation)
+                                {
+                                    nLoadedAggregate++; //keep track of # of loaded Observations
+
+                                    if (!initialized && nLoaded == observations.length && 
+                                        nLoadedAggregate == observationsAggregate.length) //when completed, foucs on the desired map target
+                                    {
+                                        setObservations(0);
+                                        initialized = true;
+                                        
+                                        if (autoplay)
+                                            setPlay(true);
+                                    }    
+
+                                }    
+                            );
+                        }, count * 10); //(count / 100) * 1000);
+
+                observationsAggregate.push(o); //add each Observation object 
+            }
+        }, 100
+    );
+
+
 }
 
 function focusOn(longitude, latitude)
@@ -640,6 +678,15 @@ function focusOn(longitude, latitude)
     Procedural.focusOnLocation(target);
 }
 
+function cancelLoading()
+{
+    for (o of observations)
+        o.cancel();
+
+    for (o of observationsAggregate)
+        o.cancel();
+}
+
 function keyPressed() //handle keyboard presses
 {
     let delta = 1;
@@ -648,8 +695,7 @@ function keyPressed() //handle keyboard presses
     {        
         //stop loading observations
         case ESCAPE:
-            for (o of observations)
-                o.cancel();
+            cancelLoading();
             break;
 
         case ENTER: 
@@ -706,6 +752,11 @@ function keyPressed() //handle keyboard presses
             UPDATE_MS *= 2;     
             break;
 
+        case 's':
+            Procedural.autoRotateSpeed += 1;
+            console.log(Procedural.autoRotateSpeed);
+            break;
+
         case 'h':
             showHelp = !showHelp;
             break; 
@@ -745,7 +796,7 @@ function keyPressed() //handle keyboard presses
 
 function drawTimeSeries()
 {
-    background("#666666");
+    background(BACKGROUND_COLOR);
 
     let i = 0;
 
@@ -790,7 +841,8 @@ function drawTimeSeries()
     {
         textSize(CANVAS_HEIGHT/6);
         textAlign(RIGHT)
-        text("[P]LAY/PAUSE   [O]RBIT   [F]OCUS   [L]ABELS   olwal.com | 2021 | 00.02 ", CANVAS_WIDTH, CANVAS_HEIGHT/10 );
+        //text("[P]LAY/PAUSE   [O]RBIT   [F]OCUS   [L]ABELS   olwal.com | 2021 | 00.02 ", CANVAS_WIDTH, CANVAS_HEIGHT/10 );
+        text("[P]LAY/PAUSE   [O]RBIT  <" + mouseX + "," + mouseY + "> DPR: " + window.devicePixelRatio.toFixed(2) + "   ", CANVAS_WIDTH, CANVAS_HEIGHT/10);
     }
 
     //draw a graph of the average values for all observations, and cursor for current
@@ -826,7 +878,7 @@ function drawTimeSeries()
            line(x + cursorWidth/2, maxHeight, x + cursorWidth/2, maxHeight * 2);
            noStroke();
            fill(o.rgb[0], o.rgb[1], o.rgb[2]);
-           ellipse(x + cursorWidth/2, maxHeight, cursorWidth/4);           
+           ellipse(x + cursorWidth/2, maxHeight, cursorWidth/3);           
         }
 
 
@@ -871,6 +923,9 @@ function drawTimeSeries()
     if (!oc)
         return;
 
+    if (!oc.date_string)
+        return;
+
     //display the current date in center
     text(oc.date_string, centerX - dw/2, ty + pad);
 
@@ -908,17 +963,24 @@ function drawTimeSeries()
     }
 }
 
-function setObservation(index) //set current observation
+function setObservation(index, observations) //set current observation
 {
     index = index.toFixed() % observations.length;
+
     if (!isNaN(index) && index >= 0 && index < observations.length)
     {
         current = index;
         let json = observations[current].json;
+        
         if (!json)
+        {
             console.log("setObservation(index): broken json: " + current);
-        try{
-        Procedural.addOverlay(json);
+            return;
+        }
+        
+        try
+        {
+            Procedural.addOverlay(json);
         }
         catch (err)
         {
@@ -927,9 +989,15 @@ function setObservation(index) //set current observation
     }
 }
 
+function setObservations(index) //set current observation
+{
+    setObservation(index, observations);
+    setObservation(index, observationsAggregate);
+}
+
 function changeObservation(delta = 1) //change observations with +/- delta
 {
-    setObservation(current + delta + observations.length);
+    setObservations(current + delta + observations.length);
 }
 
 function getObservation(x) //get observation for a given X value
@@ -961,7 +1029,7 @@ function setObservationFromX(x) //set observation given X value (e.g, from mouse
     let c = getObservation(x);
     
     if (c >= 0)
-        setObservation(c);    
+        setObservations(c);    
 }
 
 function mousePressed() //update observation based on timeline click
@@ -997,4 +1065,63 @@ function windowResized() //adjust canvas size when window is resized
 function isValidDate(d)  //check if data is valid
 {
     return d instanceof Date && !isNaN(d);
+}
+
+function togglePlay()
+{
+    setPlay(!play);
+}
+
+function setPlay(state)
+{
+    play = state;
+    if (play)
+    {
+        buttons['play'].hide();
+        buttons['pause'].show();
+    }
+    else
+    {
+        buttons['pause'].hide();
+        buttons['play'].show();
+    }
+}
+
+function addButtons()
+{
+    let w = 24;
+    let h = 24;
+    let n = 4;
+
+    let offsetX = 0; //CANVAS_WIDTH - n * w * 1.1;
+    let x = offsetX + 5; 
+    let y = 7;
+
+    //Fixed white SVG fill with https://vectorpaint.yaks.co.nz/
+    let button = createImg('data/images/play_arrow-24px_white.svg', 'Play');
+    button.size(w, h);
+    button.position(x, y);
+    button.mousePressed(togglePlay);
+    buttons['play'] = button;
+
+    button = createImg('data/images/pause-24px_white.svg', 'Pause');
+    button.size(w, h);
+    button.position(x, y);    
+    button.mousePressed(togglePlay);
+
+    button.hide();
+    buttons['pause'] = button;
+
+/*
+    x += w * 1.1;
+
+
+    button = createButton('ORBIT');
+    button.size(w, h);
+    button.position(x, y);
+    button.mousePressed(
+        function() {
+            Procedural.orbitTarget(); 
+        }
+    );*/
 }

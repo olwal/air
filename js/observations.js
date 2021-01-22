@@ -13,15 +13,17 @@ class Observations
     static preload(index) //load and return index file 
     {
         let file = index;
-        sensors = loadTable(file, 'csv', 'header', 
+        let sensors = loadTable(file, 'csv', 'header', 
                     function(sensors)
                     {
                         for (let r = 0; r < sensors.getRowCount(); r++)
                             for (let c = 0; c < sensors.getColumnCount(); c++)
                             {
                                 //convert read IDs, longitudes and latitudes to numbers
-                                let num = sensors.getNum(r, c);
+                                
+                                let num = sensors.getNum(r, c);                                
                                 sensors.set(r, c, num);
+                                
                             }
 
                         console.log("Loaded and converted index.");
@@ -32,14 +34,17 @@ class Observations
     }
 
     //default bounding box around SF
-    constructor(longitude, latitude, radius)//west = -122.516370, east = -122.380372, north = 37.817024, south = 37.616488)
+    constructor(name, longitude, latitude, radius = undefined)//west = -122.516370, east = -122.380372, north = 37.817024, south = 37.616488)
     {       
-		this.FEATURE_OPACITY = 0.5;
+        this.name = name;
+        this.FEATURE_WIDTH = 1;
+        this.FEATURE_OPACITY = 0.5;
         this.observations = {};
 		this.data = undefined;
 		this.loaded = false;
 		this.errors = 0;
-		this.notInIndex = 0;
+        this.notInIndex = 0;
+        this.count = 0;
 		this.aqiSum = 0;
         this.aqiAverage = 0;
         this.rgb = [0, 0, 0];
@@ -181,12 +186,13 @@ class Observations
                     }
 
                     //limit sensors to load based on distance to location
+                    if (self.radius > 0 && self.radius != undefined) //skip check if radius has no meaningful value
+                    {
+                        let distance = self.getDistanceM(location[0], location[1]);
 
-                    let distance = self.getDistanceM(location[0], location[1]);
-
-                    if (distance > self.radius)
-						continue;	
-
+                        if (distance > self.radius)
+                            continue;	                        
+                    }
 
                     //limit sensors to load based on this bounding box
                     /*
@@ -198,15 +204,16 @@ class Observations
 					self.count++;
                     self.aqiSum += aqi;
                     
-                    //key-value store: [ aqi, longitude, latitude ]
+                    //key-value store: id => [ aqi, longitude, latitude ]
                     self.observations[id] = [ aqi, location[0], location[1] ]; 
 
                     self.aqiAverage = self.aqiSum/self.count; //update average for all sensors
                     self.rgb = AirQuality.getColor(self.aqiAverage); //update AQI color
                 }
 
-                self.json = Observations.getFeaturesJson(self.observations, self.FEATURE_OPACITY); //generate GeoJSON for overlays
-				self.loaded = true;
+                self.json = Observations.getFeatureCollectionJson(self.name, self.observations, self.FEATURE_OPACITY, self.FEATURE_WIDTH); //generate GeoJSON for overlays
+                
+                self.loaded = true;
 
                 if (self.callbackFunction) //callback when completed
                     self.callbackFunction(self);
@@ -214,13 +221,20 @@ class Observations
         );
     }
 
-    static getFeaturesJson(observations, opacity = 0.5)
+    static getFeatureCollectionJson(name, observations, opacity = 0.5, width = 1)
     {
         let o = {};
         o.type = "FeatureCollection";
-        o.name = "sensors";
+        o.name = name;
         
-        o.features = [];
+        o.features = Observations.getFeaturesJson(name, observations, opacity, width);
+
+        return o;
+    }
+
+    static getFeaturesJson(name, observations, opacity = 0.5, width = 1)
+    {        
+        let features = [];
     
         let ids = Object.keys(observations);
 
@@ -242,22 +256,22 @@ class Observations
                     "coordinates": [longitude, latitude]
                     },
                 "type": "Feature",
-                "id": id,
+                "id": name + id,
                 "properties": {
                     "clipping": "pixel",
                     "image": "_",
                     "width": 0,                    
                     "height": 20 + 150 * min(5000, Math.pow(aqi, 1.5))/5000,
                     "background": colorAqi,       
-                    "padding": 3,
+                    "padding": width,
                     "anchor": "bottom",
                     }
                 };
             
-            o.features.push(feature);
+            features.push(feature);
         }         
 
-        return o;
+        return features;
     }
 
     static getFeaturesJsonClickable(observations, opacity = 0.5)
