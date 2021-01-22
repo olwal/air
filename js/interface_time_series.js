@@ -9,9 +9,6 @@
 var CANVAS_WIDTH = window.innerWidth; //borderless width
 const CONTAINER_P5 = document.getElementById(DIV_P5);
 
-const SENSOR_INDEX = SENSOR_INDEX_FILE;
-let PATH = BINARY_DATA_PATH;
-let BINARY_INDEX = PATH + 'index.txt';
 const LABELS_NAME = FEATURE_COLLECTION_NAME_LANDMARKS;
 let binaries;
 let binariesAggregate;
@@ -313,7 +310,7 @@ function preloadTimeSeries()
 
     if (DATASETS.includes(dataset))
     {
-        PATH = DATASET_PATH + dataset + "/";
+        let PATH = DATASET_PATH + dataset + "/";
         BINARY_INDEX = PATH + 'index.txt';
     }
 
@@ -322,11 +319,11 @@ function preloadTimeSeries()
 
     locations = Features.preload();
 
-    sensors = Observations.preload(SENSOR_INDEX);
+    sensors = Observations.preload(SENSOR_INDEX_FILE);
     binaries = loadStrings(BINARY_INDEX);
 
-    sensorsAggregate = Observations.preload('data/sensors/california_cities_selected_ids.csv');
-    binariesAggregate = loadStrings('data/binary_averages/bay_area_selected/index.txt');
+    sensorsAggregate = Observations.preload(SENSOR_INDEX_AGGREGATE_FILE);
+    binariesAggregate = loadStrings(BINARY_AGGREGATE_INDEX);
 }
 
 function setupTimeSeries()
@@ -569,7 +566,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
 
                 count += 1;
 
-                let data = PATH + b; //complete path for file to load                                      
+                let data = BINARY_DATA_PATH + b; //complete path for file to load                                      
 
                 let o = new Observations(SENSORS_NAME, longitude, latitude, radius); //create a new Observations object, which will load and preprocess the data and overlays
                 o.FEATURE_WIDTH = 1;
@@ -622,9 +619,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
 
                 count += 1;
 
-                let PATH = 'data/binary_averages/bay_area_selected/';
-
-                let data = PATH + b; //complete path for file to load   
+                let data = BINARY_AGGREGATE_DATA_PATH + b; //complete path for file to load   
                 
                 let o = new Observations(AVERAGE_NAME, longitude, latitude); //create a new Observations object, which will load and preprocess the data and overlays
                 o.FEATURE_WIDTH = 4;

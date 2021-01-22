@@ -12,11 +12,11 @@ const DIV_P5 = 'p5';
 const DIV_GL = 'gl';
 const CANVAS_HEIGHT = 80;
 let UPDATE_INTERVAL = 60000;
-const DATA_PATH = 'data/outside_sensors_bay_area.csv'; 
+const DATA_PATH = 'data/sensors/outside_sensors_bay_area.csv'; 
 //const SENSOR_INDEX_FILE = 'data/outside_sensors.csv';// 'data/outside_sensors_bay_area.csv';//'data/outside_sensors.csv';//
 //const SENSOR_INDEX_FILE = 'data/sensors/california_cities_selected.csv';
-const SENSOR_INDEX_FILE = 'data/outside_sensors_bay_area.csv';
-let LANDMARKS_PATH = 'data/california_cities_selected.csv';
+const SENSOR_INDEX_FILE = 'data/sensors/outside_sensors_bay_area.csv';
+let LANDMARKS_PATH = 'data/landmarks/california_cities_selected.csv';
 const TIME_BETWEEN_REQUESTS = 100;
 const TIME_BETWEEN_REQUESTS_FIRST = 1;
 const SHOW_CONTROLS = true;
@@ -26,6 +26,12 @@ const DATASET_PATH = 'data/binary/';
 const BINARY_DATA_PATH = DATASET_PATH + 'bay_area/';
 //const BINARY_DATA_PATH = DATASET_PATH + 'bay_area_selected/';
 const LANDMARKS = [ 'california_cities_selected', 'world_capitals'];
+
+const SENSOR_INDEX_AGGREGATE_FILE = 'data/sensors/california_cities_selected_ids.csv';
+const BINARY_AGGREGATE_DATA_PATH = 'data/binary_averages/bay_area_selected/';
+
+let BINARY_INDEX = BINARY_DATA_PATH + 'index.txt';
+const BINARY_AGGREGATE_INDEX = BINARY_AGGREGATE_DATA_PATH + 'index.txt';
 
 const FEATURE_OPACITY = 0.7; //0-1
 const FEATURE_COLLECTION_NAME = "sensors";
