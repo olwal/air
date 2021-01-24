@@ -39,9 +39,10 @@ const FEATURE_COLLECTION_NAME_LANDMARKS = "cities";
 
 const DEFAULT_LONGITUDE = -122.44198789673219;
 const DEFAULT_LATITUDE = 37.7591527514897;
-const DEFAULT_RADIUS = 10000; //m
+//const DEFAULT_RADIUS = 10000; //m
+const DEFAULT_RADIUS = Math.round(5000 * 1.609); //5 miles in m
 
-let DEFAULT_DISTANCE = 50000;
+let DEFAULT_DISTANCE = 20000;
 
 var ORBIT_AFTER_FOCUS = false;
 
@@ -49,8 +50,8 @@ var MAP_TARGET = {
 //    latitude: 37.512070759717645, longitude: -122.29158348430136,
     latitude: 37.7591527514897, longitude: -122.44198789673219,
     distance: 10000,
-    angle: 45, bearing: 0,
-    animationDuration: 2
+    angle: 15, bearing: 50,
+    animationDuration: 1
  //   angle: 35, bearing: 70
 };
 

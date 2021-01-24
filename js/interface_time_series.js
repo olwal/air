@@ -432,6 +432,20 @@ function setupTimeSeries()
         loadingText = locationName; 
         location = locationName;
 
+        let formStartDate = document.getElementById("start_date").value;
+        let formEndDate = document.getElementById("end_date").value;
+        let formRadius = document.getElementById("radius").value;
+        let formUnit = document.getElementById("unit").value;
+
+        if (isValidDateRange(formStartDate, formEndDate))
+        {
+            START_DATE_STRING = formStartDate;
+            END_DATE_STRING = formEndDate;
+        }
+
+        if (formRadius && formUnit)
+            radius = formRadius * formUnit;
+
         for (o of observations) //cancel any on-going loading
             o.cancel();
 
@@ -465,18 +479,15 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
 
     radius = _radius;
 
-    let start = new Date(start_string);
-    let end = new Date(end_string);    
-
-    if (isValidDate(start) && isValidDate(end))
+    if (isValidDateRange(start_string, end_string))
     {
-        if (start.getTime() >= Date.parse("2020-01-01") && end.getTime() <= Date.parse("2021-01-01"))
-        {
-            START_DATE = start.getTime();
-            END_DATE = end.getTime();          
-            START_DATE_STRING = start_string;
-            END_DATE_STRING = end_string;
-        }
+        let start = new Date(start_string);
+        let end = new Date(end_string);    
+    
+        START_DATE = start.getTime();
+        END_DATE = end.getTime();          
+        START_DATE_STRING = start_string;
+        END_DATE_STRING = end_string;
     }
 
     //if location was specified, try to match it in location table
@@ -516,9 +527,6 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
         addLocation(location, longitude, latitude, 2);
     }
 
-    locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
-    Procedural.addOverlay(locationLabels);
-
     loadingText = location;   
 
     distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
@@ -540,7 +548,9 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
     document.getElementById("location").value = location;
     document.getElementById("start_date").value = START_DATE_STRING;
     document.getElementById("end_date").value = END_DATE_STRING;
-    document.getElementById("radius").value = radius;
+    
+    let unit = float(document.getElementById("unit").value);
+    document.getElementById("radius").value = Math.round(radius / unit);
 
     let count = 0;
 
@@ -553,6 +563,9 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
         MAP_TARGET.latitude = latitude;    
         //Procedural.focusOnLocation(MAP_TARGET);
     }
+
+    locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
+    Procedural.addOverlay(locationLabels);
 
     window.setTimeout(
         function()
@@ -585,7 +598,10 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                                     if (nLoaded == 1)
                                     {
                                         if (!initialized)
-                                            Procedural.focusOnLocation(MAP_TARGET);                                          
+                                        {
+                                            //Procedural.displayLocation(MAP_TARGET);
+                                            Procedural.focusOnLocation(MAP_TARGET);
+                                        }
                                        setObservation(0, observations);
                                     }
 
@@ -594,7 +610,8 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                                     {
                                         setObservations(0);
                                         initialized = true;
-                                        
+                                        Procedural.focusOnLocation(MAP_TARGET);
+
                                         if (autoplay)
                                             setPlay(true);
                                     }    
@@ -639,6 +656,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                                     {
                                         setObservations(0);
                                         initialized = true;
+                                        Procedural.focusOnLocation(MAP_TARGET);
                                         
                                         if (autoplay)
                                             setPlay(true);
@@ -710,7 +728,7 @@ function keyPressed() //handle keyboard presses
             Procedural.orbitTarget(); //orbit around the current location
             break;
 
-        //next observation
+        //previous observation
         case '{': 
         case 'N': 
         case '<':   
@@ -721,7 +739,7 @@ function keyPressed() //handle keyboard presses
             changeObservation(-delta);
             return false;
 
-        //previous observation
+        //next observation
         case '}': 
         case '>': 
         case 'M': 
@@ -795,8 +813,17 @@ function drawTimeSeries()
 
     let i = 0;
 
+    //update timestamp and advance observation if playing
+    if (millis() - timestamp > UPDATE_MS)
+    {
+        if (play)
+            changeObservation();
+
+        timestamp = millis();
+    }
+
     //draw month names for the first and last observations, as well as all months that start inbetween
-    stroke(125);
+    fill(125);
     textSize(CANVAS_HEIGHT/10);
     for (let j = 0; j < observations.length; j++)
     {       
@@ -832,6 +859,7 @@ function drawTimeSeries()
         }
     }
 
+/*
     if (showHelp)
     {
         textSize(CANVAS_HEIGHT/6);
@@ -839,7 +867,7 @@ function drawTimeSeries()
         //text("[P]LAY/PAUSE   [O]RBIT   [F]OCUS   [L]ABELS   olwal.com | 2021 | 00.02 ", CANVAS_WIDTH, CANVAS_HEIGHT/10 );
         text("[P]LAY/PAUSE   [O]RBIT  <" + mouseX + "," + mouseY + "> DPR: " + window.devicePixelRatio.toFixed(2) + "   ", CANVAS_WIDTH, CANVAS_HEIGHT/10);
     }
-
+*/
     //draw a graph of the average values for all observations, and cursor for current
     for (o of observations)
     {
@@ -882,6 +910,26 @@ function drawTimeSeries()
     }
     strokeWeight(1);
     noStroke();
+
+    if (showHelp)
+    {
+        fill(255);
+        let ts = CANVAS_HEIGHT/7;
+        let tdy = ts * 1.2;
+        let tx = ts * 5;
+        let ty = 0;
+        textSize(ts);
+        textAlign(LEFT)
+        text("p PLAY/PAUSE   r REWIND   x SPEED UP   X SLOW DOWN   ", tx, ty += tdy);
+        text("[ n , STEP <-                   ] m . STEP ->", tx, ty += tdy);
+        text("{ N < STEP 10X <---             } M > STEP --->", tx, ty += tdy);
+
+        text("o ORBIT   l LABELS   g GRAPH   f FOCUS ON FEATURE", tx, ty += tdy);      
+
+        fill(0, 100);
+        rect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+        return;
+    }
 
     fill(255);
 
@@ -938,8 +986,8 @@ function drawTimeSeries()
     //    text(oc.count + " sensor" + (oc.count == 1 ? "" : "s"), centerX + dw + 4 * pad, ty + pad);    
         textAlign(RIGHT)
         text(loadingText, CANVAS_WIDTH - pad/2, CANVAS_HEIGHT/10 + pad);
-        text(oc.count + " sensor" + (oc.count == 1 ? "" : "s") + " (" + radius/1000 + " km)", CANVAS_WIDTH - pad/2, 2.2 * CANVAS_HEIGHT/10 + pad);    
-
+//        text(oc.count + " sensor" + (oc.count == 1 ? "" : "s") + " (" + radius/1000 + " km)", CANVAS_WIDTH - pad/2, 2.2 * CANVAS_HEIGHT/10 + pad);    
+        text(oc.count + " sensor" + (oc.count == 1 ? "" : "s"), CANVAS_WIDTH - pad/2, 2.2 * CANVAS_HEIGHT/10 + pad);    
     }
 
     textSize(ts * 2/3);
@@ -948,14 +996,7 @@ function drawTimeSeries()
     let yw = textWidth("2020");
     text(oc.year_string, centerX - dw/2 - yw - pad * 2, ty + pad);    
 
-    //update timestamp and advance observation if playing
-    if (millis() - timestamp > UPDATE_MS)
-    {
-        if (play)
-            changeObservation();
 
-        timestamp = millis();
-    }
 }
 
 function setObservation(index, observations) //set current observation
@@ -1060,6 +1101,16 @@ function windowResized() //adjust canvas size when window is resized
 function isValidDate(d)  //check if data is valid
 {
     return d instanceof Date && !isNaN(d);
+}
+
+function isValidDateRange(start_string, end_string)
+{
+    let start = new Date(start_string);
+    let end = new Date(end_string);    
+
+    return (isValidDate(start) && isValidDate(end) && 
+        start.getTime() >= Date.parse("2020-01-01") && end.getTime() <= Date.parse("2021-01-01") && 
+        start < end);
 }
 
 function togglePlay()
