@@ -254,7 +254,7 @@ function drawLive()
 
     let nValues = air.sensorValues.length;
 
-    if (air.updatingSensors) //if updating, show percentage and progress bar
+    if (air.updatingSensors && !air.initialized) //if updating, show percentage and progress bar
     {
         fraction = air.nSensorsUpdated/nSensors;
         let ts = CANVAS_HEIGHT/6; //smaller font size to fit two lines
