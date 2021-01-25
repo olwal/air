@@ -57,6 +57,8 @@ let timestampLive;
 let SENSORS_NAME = "$";
 let AVERAGE_NAME = "%";
 
+let air;
+
 function preload()
 {
     let params = getURLParams();
@@ -99,11 +101,13 @@ function draw()
         drawTimeSeries();
 }
 
-let air;
-
 function preloadLive() 
 {
-    air = new ObservationsRemote();
+    let longitude = MAP_TARGET.longitude;
+    let latitude = MAP_TARGET.latitude;
+    let radius = DEFAULT_RADIUS;
+
+    air = new ObservationsRemote(longitude, latitude, radius);
     air.preload();
     locations = Features.preload();
 }
@@ -111,6 +115,40 @@ function preloadLive()
 function digit(number)
 {
     return ('0' + number).slice(-2);
+}
+
+function submitFormData(location, radius, start_date, end_date)
+{
+    let long = NaN;
+    let lat = NaN;
+    let distance = NaN
+    let doFocus = true;
+
+    if (showLive)
+    {
+        let longlat = getLocationFromTable(location, MAP_TARGET.longitude, MAP_TARGET.latitude);
+        longitude = longlat[0];
+        latitude = longlat[1];
+
+        MAP_TARGET.longitude = longitude;
+        MAP_TARGET.latitude = latitude;
+
+        let formRadius = document.getElementById("radius").value;
+        let formUnit = document.getElementById("unit").value;
+
+        if (formRadius && formUnit)
+            radius = formRadius * formUnit;
+
+        loadingText = location;
+
+        document.getElementById("start_date").value = year() + "-" + digit(month()) + "-" + digit(day());
+        document.getElementById("end_date").value = year() + "-" + digit(month()) + "-" + digit(day());
+    
+        Procedural.focusOnLocation(MAP_TARGET);
+        air.changeLocation(longitude, latitude, radius);
+    }
+    else
+        loadData(start_date, end_date, long, lat, radius, distance, location, doFocus);
 }
 
 function setupLive() 
@@ -133,6 +171,9 @@ function setupLive()
 
     timestampLive = year() + " " + digit(month()) + " " + digit(day()) + " "  + digit(hour()) + ":"  + digit(minute()); //zero-padded YYYY-MM-DD hh:mm
 
+    document.getElementById("start_date").value = year() + "-" + digit(month()) + "-" + digit(day());
+    document.getElementById("end_date").value = year() + "-" + digit(month()) + "-" + digit(day());
+
     //callback for receiving updated sensor data
     air.onUpdateCallback = function(sensors) 
     {       
@@ -140,7 +181,7 @@ function setupLive()
         {
             timestampLive = year() + " " + digit(month()) + " " + digit(day()) + " "  + digit(hour()) + ":"  + digit(minute()); //zero-padded YYYY-MM-DD hh:mm
 
-            Procedural.focusOnLocation(MAP_TARGET); //focus on target position, which will also trigger a camera adjustment
+            //Procedural.focusOnLocation(MAP_TARGET); //focus on target position, which will also trigger a camera adjustment
 
             Procedural.onFeatureClicked = function (id) //clicking on a feature 
             {
@@ -161,20 +202,43 @@ function setupLive()
 
         //generate and add sensor overlays
         // let o = Features.buildFromData(callbackData, FEATURE_COLLECTION_NAME);
-        let o = Observations.getFeaturesJson(self.observations, FEATURE_OPACITY);
+
+        let o = Observations.getFeatureCollectionJson(SENSORS_NAME, self.observations, FEATURE_OPACITY, 3);
         Procedural.addOverlay(o);
 
         lastUpdated = millis();
     }
+
+    Procedural.focusOnLocation(MAP_TARGET);
+}
+
+function drawTime(hours, minutes, r, colorDial, colorHour, colorMinute)
+{
+    stroke(colorDial);
+    noFill();
+    ellipse(0, 0, r);
+
+    ha = -2 * Math.PI * ( (hours + minutes/60 % 12)/12 ); 
+    ha += -Math.PI/2
+    
+    ma = -2 * Math.PI * minutes/60;
+    ma += -Math.PI/2;
+
+    stroke(colorHour);
+    line(0, 0, -0.25 * r * Math.cos(ha), 0.25 * r * Math.sin(ha));
+
+    stroke(colorMinute);
+    line(0, 0, -0.4 * r * Math.cos(ma), 0.4 * r * Math.sin(ma));
 }
 
 function drawLive() 
 {
     background(BACKGROUND_COLOR);
 
-    let textString = "Preparing data...";
+    let hour_string = "Preparing data...";
     let i = 0;
     let keys = Object.keys(air.observations);
+    let nSensors = keys.length;
 
     noStroke();
     fill(255);
@@ -188,9 +252,11 @@ function drawLive()
     fill(255);
     let pad = 10;
 
+    let nValues = air.sensorValues.length;
+
     if (air.updatingSensors) //if updating, show percentage and progress bar
     {
-        fraction = air.nSensorsUpdated/air.nSensors;
+        fraction = air.nSensorsUpdated/nSensors;
         let ts = CANVAS_HEIGHT/6; //smaller font size to fit two lines
         textSize(ts);
     
@@ -201,14 +267,16 @@ function drawLive()
     }
     else  //if not updating, show seconds since last update
     {
-        if (lastUpdated >= 0 && air.updateInterval >= 0)
+/*        if (lastUpdated >= 0 && air.updateInterval >= 0)
             textString = ((millis() - lastUpdated)/1000).toFixed(0) + "s ago";
         else
-            textString = timestampLive.slice(-5); //get hours + minutes
-
+*/           hour_string = timestampLive.slice(-5); //get hours + minutes
+        let year_string = timestampLive.slice(0, 4);
         //display current date
         let month = int(timestampLive.slice(5, 7))
-        let date_string = Observations.getMonth(month) + " " + timestampLive.slice(7, 10)
+        let date_string = Observations.getMonth(month) + " " + timestampLive.slice(8, 10)
+
+        //display the current date in center
         text(date_string, centerX - dw/2, ty + pad);
 
         //smaller text for year and time
@@ -217,40 +285,91 @@ function drawLive()
         //hour, left-centered to the right
         textAlign(LEFT, CENTER);
         fill(200);
-        text(textString, centerX + dw/2 + pad, ty + pad);    
+//        text(hour_string, centerX + dw/2 + pad, ty + pad);    
+
+        push();
+            translate(centerX + dw/2 + 3 * pad, ty + pad);
+
+            let r = pad * 3;
+
+            let colorDial = color(100);
+            let colorHour = color(100);
+            let colorMinute = color(100);
+            drawTime(hour(), minute(), r, colorDial, colorHour, colorMinute);
+
+            let hours = int(timestampLive.slice(-5, -3));
+            let minutes = int(timestampLive.slice(-2));
+
+            colorDial = color(125);
+            colorHour = color(180);
+            colorMinute = color(200, 200, 100);
+            drawTime(hours, minutes, r, colorDial, colorHour, colorMinute);
+
+        pop();
+
         
+        textSize(CANVAS_HEIGHT/10);
         textAlign(RIGHT)
-        text(keys.length + " sensor" + (keys.length == 1 ? "" : "s"), CANVAS_WIDTH - pad, CANVAS_HEIGHT/10 + pad);
+        text(loadingText, CANVAS_WIDTH - pad/2, CANVAS_HEIGHT/10 + pad);
+        text(nValues + " sensor" + (nValues == 1 ? "" : "s"), CANVAS_WIDTH - pad/2, 2.2 * CANVAS_HEIGHT/10 + pad);    
 
-        let year_string = timestampLive.slice(0, 4);
-
+        textSize(ts * 2/3);
         textAlign(LEFT);
         //year, right-centered to the left
-        let yw = textWidth(year_string);
+        let yw = textWidth("2020");
         text(year_string, centerX - dw/2 - yw - pad * 2, ty + pad);   
     }
 
     //draw a graph of the average values for all observations, and cursor for current
-    for (id of keys)
+    for (v of air.sensorValues)
     {
-        let aqi = air.observations[id][0];
-        let rgb = air.observations[id][3];
+        let id = v[0];
+        let aqi = v[1];
+        let rgb = v[2];
+        
         if (!rgb)
             rgb = [ 0, 0, 0 ];
 
         let maxHeight = CANVAS_HEIGHT/2;
-        let x = CANVAS_WIDTH * i/(keys.length - 1);
-        let y = maxHeight * min(aqi, 600)/600;
+        let x = CANVAS_WIDTH * i/(nValues - 1);
+        let y = maxHeight * min(50 + aqi, 600)/600;
+
+//        console.log(y + " " + rgb[0]);
 
         if (showGraph)
         {
+//            console.log(y + " " + rgb[0]);
             noStroke();
             fill(rgb[0], rgb[1], rgb[2]); //colors based on precomputed AQI color
-            rect(x, maxHeight * 2, CANVAS_WIDTH/(keys.length - 1), -y);
+            rect(x, maxHeight * 2, CANVAS_WIDTH/(nValues - 1), -y);
         }
 
         i += 1;
     }
+
+    if (air.sensorValues.length == 0)
+    {
+        noStroke();
+        let loadingColor  = color(150, 150, 150);
+        stroke(loadingColor);
+        fill(loadingColor); //colors based on precomputed AQI color
+
+        aqi = 20;
+
+        let maxHeight = CANVAS_HEIGHT/2;
+        let y = 5;
+
+        for (let i = 0; i < air.nSensorsUpdated; i++)
+        {
+            let x = CANVAS_WIDTH * i/(nSensors - 1);
+            rect(x, maxHeight * 2, CANVAS_WIDTH/(nSensors - 1), -y);
+        }
+
+        print(nSensors);
+    }
+
+
+
 }
 
 function drawLiveClassic() 
@@ -468,27 +587,10 @@ function addLocation(name, longitude, latitude, show)
     row.setNum('show', show);
 }
 
-function loadData(start_string, end_string, longitude, latitude, _radius, distance, location, doFocus = false)
+function getLocationFromTable(location, defaultLongitude = undefined, defaultLatitude = undefined)
 {
-    observations = [];
-    observationsAggregate = [];
-
-    current = 0;
-    nLoaded = 0;
-    nLoadedAggregate = 0;
-
-    radius = _radius;
-
-    if (isValidDateRange(start_string, end_string))
-    {
-        let start = new Date(start_string);
-        let end = new Date(end_string);    
-    
-        START_DATE = start.getTime();
-        END_DATE = end.getTime();          
-        START_DATE_STRING = start_string;
-        END_DATE_STRING = end_string;
-    }
+    let longitude = defaultLongitude;
+    let latitude = defaultLatitude; 
 
     //if location was specified, try to match it in location table
     if (location != undefined)
@@ -514,6 +616,35 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
             longitude = parseFloat(row.get("longitude"));
         }
     }
+
+    return [ longitude, latitude ];
+}
+
+function loadData(start_string, end_string, longitude, latitude, _radius, distance, location, doFocus = false)
+{
+    observations = [];
+    observationsAggregate = [];
+
+    current = 0;
+    nLoaded = 0;
+    nLoadedAggregate = 0;
+
+    radius = _radius;
+
+    if (isValidDateRange(start_string, end_string))
+    {
+        let start = new Date(start_string);
+        let end = new Date(end_string);    
+    
+        START_DATE = start.getTime();
+        END_DATE = end.getTime();          
+        START_DATE_STRING = start_string;
+        END_DATE_STRING = end_string;
+    }
+
+    let longlat = getLocationFromTable(location, longitude, latitude);
+    longitude = longlat[0];
+    latitude = longlat[1];
 
     //check if URL parameters were valid, otherwise use default value
     longitude = isNaN(longitude) ? DEFAULT_LONGITUDE : longitude;
@@ -873,13 +1004,17 @@ function drawTimeSeries()
     {
         let maxHeight = CANVAS_HEIGHT/2;
         let x = CANVAS_WIDTH * i/(observations.length - 1);
-        let y = maxHeight * min(o.aqiAverage, 600)/600;
+        let y = maxHeight * min(50 + o.aqiAverage, 600)/600;
         let cursorWidth = CANVAS_WIDTH/(observations.length - 1);
 
         if (showGraph)
         {
+
             noStroke();
-            fill(o.rgb[0], o.rgb[1], o.rgb[2]); //colors based on precomputed AQI color
+            if (o.rgb[0] == 0 && o.rgb[1] == 0 && o.rgb[2] == 0) //not loaded yet, use background instead of black
+                fill(BACKGROUND_COLOR);
+            else
+                fill(o.rgb[0], o.rgb[1], o.rgb[2]); //colors based on precomputed AQI color
             rect(x, maxHeight * 2, cursorWidth, -y);
         }
 
@@ -978,7 +1113,28 @@ function drawTimeSeries()
     //hour, left-centered to the right
     textAlign(LEFT, CENTER);
     fill(200);
-    text(oc.hour_string + ":00", centerX + dw/2 + pad, ty + pad);    
+//    text(oc.hour_string + ":00", centerX + dw/2 + pad, ty + pad);    
+
+    push();
+        translate(centerX + dw/2 + 3 * pad, ty + pad);
+
+        let r = pad * 3;
+
+        let hours = int(oc.hour_string);
+        let minutes = 0;
+
+        let pm = hours >= 12;
+
+        let h = (hours + 20) % 24;
+        let v = Math.sin(2 * PI * h/24);
+        //let c = color(v * 150 + 100, v * 250 + 5, 0);
+        let c = color(v * 50 + 150);
+        drawTime(hours, minutes, r, c, c, c);
+
+        fill(c);
+        text(pm ? "PM" : "AM", r * 1.1, 0);
+
+    pop();
     
     if (oc.count && !showHelp)
     {

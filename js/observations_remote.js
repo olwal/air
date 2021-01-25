@@ -6,10 +6,13 @@
 
 class ObservationsRemote 
 {
-    constructor()
+    constructor(longitude, latitude, radius)
     {
         this.latitudes = [ 10000, -10000 ]; //min, max
         this.longitudes = [ 10000, -10000 ];  //min, max
+
+        //position and radius (m)
+        this.setLocation(longitude, latitude, radius)
 
         this.selected = undefined; //tracking clicked object
 
@@ -17,7 +20,22 @@ class ObservationsRemote
         this.TIME_BETWEEN_REQUESTS_FIRST = 1; //the first round should update fast
         this.TIME_BETWEEN_REQUESTS = 10; //slower updates when we refresh the data
 
+        //static fields are not yet supported in all browswer, thus setting these up as member fields
+        this.COLUMN_ID = "id";
+        this.COLUMN_LONGITUDE = "longitude";
+        this.COLUMN_LATITUDE = "latitude";
+        this.COLUMN_AQI = "aqi";
+        this.COLUMN_UPDATED = "updated";
+        this.COLUMN_TEMPERATURE = "temp_f";
+        this.COLUMN_HUMIDITY = "humidity";
+        this.COLUMN_PRESSURE = "pressure";
+        this.COLUMN_LABEL = "label";
+        this.COLUMN_COLOR = "color";
+        this.COLUMN_VALUE = this.COLUMN_AQI;
+
+        this.sensorValues = []; //sorted array of updated values
         this.nSensorsUpdated = 0; //track updated sensors
+        this.nSensorsSkipped = 0; //track skipped sensors (due to distance)
         this.updatingSensors = false; //flag whether we are currently updating
         this.initialized = false; //has there been a first update of all sensor data
     }
@@ -26,7 +44,6 @@ class ObservationsRemote
     {
         self = this;
         this.sensors = loadTable(DATA_PATH, 'csv', 'header');   
-
         this.observations = {};
     }
 
@@ -36,9 +53,9 @@ class ObservationsRemote
 
         for (let r = 0; r < self.sensors.getRowCount(); r++)
         {
-            let id = self.sensors.getNum(r, "id");
-            let longitude = self.sensors.getNum(r, "longitude");
-            let latitude = self.sensors.getNum(r, "latitude");
+            let id = self.sensors.getNum(r, this.COLUMN_ID);
+            let longitude = self.sensors.getNum(r, this.COLUMN_LONGITUDE);
+            let latitude = self.sensors.getNum(r, this.COLUMN_LATITUDE);
             let aqi = -1;
 
             //store min, max for longitude and latitude
@@ -54,13 +71,18 @@ class ObservationsRemote
             if (latitude > this.latitudes[1])
                 this.latitudes[1] = latitude;
 
+            //convert read IDs, longitudes and latitudes to numbers
+            self.sensors.set(r, this.COLUMN_ID, id);
+            self.sensors.set(r, this.COLUMN_LONGITUDE, longitude);
+            self.sensors.set(r, this.COLUMN_LATITUDE, latitude);
+
+            let distance = this.getDistanceM(longitude, latitude);
+            if (distance > this.radius)
+                continue;
+
             //key-value store: [ aqi, longitude, latitude ]
             self.observations[id] = [ aqi, longitude, latitude ];
 
-            //convert read IDs, longitudes and latitudes to numbers
-            self.sensors.set(r, "id", id);
-            self.sensors.set(r, "longitude", longitude);
-            self.sensors.set(r, "latitude", latitude);
 /*
             for (let c = 0; c < self.sensors.getColumnCount(); c++)
             {
@@ -77,18 +99,20 @@ class ObservationsRemote
         };
 
         //add columns to table for retrieved data
-        self.sensors.addColumn('aqi');
-        self.sensors.addColumn('temp_f');
-        self.sensors.addColumn('pressure');
-        self.sensors.addColumn('humidity');
-        self.sensors.addColumn('label');
+        self.sensors.addColumn(self.COLUMN_AQI);
+        self.sensors.addColumn(self.COLUMN_TEMPERATURE);
+        self.sensors.addColumn(self.COLUMN_PRESSURE);
+        self.sensors.addColumn(self.COLUMN_HUMIDITY);
+        self.sensors.addColumn(self.COLUMN_LABEL);
         //add column for calculated color
-        self.sensors.addColumn('color'); 
+        self.sensors.addColumn(self.COLUMN_COLOR); 
+        self.sensors.addColumn(self.COLUMN_UPDATED);         
 
         if (limitSensorsToLoad > 0) //loading fewer sensors for debug/test
-            self.nSensors = limitSensorsToLoad
+            self.nSensors = limitSensorsToLoad;
         else //otherwise (default) load all sensors
-            self.nSensors = self.sensors.rows.length;
+            //self.nSensors = self.sensors.rows.length;
+            self.nSensors = self.sensors.rows.length; 
 
         self.fetchData();
     }
@@ -117,6 +141,69 @@ class ObservationsRemote
         }
     }
 
+    setLocation(longitude, latitude, radius)
+    {
+        this.longitude = longitude;
+        this.latitude = latitude;
+        this.radius = radius;        
+    }
+
+    changeLocation(longitude, latitude, radius)
+    {
+        this.setLocation(longitude, latitude, radius);
+
+        this.selected = undefined; //tracking clicked object
+
+        this.sensorValues = []; //sorted array of updated values
+        this.nSensorsUpdated = 0; //track updated sensors
+        this.nSensorsSkipped = 0; //track skipped sensors (due to distance)
+        this.updatingSensors = false; //flag whether we are currently updating
+        this.initialized = false; //has there been a first update of all sensor data
+        this.observations = {};     
+
+        this.latitudes = [ 10000, -10000 ]; //min, max
+        this.longitudes = [ 10000, -10000 ];  //min, max
+
+        for (let r = 0; r < self.sensors.getRowCount(); r++)
+        {
+            let id = self.sensors.getNum(r, this.COLUMN_ID);
+            let sensorLongitude = self.sensors.getNum(r, this.COLUMN_LONGITUDE);
+            let sensorLatitude = self.sensors.getNum(r, this.COLUMN_LATITUDE);
+            let aqi = -1;
+
+            //store min, max for longitude and latitude
+            if (longitude < this.longitudes[0])
+                this.longitudes[0] = longitude;
+
+            if (longitude > this.longitudes[1])
+                this.longitudes[1] = longitude;
+            
+            if (latitude < this.latitudes[0])
+                this.latitudes[0] = latitude;
+            
+            if (latitude > this.latitudes[1])
+                this.latitudes[1] = latitude;
+
+            let distance = this.getDistanceM(sensorLongitude, sensorLatitude);
+            if (distance > this.radius)
+                continue;
+
+            //key-value store: [ aqi, longitude, latitude ]
+            this.observations[id] = [ aqi, sensorLongitude, sensorLatitude ];
+        }
+
+        console.log( "sensors: " + Object.keys(air.observations).length );
+
+        this.fetchData();
+    }
+
+    preload() //load table with sensor IDs and locations
+    {
+        self = this;
+        this.sensors = loadTable(DATA_PATH, 'csv', 'header');   
+        this.observations = {};        
+    }
+
     //fetch data from remote server
     fetchData() 
     {         
@@ -124,6 +211,8 @@ class ObservationsRemote
             return;
 
         self.updatingSensors = true; //flag on-going update
+        self.clearUpdates(self.sensors, "updated");
+
         console.log("Starting update...");
         for (var i = 0; i < self.nSensors; i++)
         {
@@ -132,17 +221,29 @@ class ObservationsRemote
             //start each request slightly offset to avoid many simultaneous requests
             timeout *= i;
 
-            let sensorId = self.sensors.rows[i].arr[0]; //id
+            let sensorId        = self.sensors.rows[i].arr[0]; //id
+            let sensorLongitude = self.sensors.rows[i].arr[1]; //longitude
+            let sensorLatitude  = self.sensors.rows[i].arr[2]; //latitude
+
+            let distance = self.getDistanceM(sensorLongitude ,sensorLatitude);
+            if (distance > self.radius)
+            {
+                self.nSensorsSkipped += 1;
+                continue;
+            }
+
             let url = "https://www.purpleair.com/json?show=" + sensorId;
 
             setTimeout(function() { 
-                try{
-                 loadJSON(url, self.onFetched, //callback upon successful result
-                    function (response) { //onError
-                        console.log("fetchData: loadJSON");
-                        console.log(response);
-                        self.onFetched(undefined); //call with undefined if failed
-                    }
+                try 
+                {
+                    loadJSON(url, self.onFetched, //callback upon successful result
+                        function (response) 
+                        { //onError
+                            console.log("fetchData: loadJSON");
+                            console.log(response);
+                            self.onFetched(undefined); //call with undefined if failed
+                        }
                     )
                 }
                 catch(err)
@@ -182,13 +283,14 @@ class ObservationsRemote
             let rgb = AirQuality.getColor(aqi);
             let color = "rgba(" + rgb[0] + "," + rgb[1] + "," + rgb[2] + "," + self.FEATURE_OPACITY + ")";
 
-            self.sensors.set(row, "aqi", aqi);
-            self.sensors.set(row, "color", color);
-            self.sensors.set(row, "label", results.Label);
-            self.sensors.set(row, "temp_f", results.temp_f);
-            self.sensors.set(row, "pressure", results.pressure);
-            self.sensors.set(row, "humidity", results.humidity);            
-
+            self.sensors.set(row, self.COLUMN_AQI, aqi);
+            self.sensors.set(row, self.COLUMN_COLOR, rgb);
+            self.sensors.set(row, self.COLUMN_LABEL, results.Label);
+            self.sensors.set(row, self.COLUMN_TEMPERATURE, results.temp_f);
+            self.sensors.set(row, self.COLUMN_PRESSURE, results.pressure);
+            self.sensors.set(row, self.COLUMN_HUMIDITY, results.humidity);        
+            self.sensors.set(row, self.COLUMN_UPDATED, true);        
+            
             let values = self.observations[id];
             self.observations[id] = [ aqi, values[1], values[2], rgb ];
 
@@ -196,12 +298,49 @@ class ObservationsRemote
         }
 
         //check if all sensors have been processed
-        if (self.nSensorsUpdated >= self.nSensors)
+        if ((self.nSensorsUpdated + self.nSensorsSkipped) >= self.nSensors)
         {
+            console.log(
+                self.nSensorsUpdated + " " + self.nSensorsSkipped
+            );
+    
             self.updatingSensors = false;
+            self.sensorValues = self.getUpdatedValues(self.sensors, 
+                self.COLUMN_ID, self.COLUMN_UPDATED, self.COLUMN_VALUE, self.COLUMN_COLOR);
             self.nSensorsUpdated = 0;
+            self.nSensorsSkipped = 0;
             self.onUpdateCompleted();
         }
+    }
+
+    clearUpdates(table, columnUpdated)
+    {   
+        for (let r = 0; r < table.getRowCount(); r++)
+            table.set(r, columnUpdated, false);
+    }
+
+    getUpdatedValues(table, columnId, columnUpdated, columnValue, columnColor)
+    {
+        let values = [];
+
+        for (let r = 0; r < table.getRowCount(); r++)
+        {
+            let updated = table.get(r, columnUpdated);
+            if (!updated)
+                continue;
+
+            let value = [ table.getNum(r, columnId), 
+                          table.getNum(r, columnValue),
+                          table.get(r, columnColor)
+                        ];
+            values.push(value); 
+        }
+
+        return values.sort(
+            function(a, b) {
+                return a[1] > b[1];
+            }
+        ); 
     }
 
     //callback for when fetch requests have been completed
@@ -220,7 +359,7 @@ class ObservationsRemote
         window.setInterval( 
             function() {                
                 //don't start if actively updating
-                if (self.updatingSensors || self.nSensorsUpdated > 0)
+                if (self.updatingSensors || (self.nSensorsUpdated + self.nSensorsSkipped) > 0)
                     return;
     
                 self.fetchData();
@@ -234,7 +373,7 @@ class ObservationsRemote
     //returns the row in sensors for given id
     findRow(id)
     {
-        return self.binarySearch(self.sensors.getColumn("id"), id);
+        return self.binarySearch(self.sensors.getColumn(self.COLUMN_ID), id);
     }
 
     //classic binary search for value in sorted array of values
@@ -258,4 +397,29 @@ class ObservationsRemote
            
         return -1; 
     }  
+
+    getDistanceM(longitude1, latitude1, longitude2 = undefined, latitude2 = undefined)
+    {
+        if (longitude2 == undefined)
+            longitude2 = this.longitude;
+
+        if (latitude2 == undefined)
+            latitude2 = this.latitude;
+                
+        let R = 6371; //earth's radius (km)
+
+        let PI_180 = PI/180;
+
+        let deltaLatitude = (latitude2-latitude1) * PI_180;
+        let deltaLongitude = (longitude2-longitude1) * PI_180;
+
+        let a = pow(sin(deltaLatitude/2), 2) +
+                cos(latitude1 * PI_180) * cos(latitude2 * (PI_180)) *
+                pow(sin(deltaLongitude/2), 2);;
+
+        let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+        let d = R * c;
+        
+        return d*1000;
+    }    
 }

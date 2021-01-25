@@ -64,12 +64,7 @@
 
             console.log(start_date + " " + end_date + " " + location + " " + radius + " meters, multiplier (km/miles) " + unit);
 
-            let long = NaN;
-            let lat = NaN;
-            let distance = NaN
-            let doFocus = true;
-
-            loadData(start_date, end_date, long, lat, radius, distance, location, doFocus);
+            submitFormData(location, radius, start_date, end_date);
 
             return false;
           }
@@ -154,8 +149,8 @@
     </style>
 
     <body>
-        <div id ="p5"></div>                
-        <div id ="gl"></div>
+      <div id ="p5"></div>                
+      <div id ="gl"></div>
 
             <!-- form action="/air/" target="_self" method="get" -->
             <form onsubmit="reloadData(event);">
@@ -261,7 +256,7 @@
     <script type="text/javascript" src="js/features.js"></script>
     <script type="text/javascript" src="js/observations.js"></script>
     <script type="text/javascript" src="js/observations_remote.js"></script>
-    <script type="text/javascript" src="js/interface_time_series.js"></script>
+    <script type="text/javascript" src="js/application.js"></script>
 
 </html>
 
