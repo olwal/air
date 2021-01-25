@@ -1131,6 +1131,7 @@ function drawTimeSeries()
         let c = color(v * 50 + 150);
         drawTime(hours, minutes, r, c, c, c);
 
+        noStroke();
         fill(c);
         text(pm ? "PM" : "AM", r * 1.1, 0);
 
