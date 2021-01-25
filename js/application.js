@@ -339,7 +339,7 @@ function drawLive()
         if (showGraph)
         {
 //            console.log(y + " " + rgb[0]);
-            noStroke();
+            stroke(rgb[0], rgb[1], rgb[2]);
             fill(rgb[0], rgb[1], rgb[2]); //colors based on precomputed AQI color
             rect(x, maxHeight * 2, CANVAS_WIDTH/(nValues - 1), -y);
         }
@@ -349,8 +349,7 @@ function drawLive()
 
     if (air.sensorValues.length == 0)
     {
-        noStroke();
-        let loadingColor  = color(150, 150, 150);
+        let loadingColor = color(150, 150, 150);
         stroke(loadingColor);
         fill(loadingColor); //colors based on precomputed AQI color
 
@@ -1009,12 +1008,16 @@ function drawTimeSeries()
 
         if (showGraph)
         {
-
-            noStroke();
             if (o.rgb[0] == 0 && o.rgb[1] == 0 && o.rgb[2] == 0) //not loaded yet, use background instead of black
+            {
+                stroke(BACKGROUND_COLOR);
                 fill(BACKGROUND_COLOR);
+            }
             else
-                fill(o.rgb[0], o.rgb[1], o.rgb[2]); //colors based on precomputed AQI color
+            {
+                stroke(o.rgb[0], o.rgb[1], o.rgb[2]); //colors based on precomputed AQI color
+                fill(o.rgb[0], o.rgb[1], o.rgb[2]); 
+            }
             rect(x, maxHeight * 2, cursorWidth, -y);
         }
 
