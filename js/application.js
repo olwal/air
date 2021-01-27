@@ -740,6 +740,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
             print("loaded from cache");
             observations = oCached;
             nLoaded = observations.length;
+            setObservations(0);
             updateForm(location);
             locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
             Procedural.addOverlay(locationLabels);
@@ -1053,8 +1054,10 @@ function drawTimeSeries()
 
     let i = 0;
 
+    let deltaT = millis() - timestamp;
+
     //update timestamp and advance observation if playing
-    if (millis() - timestamp > UPDATE_MS)
+    if (deltaT > UPDATE_MS)
     {
         if (play)
             changeObservation();
@@ -1236,7 +1239,7 @@ function drawTimeSeries()
         let r = pad * 3;
 
         let hours = int(oc.hour_string);
-        let minutes = 0;
+        let minutes = UPDATE_MS < 400 ? 0 : 60 * (deltaT / UPDATE_MS);
 
         let pm = hours >= 12;
 
@@ -1355,6 +1358,7 @@ function mousePressed() //update observation based on timeline click
     }
 }
 
+/*
 function mouseReleased() //update observation based on timeline click
 {
     if (mouseY > CANVAS_HEIGHT/2 && mouseY < CANVAS_HEIGHT)
@@ -1364,6 +1368,7 @@ function mouseReleased() //update observation based on timeline click
 
     console.log(mouseX + " " + mouseY);
 }
+*/
 
 function mouseDragged() //update observation based on timeline drag
 {
