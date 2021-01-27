@@ -206,8 +206,6 @@ function setupLive()
         */
 
         //generate and add sensor overlays
-        // let o = Features.buildFromData(callbackData, FEATURE_COLLECTION_NAME);
-
         let o = Observations.getFeatureCollectionJson(SENSORS_NAME, self.observations, FEATURE_OPACITY, 3);
         Procedural.addOverlay(o);
 
@@ -497,10 +495,22 @@ function setupTimeSeries()
     if (location == undefined && params['city'])
         location = params['city'];
 
-    if (location == undefined && (isNaN(longitude) || isNaN(latitude)))
-        location = DEFAULT_LOCATION;
+    //did we start with valid location or longitude/latitude?
+    let loadOnStart = !(location == undefined && (isNaN(longitude) || isNaN(latitude)));
 
-    loadData(start_string, end_string, longitude, latitude, radius, distance, location);
+    if (loadOnStart)
+    {
+        location = location.replace(/\+/g, " ");
+        location = location.replace(/\%20/g, " ");
+        loadData(start_string, end_string, longitude, latitude, radius, distance, location);
+    }
+    else
+    {
+        MAP_TARGET.location = undefined;
+        loadDataAggregate(START_DATE, END_DATE, longitude, latitude);
+        locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations);
+        Procedural.addOverlay(locationLabels);
+    }
 
     Procedural.onFeatureClicked = function (id) //clicking on a feature 
     {
@@ -609,6 +619,8 @@ function hideDetailSensorView()
     MAP_TARGET.location = undefined;
     observations = observationsAggregate;
     Procedural.removeOverlay(SENSORS_NAME);
+    locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations);
+    Procedural.addOverlay(locationLabels);
     showDetails = false;
 }
 
@@ -723,6 +735,9 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
             observations = oCached;
             nLoaded = observations.length;
             updateForm(location);
+            Procedural.focusOnLocation(MAP_TARGET);
+            locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
+            Procedural.addOverlay(locationLabels);
             return;
         }
         else
@@ -765,8 +780,6 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
 
     updateForm(location, START_DATE_STRING, END_DATE_STRING, radius);
 
-    let count = 0;
-
     if (doFocus)
         initialized = false;
 
@@ -783,6 +796,8 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
     window.setTimeout(
         function()
         {
+            let count = 0;
+
             for (b of binaries) //b is the filename (e.g., "2020-12-13_00.bin")
             {
                 let ms = Date.parse(b.slice(0, -7)); //extracts date portion and converts to UTC milliseconds
@@ -796,8 +811,6 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
 
                 let o = new Observations(SENSORS_NAME, longitude, latitude, radius); //create a new Observations object, which will load and preprocess the data and overlays
                 o.FEATURE_WIDTH = 1;
-
-                let i = count;
 
                 window.setTimeout(
                         function()
@@ -831,14 +844,21 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
     if (!reloadNeeded) //no need to reload averages if main parameters didn't change
         return;
 
+    loadDataAggregate(START_DATE, END_DATE, longitude, latitude)
+}
+
+function loadDataAggregate(start_date, end_date, longitude, latitude)
+{
     window.setTimeout(
         function()
         {
+            let count = 0;
+
             for (b of binariesAggregate) //b is the filename (e.g., "2020-12-13_00.bin")
             {
                 let ms = Date.parse(b.slice(0, -7)); //extracts date portion and converts to UTC milliseconds
 
-                if (ms < START_DATE || ms > END_DATE || b.length == 0) //skips this file if it is too early or too late
+                if (ms < start_date || ms > end_date || b.length == 0) //skips this file if it is too early or too late
                     continue;
 
                 count += 1;
@@ -846,9 +866,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                 let data = BINARY_AGGREGATE_DATA_PATH + b; //complete path for file to load   
                 
                 let o = new Observations(AVERAGE_NAME, longitude, latitude); //create a new Observations object, which will load and preprocess the data and overlays
-                o.FEATURE_WIDTH = 4;
-                
-                let i = count;
+                o.FEATURE_WIDTH = 4;                        
 
                 window.setTimeout(
                         function()
@@ -870,8 +888,6 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
 
 function isLoadedComplete()
 {
-    print(initialized + " " + nLoaded + " " + observations.length + " " + reloadNeeded);
-
     if (nLoaded == observations.length &&
         (!reloadNeeded || nLoadedAggregate == observationsAggregate.length))
     {
@@ -881,7 +897,7 @@ function isLoadedComplete()
             initialized = true;
             Procedural.focusOnLocation(MAP_TARGET);
             if (autoplay)
-            setPlay(true);
+                setPlay(true);
         }
 
         print(MAP_TARGET.location + " -> cache");

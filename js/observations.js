@@ -227,6 +227,15 @@ class Observations
         let o = {};
         o.type = "FeatureCollection";
         o.name = name;
+        o.defaults = {
+            "properties": {
+                "clipping": "pixel",
+                "image": "_",
+                "width": 0,                    
+                "padding": width,
+                "anchor": "bottom",
+                }
+        };
         
         o.features = Observations.getFeaturesJson(name, observations, opacity, width);
 
@@ -259,13 +268,8 @@ class Observations
                 "type": "Feature",
                 "id": name + id,
                 "properties": {
-                    "clipping": "pixel",
-                    "image": "_",
-                    "width": 0,                    
                     "height": 20 + 150 * min(5000, Math.pow(aqi, 1.5))/5000,
                     "background": colorAqi,       
-                    "padding": width,
-                    "anchor": "bottom",
                     }
                 };
             

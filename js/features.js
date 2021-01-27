@@ -13,139 +13,29 @@ class Features
     return loadTable(LANDMARKS_PATH, 'csv', 'header');
   }
 
-  static buildFromData(data, name)
-  {
-    let o = {};
-    o.type = "FeatureCollection";
-    o.name = name;
-    o.features = [];
-/*    o.defaults = {
-      "properties": {
-        "borderRadius": 25,
-        "padding": 10,
-        "borderWidth": 0,
-        },        
-      }
-    };    
- */   
-
-    for (let i = 0; i < data.length; i++)
-    {
-  /*    let f =  {
-        "geometry": {
-          "type": "Point",
-          "coordinates": [data[i][1], data[i][2]]
-        },
-        "type": "Feature",
-        "id": 0,
-        "properties": {
-          "color": "#ddd",
-          "fontSize": 400,
-          "name": "|",
-          "anchorOffset": {
-            "y": -70,
-            "x": 0
-          },
-          "collapseDistance": 3000,
-          "fadeDistance": 5000,          
-          "anchor": "bottom"
-        }
-      };
-  
-      o.features.push(f);
-*/
-
-      let node = {};
-      node.type = 'Feature';
-      node.id = data[i][0];
-      
-      let geometry = {};
-      geometry.type = 'Point';
-      geometry.coordinates = [data[i][1], data[i][2]];
-      node.geometry = geometry;
-    
-      let aqi = parseInt(data[i][3]);
-
-      if (isNaN(aqi))
-        continue;
-
-      let colorAqi = data[i][8];
-      //'#000000'; //data[i][8];
-
-      node.properties = {};
-//      node.properties.fontSize = 40;
-      node.properties.borderRadius = 0;
-      node.properties.color = '#ffffff';
-      node.properties.padding = 0;
-  //    node.properties.name = data[i][8];
-      //node.properties.name = data[i][7];//aqi;
-  //    node.properties.background = colorAqi; // + "33"; //data[i][4];
-
-//      o.features.push(node);
-
-//      node.id = "#" + data[i][0] + " bar";
-      node.properties.color = colorAqi;
-      node.properties.fontSize = 20 + 150 * min(5000, Math.pow(aqi, 1.5))/5000;
-      
- //Math.max(20 + 2*aqi;
-      node.properties.name = "|";
-      node.properties.anchor = "bottom";
-      node.properties.fadeDistance = 100000;
-      //node.properties.anchorOffset = { x: 0, y: -(20 + 2*aqi)/5 };
-      node.properties.anchorOffset = { x: 0, y: 0 };
-      o.features.push(node);
-/*
-      let base = {};
-      base.type = 'Feature';
-
-      let geometry2 = {};
-      geometry2.type = 'Point';
-      geometry2.coordinates = [data[i][1], data[i][2]];
-      base.geometry = geometry2;
-      base.id = "#" + data[i][0] + " base";
-      base.properties = {};
-      base.properties.fontSize = 10;
-      base.properties.color = colorAqi;
-      base.properties.name = "";
-      base.properties.anchor = "center";
-      base.properties.anchorOffset = {};
-      base.properties.icon = "circle-o";
-      o.features.push(base);      
-*/
-    }
-    
-    console.log("Read " + data.length + " features.");
-
-    return o;
-  }
-
   static getBayAreaFeatures(featureCollectionName, locations, location = undefined)
   {   
     let o = {};
     o.type = "FeatureCollection";
     o.name = featureCollectionName;
-    /*o.defaults = {
+    o.defaults = {
       "properties": {
-        "color": "white",
-        "padding": 10,
-        "clipping": "object",
-        "borderRadius": 25,
-        "padding": 10,
-        "borderWidth": 0,
-        "background": "rgba(255, 255, 255, 200)",
         "anchorOffset": {
-          "y": 70,
+          "y": 0,
           "x": 0
-        },        
-      }*/
-   // };
-
+        },
+        "anchor": "bottom",
+        "fadeDistance": 1000000,
+        "clipping": "pixel"
+        }
+    };
 
     let count = 0;
+    let selectedLocation = false;; 
 
     o.features = [];
 
-    console.log("length: " + locations.rows.length);    
+//    console.log("length: " + locations.rows.length);    
 
     for (let row of locations.rows)
     {
@@ -166,10 +56,13 @@ class Features
         
         if (name == location)
         {
+          selectedLocation = true;
           //name = "[ " + name + " ]";
           if (show != '1' && show != 1)
             show = '2';
         }      
+        else
+          selectedLocation = false;
       }
       
       let latitude = parseFloat(row.get("latitude")); //parseFloat(row.arr[1]);
@@ -194,19 +87,25 @@ class Features
           "fontSize": 10 + (10 / (show * show)),
           "color": textColor,        
           "name": name,
-          "anchorOffset": {
-            "y": 0,
-            "x": 0
-          },
-          "anchor": "bottom",
           /*"borderRadius": 25,
           "padding": 20,
           "borderWidth": 0,
           "background": "rgba(100, 100, 100, 1)",*/
-          "fadeDistance": 1000000,
-          "clipping": "pixel"
           }
         };
+
+      if (selectedLocation)
+      {
+        feature.properties = {
+          "fontSize": 10 + (10 / (show * show)),
+          "color": textColor,
+          "name": name,
+          "borderRadius": 10,
+          "padding": 0,
+          "borderWidth": 0,
+          "background": "rgba(0, 0, 0, 0.25)"
+          }
+      }
 
       count += 1;
       o.features.push(feature);
