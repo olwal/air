@@ -500,12 +500,14 @@ function setupTimeSeries()
 
     if (loadOnStart)
     {
+        showDetails = true;
         location = location.replace(/\+/g, " ");
         location = location.replace(/\%20/g, " ");
         loadData(start_string, end_string, longitude, latitude, radius, distance, location);
     }
     else
     {
+        showDetails = false;
         MAP_TARGET.location = undefined;
         loadDataAggregate(START_DATE, END_DATE, longitude, latitude);
         locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations);
