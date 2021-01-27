@@ -708,10 +708,6 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
         observationsCache = {};
     }
 
-    current = 0;
-    nLoaded = 0;
-    nLoadedAggregate = 0;
-
     radius = _radius;
 
     if (isValidDateRange(start_string, end_string))
@@ -743,7 +739,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
             observations = oCached;
             nLoaded = observations.length;
             nLoadedAggregate = observations.length;
-            setObservations(0);
+            setObservations(current);
             updateForm(location);
             locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
             Procedural.addOverlay(locationLabels);
@@ -759,6 +755,10 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
             console.log(location + " not found in cache, loading data");
         }
     }
+
+//    current = 0;
+    nLoaded = 0;
+    nLoadedAggregate = 0;
 
     //check if URL parameters were valid, otherwise use default value
     longitude = isNaN(longitude) ? DEFAULT_LONGITUDE : longitude;
@@ -841,7 +841,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                                             //Procedural.displayLocation(MAP_TARGET);
                                             Procedural.focusOnLocation(MAP_TARGET);
                                         }
-                                       setObservation(0, observations);
+                                       setObservation(current, observations);
                                     }
 
                                     isLoadedComplete();
@@ -906,7 +906,7 @@ function isLoadedComplete()
     {
         if (!initialized)
         {
-            setObservations(0);
+            setObservations(current);
             initialized = true;
             Procedural.focusOnLocation(MAP_TARGET);
             if (autoplay)
