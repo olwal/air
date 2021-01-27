@@ -509,9 +509,11 @@ function setupTimeSeries()
     {
         showDetails = false;
         MAP_TARGET.location = undefined;
+        updateForm(DEFAULT_LOCATION, START_DATE_STRING, END_DATE_STRING, radius);
         loadDataAggregate(START_DATE, END_DATE, longitude, latitude);
         locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations);
         Procedural.addOverlay(locationLabels);
+        observations = observationsAggregate;
     }
 
     Procedural.onFeatureClicked = function (id) //clicking on a feature 
@@ -728,7 +730,9 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
 
     if (found && !reloadNeeded)
     {
-        MAP_TARGET.location = location;
+        MAP_TARGET.longitude = longitude; 
+        MAP_TARGET.latitude = latitude; 
+        MAP_TARGET.location = location;    
 
         let oCached = observationsCache[location];
         if (oCached)
@@ -737,9 +741,12 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
             observations = oCached;
             nLoaded = observations.length;
             updateForm(location);
-            Procedural.focusOnLocation(MAP_TARGET);
             locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)
             Procedural.addOverlay(locationLabels);
+
+            if (doFocus)
+                Procedural.focusOnLocation(MAP_TARGET);
+
             return;
         }
         else
@@ -890,7 +897,7 @@ function loadDataAggregate(start_date, end_date, longitude, latitude)
 
 function isLoadedComplete()
 {
-    if (nLoaded == observations.length &&
+    if ((!showDetails || nLoaded == observations.length) &&
         (!reloadNeeded || nLoadedAggregate == observationsAggregate.length))
     {
         if (!initialized)
@@ -1183,14 +1190,16 @@ function drawTimeSeries()
     fill(255);
     let pad = 10;
 
-    if (nLoaded < observations.length) //show progress information, if not loaded yet
+    let n = showDetails ? nLoaded : nLoadedAggregate;
+
+    if (n < observations.length) //show progress information, if not loaded yet
     {
         let ts = CANVAS_HEIGHT/6; //smaller font size to fit two lines
         textSize(ts);
     
         textAlign(CENTER, CENTER);        
         //Percentage of loaded observations
-        text(loadingText + " " + (100 * nLoaded/observations.length).toFixed() + "%", centerX, ty);
+        text(loadingText + " " + (100 * n/observations.length).toFixed() + "%", centerX, ty);
         //Second line that shows the time span to load        
         textSize(ts * 0.75);
         fill(150);
