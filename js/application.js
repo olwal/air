@@ -622,10 +622,12 @@ function hideDetailSensorView()
 {
     MAP_TARGET.location = undefined;
     observations = observationsAggregate;
+    nLoaded = observations.length;
+    nLoadedAggregate = observations.length;
     Procedural.removeOverlay(SENSORS_NAME);
+    showDetails = false;
     locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations);
     Procedural.addOverlay(locationLabels);
-    showDetails = false;
 }
 
 function updateForm(location, start_date = undefined, end_date = undefined, radius = undefined)
@@ -740,6 +742,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
             print("loaded from cache");
             observations = oCached;
             nLoaded = observations.length;
+            nLoadedAggregate = observations.length;
             setObservations(0);
             updateForm(location);
             locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations, location)

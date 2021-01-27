@@ -38,7 +38,7 @@ class Observations
     {       
         this.name = name;
         this.FEATURE_WIDTH = 1;
-        this.FEATURE_OPACITY = 0.5;
+        this.FEATURE_OPACITY = 0.7;
         this.observations = {};
 		this.data = undefined;
 		this.loaded = false;

@@ -52,7 +52,7 @@ class Features
 
       if (location != undefined)
       {
-        textColor = (name == location) ? "rgba(255, 255, 255, 1)" : "rgba(255, 255, 255, 0.7)";
+        textColor = (name == location) ? "rgba(255, 255, 255, 1)" : textColor;
         
         if (name == location)
         {
