@@ -19,6 +19,7 @@ let sensorsAggregate;
 
 let observations = [];
 let observationsAggregate = [];
+let observationsCache = {};
 let current = 0;
 let nLoaded = 0;
 let nLoadedAggregate = 0;
@@ -212,16 +213,26 @@ function setupLive()
     Procedural.focusOnLocation(MAP_TARGET);
 }
 
-function drawTime(hours, minutes, r, colorDial, colorHour, colorMinute)
+function drawAnalogTime(r, hours, minutes, seconds, colorDial, colorHour, colorMinute, colorSeconds = undefined)
 {
     stroke(colorDial);
     noFill();
-    ellipse(0, 0, r);
+//    ellipse(0, 0, r);
 
-    ha = -2 * Math.PI * ( (hours + minutes/60 % 12)/12 ); 
+    for (let a = 0; a < 2 * PI; a += PI/6)
+    {
+        let x = Math.cos(a);
+        let y = Math.sin(a);
+
+        line(0.55 * r * x, 0.55 * r * y,
+             0.6 * r * x, 0.6 * r * y 
+            );
+    }
+
+    let ha = -2 * Math.PI * ( (hours + minutes/60 % 12)/12 ); 
     ha += -Math.PI/2
     
-    ma = -2 * Math.PI * minutes/60;
+    let ma = -2 * Math.PI * minutes/60;
     ma += -Math.PI/2;
 
     stroke(colorHour);
@@ -229,6 +240,16 @@ function drawTime(hours, minutes, r, colorDial, colorHour, colorMinute)
 
     stroke(colorMinute);
     line(0, 0, -0.4 * r * Math.cos(ma), 0.4 * r * Math.sin(ma));
+
+    if (seconds != undefined && colorSeconds)
+    {
+        let sa = -2 * Math.PI * seconds/60;
+        sa += -Math.PI/2;
+        line(0, 0, -0.47 * r * Math.cos(sa), 0.47 * r * Math.sin(sa));    
+    }
+
+    fill(colorDial);
+    ellipse(0, 0, 0.05 * r);
 }
 
 function drawLive() 
@@ -295,7 +316,8 @@ function drawLive()
             let colorDial = color(100);
             let colorHour = color(100);
             let colorMinute = color(100);
-            drawTime(hour(), minute(), r, colorDial, colorHour, colorMinute);
+            let colorSeconds = color(90);
+            drawAnalogTime(r, hour(), minute(), second(), colorDial, colorHour, colorMinute, colorSeconds);
 
             let hours = int(timestampLive.slice(-5, -3));
             let minutes = int(timestampLive.slice(-2));
@@ -303,7 +325,7 @@ function drawLive()
             colorDial = color(125);
             colorHour = color(180);
             colorMinute = color(200, 200, 100);
-            drawTime(hours, minutes, r, colorDial, colorHour, colorMinute);
+            drawAnalogTime(r, hours, minutes, undefined, colorDial, colorHour, colorMinute, undefined);
 
         pop();
 
@@ -1132,7 +1154,7 @@ function drawTimeSeries()
         let v = Math.sin(2 * PI * h/24);
         //let c = color(v * 150 + 100, v * 250 + 5, 0);
         let c = color(v * 50 + 150);
-        drawTime(hours, minutes, r, c, c, c);
+        drawAnalogTime(r, hours, minutes, undefined, c, c, c);
 
         noStroke();
         fill(c);
@@ -1269,7 +1291,7 @@ function isValidDateRange(start_string, end_string)
     let end = new Date(end_string);    
 
     return (isValidDate(start) && isValidDate(end) && 
-        start.getTime() >= Date.parse("2020-01-01") && end.getTime() <= Date.parse("2021-01-01") && 
+        start.getTime() >= Date.parse(DATASET_START_DATE) && end.getTime() <= Date.parse(DATASET_END_DATE) && 
         start < end);
 }
 
