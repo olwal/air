@@ -60,6 +60,9 @@ let AVERAGE_NAME = "%";
 
 let air;
 
+let reloadNeeded = true;
+
+
 function preload()
 {
     let params = getURLParams();
@@ -553,9 +556,10 @@ function setupTimeSeries()
             locationName = id;
         }
 
-        if (location == locationName)
+        if (MAP_TARGET.location == locationName)
         {
-            console.log("Already loaded")
+            hideDetailSensorView();
+//            console.log("Already loaded")
             return;
         }
 
@@ -599,6 +603,31 @@ function setupTimeSeries()
     addButtons();
 }
 
+function hideDetailSensorView()
+{
+    MAP_TARGET.location = undefined;
+    observations = observationsAggregate;
+    Procedural.removeOverlay(SENSORS_NAME);
+}
+
+function updateForm(location, start_date = undefined, end_date = undefined, radius = undefined)
+{
+    if (location)
+        document.getElementById("location").value = location;
+    
+    if (start_date)
+        document.getElementById("start_date").value = start_date;
+
+    if (end_date)
+        document.getElementById("end_date").value = end_date;
+    
+    if (radius)
+    {
+        let unit = float(document.getElementById("unit").value);
+        document.getElementById("radius").value = Math.round(radius / unit);
+    }
+}
+
 function addLocation(name, longitude, latitude, show)
 {
     let row = locations.addRow();
@@ -612,6 +641,8 @@ function getLocationFromTable(location, defaultLongitude = undefined, defaultLat
 {
     let longitude = defaultLongitude;
     let latitude = defaultLatitude; 
+
+    let found = false; //default = no match found
 
     //if location was specified, try to match it in location table
     if (location != undefined)
@@ -635,16 +666,25 @@ function getLocationFromTable(location, defaultLongitude = undefined, defaultLat
         {
             latitude = parseFloat(row.get("latitude"));
             longitude = parseFloat(row.get("longitude"));
+            found = true;
         }
     }
 
-    return [ longitude, latitude ];
+    return [ longitude, latitude, found ];
 }
 
 function loadData(start_string, end_string, longitude, latitude, _radius, distance, location, doFocus = false)
 {
-    observations = [];
-    observationsAggregate = [];
+    //if parameters changed reload
+    reloadNeeded = start_string != START_DATE_STRING || end_string != END_DATE_STRING ||
+        _radius != radius;
+
+    if (reloadNeeded)
+    {
+        observations = [];
+        observationsAggregate = [];
+        observationsCache = {};
+    }
 
     current = 0;
     nLoaded = 0;
@@ -666,6 +706,27 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
     let longlat = getLocationFromTable(location, longitude, latitude);
     longitude = longlat[0];
     latitude = longlat[1];
+    let found = longlat[2]; //indicates whether location match was found
+
+    if (found && !reloadNeeded)
+    {
+        MAP_TARGET.location = location;
+
+        let oCached = observationsCache[location];
+        if (oCached)
+        {
+            print("loaded from cache");
+            observations = oCached;
+            nLoaded = observations.length;
+            updateForm(location);
+            return;
+        }
+        else
+        {
+            observations = [];
+            console.log(location + " not found in cache, loading data");
+        }
+    }
 
     //check if URL parameters were valid, otherwise use default value
     longitude = isNaN(longitude) ? DEFAULT_LONGITUDE : longitude;
@@ -683,26 +744,22 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
 
     distance = isNaN(distance) ? DEFAULT_DISTANCE : distance;
 
+    /*
     console.log("date start: " + START_DATE_STRING);
     console.log("date end: " + END_DATE_STRING);    
     console.log("longitude: " + longitude);
     console.log("latitude: " + latitude);
     console.log("radius: " + radius);
     console.log("distance: " + distance);
-    console.log("location: " + location);
-    console.log("# of files to load: " + binaries.length);
+    */
+    console.log("location: " + location + ", # of files to load: " + binaries.length);
 
-    //set the map target to San Francisco
     MAP_TARGET.longitude = longitude; //-122.44198789673219;
     MAP_TARGET.latitude = latitude; //37.7591527514897;
     MAP_TARGET.distance = distance; //20000;    
+    MAP_TARGET.location = location;    
 
-    document.getElementById("location").value = location;
-    document.getElementById("start_date").value = START_DATE_STRING;
-    document.getElementById("end_date").value = END_DATE_STRING;
-    
-    let unit = float(document.getElementById("unit").value);
-    document.getElementById("radius").value = Math.round(radius / unit);
+    updateForm(location, START_DATE_STRING, END_DATE_STRING, radius);
 
     let count = 0;
 
@@ -757,16 +814,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                                        setObservation(0, observations);
                                     }
 
-                                    if (!initialized && nLoaded == observations.length && 
-                                        nLoadedAggregate == observationsAggregate.length) //when completed, foucs on the desired map target
-                                    {
-                                        setObservations(0);
-                                        initialized = true;
-                                        Procedural.focusOnLocation(MAP_TARGET);
-
-                                        if (autoplay)
-                                            setPlay(true);
-                                    }    
+                                    isLoadedComplete();
                                 }    
                             );
                         }, count * 10); //(count / 100) * 1000);
@@ -775,6 +823,9 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
             }
         }, 100
     );
+
+    if (!reloadNeeded) //no need to reload averages if main parameters didn't change
+        return;
 
     window.setTimeout(
         function()
@@ -802,18 +853,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                                 function(observation)
                                 {
                                     nLoadedAggregate++; //keep track of # of loaded Observations
-
-                                    if (!initialized && nLoaded == observations.length && 
-                                        nLoadedAggregate == observationsAggregate.length) //when completed, foucs on the desired map target
-                                    {
-                                        setObservations(0);
-                                        initialized = true;
-                                        Procedural.focusOnLocation(MAP_TARGET);
-                                        
-                                        if (autoplay)
-                                            setPlay(true);
-                                    }    
-
+                                    isLoadedComplete();
                                 }    
                             );
                         }, count * 10); //(count / 100) * 1000);
@@ -822,8 +862,27 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
             }
         }, 100
     );
+}
 
+function isLoadedComplete()
+{
+    print(initialized + " " + nLoaded + " " + observations.length + " " + reloadNeeded);
 
+    if (nLoaded == observations.length &&
+        (!reloadNeeded || nLoadedAggregate == observationsAggregate.length))
+    {
+        if (!initialized)
+        {
+            setObservations(0);
+            initialized = true;
+            Procedural.focusOnLocation(MAP_TARGET);
+            if (autoplay)
+            setPlay(true);
+        }
+
+        print(MAP_TARGET.location + " -> cache");
+        observationsCache[MAP_TARGET.location] = observations;        
+    }    
 }
 
 function focusOn(longitude, latitude)
@@ -1192,7 +1251,7 @@ function setObservation(index, observations) //set current observation
         
         if (!json)
         {
-            console.log("setObservation(index): broken json: " + current);
+            // console.log("setObservation(index): broken json: " + current);
             return;
         }
         
@@ -1252,10 +1311,21 @@ function setObservationFromX(x) //set observation given X value (e.g, from mouse
 
 function mousePressed() //update observation based on timeline click
 {
-    if (mouseY < CANVAS_HEIGHT/2 || mouseY > CANVAS_HEIGHT)
+    if (mouseY > CANVAS_HEIGHT/2 && mouseY < CANVAS_HEIGHT)
+    {
+        setObservationFromX(mouseX);
         return;
+    }
+}
 
-    setObservationFromX(mouseX);
+function mouseReleased() //update observation based on timeline click
+{
+    if (mouseY > CANVAS_HEIGHT/2 && mouseY < CANVAS_HEIGHT)
+    {
+        return;
+    }
+
+    console.log(mouseX + " " + mouseY);
 }
 
 function mouseDragged() //update observation based on timeline drag

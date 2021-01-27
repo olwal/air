@@ -42,6 +42,9 @@ const DEFAULT_LATITUDE = 37.7591527514897;
 //const DEFAULT_RADIUS = 10000; //m
 const DEFAULT_RADIUS = Math.round(5000 * 1.609); //5 miles in m
 
+const DATASET_START_DATE = "2020-01-01";
+const DATASET_END_DATE = "2021-01-01";
+
 let DEFAULT_DISTANCE = 20000;
 
 var ORBIT_AFTER_FOCUS = false;
@@ -51,7 +54,8 @@ var MAP_TARGET = {
     latitude: 37.7591527514897, longitude: -122.44198789673219,
     distance: 10000,
     angle: 15, bearing: 50,
-    animationDuration: 1
+    animationDuration: 1,
+    location: 'San Francisco'
  //   angle: 35, bearing: 70
 };
 
