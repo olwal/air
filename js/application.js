@@ -48,6 +48,7 @@ let showLabels = true;
 let showHelp = false;
 let showGraph = true;
 let showControls = SHOW_CONTROLS;
+let showDetails = true;
 
 let focusOnClick = false;
 
@@ -608,6 +609,7 @@ function hideDetailSensorView()
     MAP_TARGET.location = undefined;
     observations = observationsAggregate;
     Procedural.removeOverlay(SENSORS_NAME);
+    showDetails = false;
 }
 
 function updateForm(location, start_date = undefined, end_date = undefined, radius = undefined)
@@ -675,6 +677,8 @@ function getLocationFromTable(location, defaultLongitude = undefined, defaultLat
 
 function loadData(start_string, end_string, longitude, latitude, _radius, distance, location, doFocus = false)
 {
+    showDetails = true;
+
     //if parameters changed reload
     reloadNeeded = start_string != START_DATE_STRING || end_string != END_DATE_STRING ||
         _radius != radius;
@@ -1247,7 +1251,13 @@ function setObservation(index, observations) //set current observation
     if (!isNaN(index) && index >= 0 && index < observations.length)
     {
         current = index;
-        let json = observations[current].json;
+
+        let json;
+        
+        if (observations == observationsAggregate && showDetails)
+            json = observations[current].jsonInactive;
+        else
+            json = observations[current].json;
         
         if (!json)
         {

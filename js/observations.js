@@ -212,6 +212,7 @@ class Observations
                 }
 
                 self.json = Observations.getFeatureCollectionJson(self.name, self.observations, self.FEATURE_OPACITY, self.FEATURE_WIDTH); //generate GeoJSON for overlays
+                self.jsonInactive = Observations.getFeatureCollectionJson(self.name, self.observations, self.FEATURE_OPACITY / 2, self.FEATURE_WIDTH); //generate GeoJSON for overlays
                 
                 self.loaded = true;
 
