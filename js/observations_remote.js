@@ -338,7 +338,7 @@ class ObservationsRemote
 
         return values.sort(
             function(a, b) {
-                return a[1] > b[1];
+                return a[1] - b[1];
             }
         ); 
     }

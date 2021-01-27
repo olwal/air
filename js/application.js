@@ -1171,9 +1171,9 @@ function drawTimeSeries()
         let ty = 0;
         textSize(ts);
         textAlign(LEFT)
-        text("p PLAY/PAUSE   r REWIND   x SPEED UP   X SLOW DOWN   ", tx, ty += tdy);
-        text("[ n , STEP <-                   ] m . STEP ->", tx, ty += tdy);
-        text("{ N < STEP 10X <---             } M > STEP --->", tx, ty += tdy);
+        text("p PLAY/PAUSE   r REWIND   x SPEED UP   X SLOW DOWN        (DPR: " + window.devicePixelRatio + ")", tx, ty += tdy);
+        text("[ n , STEP -1X <-                   ] m . STEP +1X ->", tx, ty += tdy);
+        text("{ N < STEP -10X <---             } M > STEP +10X --->", tx, ty += tdy);
 
         text("o ORBIT   l LABELS   g GRAPH   f FOCUS ON FEATURE", tx, ty += tdy);      
 
