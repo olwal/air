@@ -126,7 +126,7 @@ function submitFormData(location, radius, start_date, end_date)
 {
     let long = NaN;
     let lat = NaN;
-    let distance = NaN
+    let distance = proceduralLocation.distance;
     let doFocus = true;
 
     if (showLive)
@@ -149,7 +149,7 @@ function submitFormData(location, radius, start_date, end_date)
         document.getElementById("start_date").value = year() + "-" + digit(month()) + "-" + digit(day());
         document.getElementById("end_date").value = year() + "-" + digit(month()) + "-" + digit(day());
     
-        Procedural.focusOnLocation(MAP_TARGET);
+        focusOn(MAP_TARGET);
         air.changeLocation(longitude, latitude, radius);
     }
     else
@@ -212,7 +212,7 @@ function setupLive()
         lastUpdated = millis();
     }
 
-    Procedural.focusOnLocation(MAP_TARGET);
+    focusOn(MAP_TARGET);
 }
 
 function drawAnalogTime(r, hours, minutes, seconds, colorDial, colorHour, colorMinute, colorSeconds = undefined)
@@ -745,7 +745,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
             Procedural.addOverlay(locationLabels);
 
             if (doFocus)
-                Procedural.focusOnLocation(MAP_TARGET);
+                focusOn(MAP_TARGET);
 
             return;
         }
@@ -839,7 +839,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                                         if (!initialized)
                                         {
                                             //Procedural.displayLocation(MAP_TARGET);
-                                            Procedural.focusOnLocation(MAP_TARGET);
+                                            focusOn(MAP_TARGET);
                                         }
                                        setObservation(current, observations);
                                     }
@@ -918,7 +918,7 @@ function isLoadedComplete()
     }    
 }
 
-function focusOn(longitude, latitude)
+function focusOn(target)
 {
     /*
     let target = {
@@ -927,10 +927,9 @@ function focusOn(longitude, latitude)
         angle: 35, bearing: 70,
         animationDuration: 2
     };    */
-
-    let target = MAP_TARGET;
-    target.longitude = longitude;
-    target.latitude = latitude;
+    target.distance = proceduralLocation.distance;
+    target.bearing = proceduralLocation.bearing;
+    target.angle = proceduralLocation.angle;
 
     Procedural.focusOnLocation(target);
 }
@@ -1040,13 +1039,11 @@ function keyPressed() //handle keyboard presses
             break;
 
         case 'f': //focus on default location
-            Procedural.focusOnLocation(MAP_TARGET);
+            focusOn(MAP_TARGET);
             break;
 
         case 'u': //focus on default location
-            ORBIT_AFTER_FOCUS = false;
-            console.log(MAP_TARGET_0);
-            Procedural.focusOnLocation(MAP_TARGET_0);
+            focusOn(MAP_TARGET_0);
             break;            
     }
 }

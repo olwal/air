@@ -49,11 +49,14 @@ let DEFAULT_DISTANCE = 20000;
 
 var ORBIT_AFTER_FOCUS = false;
 
+var proceduralLocation; 
+var proceduralLoaded = false;
+
 var MAP_TARGET = {
 //    latitude: 37.512070759717645, longitude: -122.29158348430136,
     latitude: 37.7591527514897, longitude: -122.44198789673219,
     distance: 10000,
-    angle: 35, bearing: 50,
+    angle: 55, bearing: -50,
     animationDuration: 1,
     location: 'San Francisco'
  //   angle: 35, bearing: 70
