@@ -39,11 +39,14 @@ const FEATURE_COLLECTION_NAME_LANDMARKS = "cities";
 
 const DEFAULT_LONGITUDE = -122.44198789673219;
 const DEFAULT_LATITUDE = 37.7591527514897;
-//const DEFAULT_RADIUS = 10000; //m
 const DEFAULT_RADIUS = Math.round(5000 * 1.609); //5 miles in m
 
 const DATASET_START_DATE = "2020-01-01";
 const DATASET_END_DATE = "2021-01-01";
+
+let AUTOPLAY = false; //whether dataset play back starts
+let UPDATE_MS = 500; //inter-frame delay 
+let UPDATE_MULTIPLIER = 1.2;
 
 let DEFAULT_DISTANCE = 20000;
 

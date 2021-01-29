@@ -37,6 +37,9 @@ class Features
 
 //    console.log("length: " + locations.rows.length);    
 
+    let dpr = window.devicePixelRatio; //scale labels based on pixel density
+    let fontScale = CANVAS_WIDTH/1000 * dpr;
+
     for (let row of locations.rows)
     {
       let name = row.get("name"); //.arr[0];
@@ -65,8 +68,6 @@ class Features
           selectedLocation = false;
       }
       
-      let dpr  = window.devicePixelRatio; //scale labels based on pixel density
-
       let latitude = parseFloat(row.get("latitude")); //parseFloat(row.arr[1]);
       let longitude = parseFloat(row.get("longitude")); //parseFloat(row.arr[2]);
 
@@ -86,7 +87,7 @@ class Features
         "type": "Feature",
         "id": name, //count,
         "properties": {
-          "fontSize": 10 + (10 / (show * show)) * dpr,
+          "fontSize":  fontScale * 10 + (10 / (show * show)),
           "color": textColor,        
           "name": name,
           /*"borderRadius": 25,
@@ -99,7 +100,7 @@ class Features
       if (selectedLocation)
       {
         feature.properties = {
-          "fontSize": 10 + (10 / (show * show)) * dpr,
+          "fontSize": fontScale * 10 + (10 / (show * show)),
           "color": textColor,
           "name": name,
           "borderRadius": 10,

@@ -27,10 +27,9 @@ let loadingText = "Loaded";
 let radius = DEFAULT_RADIUS;
 let distance = DEFAULT_DISTANCE;
 let initialized = false;
-let autoplay = true;
-
+let autoplay = AUTOPLAY;
 let timestamp; //keep track of time for animation
-let UPDATE_MS = 100; //inter-frame delay 
+
 
 let play = false;
 let buttons = {};
@@ -518,7 +517,6 @@ function setupTimeSeries()
 
     Procedural.onFeatureClicked = function (id) //clicking on a feature 
     {
-
         console.log("---------------------")
         console.log("[ Clicked " + id + " ]");
 
@@ -578,6 +576,8 @@ function setupTimeSeries()
             return;
         }
 
+        showDetails = true;
+
         console.log("Loading : " + id);
 /*            window.open('https://olwal.github.io/air/3d/?' +
             'start_date=' + START_DATE_STRING + 
@@ -626,6 +626,7 @@ function hideDetailSensorView()
     nLoadedAggregate = observations.length;
     Procedural.removeOverlay(SENSORS_NAME);
     showDetails = false;
+    setObservations(current);
     locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations);
     Procedural.addOverlay(locationLabels);
 }
@@ -1001,11 +1002,13 @@ function keyPressed() //handle keyboard presses
                 Procedural.removeOverlay(FEATURE_COLLECTION_NAME_LANDMARKS);
 
         case 'x': 
-            UPDATE_MS /= 2;
+            UPDATE_MS /= UPDATE_MULTIPLIER;
+            console.log(UPDATE_MS);            
             break;
 
         case 'X': 
-            UPDATE_MS *= 2;     
+            UPDATE_MS *= UPDATE_MULTIPLIER;     
+            console.log(UPDATE_MS);            
             break;
 
         case 's':
@@ -1239,7 +1242,10 @@ function drawTimeSeries()
         let r = pad * 3;
 
         let hours = int(oc.hour_string);
-        let minutes = UPDATE_MS < 400 ? 0 : 60 * (deltaT / UPDATE_MS);
+        let minutes = 0;
+        
+        if (play && UPDATE_MS < 400) //if running and inbetween values, interpolate minutes
+            minutes = 60 * (deltaT / UPDATE_MS);
 
         let pm = hours >= 12;
 
@@ -1283,8 +1289,8 @@ function setObservation(index, observations) //set current observation
         current = index;
 
         let json;
-        
-        if (observations == observationsAggregate && showDetails)
+    
+        if ((observations == observationsAggregate) && showDetails)
             json = observations[current].jsonInactive;
         else
             json = observations[current].json;
