@@ -60,8 +60,8 @@ const MS_TO_DAYS = 24 /* h */ * 60 /* min */ * 60 /* s */ * 1000 /* ms */;
 var MAP_TARGET = {
 //    latitude: 37.512070759717645, longitude: -122.29158348430136,
     latitude: 37.7591527514897, longitude: -122.44198789673219,
-    distance: 10000,
-    angle: 55, bearing: -50,
+    distance: 54000,
+    angle: 28, bearing: 225,
     animationDuration: 1,
     location: 'San Francisco'
  //   angle: 35, bearing: 70
@@ -86,7 +86,7 @@ const GL_CONFIGURATION = {
     // Minimum distance camera can approach scene
     minDistance: 1000,
     // Maximum distance camera can move from scene
-    maxDistance: 100000,
+    maxDistance: 1000000,
     // Maximum distance camera target can move from scene
     maxBounds: 75000,
     // Minimum polar angle of camera
