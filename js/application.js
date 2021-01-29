@@ -838,8 +838,6 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                         count = 10 * dayDiff;
                     else
                         count = 10 * (dayRange + dayRange + dayDiff);
-
-                    print(dayDiff + " " + count);
                 }
                 else
                     count += 10;
@@ -1182,7 +1180,7 @@ function drawTimeSeries()
            line(x + cursorWidth/2, maxHeight, x + cursorWidth/2, maxHeight * 2);
            noStroke();
            fill(o.rgb[0], o.rgb[1], o.rgb[2]);
-           ellipse(x + cursorWidth/2, maxHeight, cursorWidth/3);           
+           ellipse(x + cursorWidth/2, maxHeight, maxHeight/5);           
         }
 
 
