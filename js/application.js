@@ -926,9 +926,10 @@ function isLoadedComplete()
     if ((!showDetails || nLoaded == observations.length) &&
         (!reloadNeeded || nLoadedAggregate == observationsAggregate.length))
     {
+        setObservations(current);
+
         if (!initialized)
         {
-            setObservations(current);
             initialized = true;
             Procedural.focusOnLocation(MAP_TARGET);
             if (autoplay)
