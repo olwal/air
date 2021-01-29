@@ -38,7 +38,7 @@ class Features
 //    console.log("length: " + locations.rows.length);    
 
     let dpr = window.devicePixelRatio; //scale labels based on pixel density
-    let fontScale = CANVAS_WIDTH/1000 * dpr;
+    let fontScale = dpr; // * 1.5; //CANVAS_WIDTH/1000 * dpr;
 
     for (let row of locations.rows)
     {
@@ -51,7 +51,7 @@ class Features
       if (show == '0' && (location == undefined || name != location))
         continue;
 
-      let textColor = "rgba(255, 255, 255, 0.8)";
+      let textColor = "rgba(255, 255, 255, 0.7)";
 
       if (location != undefined)
       {
