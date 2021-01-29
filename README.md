@@ -126,3 +126,6 @@ Examples:
 | Longitude/Latitude (Between Mountain View and Cupertino) with default dates | http://olwal.github.io/air/3d?longitude=-122.08&latitude=37.35 |
 | Default location and dates, but 20 km radius | http://olwal.github.io/air/3d?radius=20000 |
 | Alameda, Aug 15-Oct 03, 20 km radius, 30 km camera distance | http://olwal.github.io/air/3d?location=Alameda&start_date=2020-08-15&end_date=2020-10-03&radius=20000&distance=30000 |
+
+## Acknowledgments
+Thank you to Oskar Rönnberg, Carsten Schwesig, and Sebastian Rinnebach for insightful feedback on the interface and features. Special thanks to Felix Palmer for providing the open sourced procedural-gl.js library. 
