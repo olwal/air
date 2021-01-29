@@ -55,6 +55,8 @@ var ORBIT_AFTER_FOCUS = false;
 var proceduralLocation; 
 var proceduralLoaded = false;
 
+const MS_TO_DAYS = 24 /* h */ * 60 /* min */ * 60 /* s */ * 1000 /* ms */;
+
 var MAP_TARGET = {
 //    latitude: 37.512070759717645, longitude: -122.29158348430136,
     latitude: 37.7591527514897, longitude: -122.44198789673219,

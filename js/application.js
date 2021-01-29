@@ -125,7 +125,7 @@ function submitFormData(location, radius, start_date, end_date)
 {
     let long = NaN;
     let lat = NaN;
-    let distance = proceduralLocation.distance;
+    let distance = NaN;
     let doFocus = true;
 
     if (showLive)
@@ -697,6 +697,14 @@ function getLocationFromTable(location, defaultLongitude = undefined, defaultLat
 function loadData(start_string, end_string, longitude, latitude, _radius, distance, location, doFocus = false)
 {
     showDetails = true;
+   
+    let msCurrent = false;
+    if (observations && observations[current])
+    {
+        currentDate = observations[current].filename.slice(-17, -7); //save current observation
+        msCurrent = Date.parse(currentDate); //to be used when loading data
+        msCurrent += int(observations[current].hour_string * 60 * 1000);
+    }
 
     //if parameters changed reload
     reloadNeeded = start_string != START_DATE_STRING || end_string != END_DATE_STRING ||
@@ -819,7 +827,22 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                 if (ms < START_DATE || ms > END_DATE || b.length == 0) //skips this file if it is too early or too late
                     continue;
 
-                count += 1;
+                if (msCurrent)
+                {
+                    ms = ms + b.slice(-6, -4) * 60 * 1000; //add # of hours in ms
+                    let msDiff = ms - msCurrent; 
+                    let dayDiff = msDiff / MS_TO_DAYS;
+                    let dayRange = (END_DATE - START_DATE)/MS_TO_DAYS;
+
+                    if (dayDiff >= 0)
+                        count = 10 * dayDiff;
+                    else
+                        count = 10 * (dayRange + dayRange + dayDiff);
+
+                    print(dayDiff + " " + count);
+                }
+                else
+                    count += 10;
 
                 let data = BINARY_DATA_PATH + b; //complete path for file to load                                      
 
@@ -848,7 +871,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                                     isLoadedComplete();
                                 }    
                             );
-                        }, count * 10); //(count / 100) * 1000);
+                        }, count);
 
                 observations.push(o); //add each Observation object 
             }
@@ -928,9 +951,13 @@ function focusOn(target)
         angle: 35, bearing: 70,
         animationDuration: 2
     };    */
-    target.distance = proceduralLocation.distance;
-    target.bearing = proceduralLocation.bearing;
-    target.angle = proceduralLocation.angle;
+
+    if (proceduralLocation)
+    {
+        target.distance = proceduralLocation.distance;
+        target.bearing = proceduralLocation.bearing;
+        target.angle = proceduralLocation.angle;
+    }
 
     Procedural.focusOnLocation(target);
 }
