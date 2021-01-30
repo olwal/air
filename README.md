@@ -1,6 +1,6 @@
 [![3D visualization of air quality sensor data](media/sensor_data_3d_bay_area.jpg)](https://olwal.github.io/air/3d/)
 
-# 2020 | Bay Area Air Quality Year in 3D Review
+# 2020 | Bay Area Air Quality Year in 4D Review
 This project visualizes air quality data overlaid onto a 3D geographical map. The map shows hourly data from thousands of sensors and allows interaction and playback of air quality pattern across various locations. These visualizations particularly highlight the significant impact that the 2020 Bay Area fires had on air quality, but can be used to explore patterns throughout the full year. 
 
 Tested platforms:
@@ -19,7 +19,7 @@ The application allows specification of location in California, start and end da
 The animated 3D visualizations are based on sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/). 
 
 ## 2020 Bay Area fires
-Real-time 3D visualization of air quality sensor data within a certain radius from the location, references to 3rd party material, and timelapse videos of the 3D visualizations.
+Here is a sample collection of interactive 3D visualization of air quality sensor data within a certain radius from the location, references to 3rd party material, and timelapse videos of the 3D visualizations. The visualizations are specified and configured through URL parameters.
 
 ### [LNU Lightning Complex Fires](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03&radius=50000&distance=50000&unit=km) | Aug 17 to Oct 02
 - Locations: [Napa](https://olwal.github.io/air/3d?location=Napa&start_date=2020-08-16&end_date=2020-10-11&radius=50000&distance=50000&unit=km), Lake, [Sonoma](https://olwal.github.io/air/3d?location=Sonoma&start_date=2020-08-16&end_date=2020-10-11&radius=25000&distance=50000&unit=km), [Yolo](https://olwal.github.io/air/3d?location=Yolo&start_date=2020-08-16&end_date=2020-10-11&radius=50000&distance=50000&unit=km), Solano
@@ -50,7 +50,7 @@ Interactive demo | Santa Clara | Aug 15-Oct 03:
 
 ## 2020 | 1-year Time Series
 These full-year datasets take quite some time to load.
-Firefox seems most stable in loading these.
+Firefox on Desktop seems most stable in loading these.
 
 - [Oakland](https://olwal.github.io/air/3d/?location=Oakland&start_date=2020-01-01&end_date=2021-01-01&radius=20000&distance=20000&unit=km) | [Timelapse Video](https://youtu.be/jxLtuF0n3hA) (15:29) | 2020 Jan-Dec
 - [Santa Cruz](https://olwal.github.io/air/3d/?location=Santa%20Cruz&start_date=2020-01-01&end_date=2021-01-01&radius=20000&distance=30000&unit=km) | [Timelapse Video](https://youtu.be/fsbrf3rNnMg) (15:40) | 2020 Jan-Dec
