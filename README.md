@@ -21,40 +21,40 @@ The animated 3D visualizations are based on sensor data from [PurpleAir](https:/
 ## 2020 Bay Area fires
 Real-time 3D visualization of air quality sensor data within a certain radius from the location, references to 3rd party material, and timelapse videos of the 3D visualizations.
 
-### [LNU Lightning Complex Fires](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03&radius=50000&distance=50000) | Aug 17 to Oct 02
-- Locations: [Napa](https://olwal.github.io/air/3d?location=Napa&start_date=2020-08-16&end_date=2020-10-11&radius=50000&distance=50000), Lake, [Sonoma](https://olwal.github.io/air/3d?location=Sonoma&start_date=2020-08-16&end_date=2020-10-11&radius=25000&distance=50000), [Yolo](https://olwal.github.io/air/3d?location=Yolo&start_date=2020-08-16&end_date=2020-10-11&radius=50000&distance=50000), Solano
+### [LNU Lightning Complex Fires](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03&radius=50000&distance=50000&unit=km) | Aug 17 to Oct 02
+- Locations: [Napa](https://olwal.github.io/air/3d?location=Napa&start_date=2020-08-16&end_date=2020-10-11&radius=50000&distance=50000&unit=km), Lake, [Sonoma](https://olwal.github.io/air/3d?location=Sonoma&start_date=2020-08-16&end_date=2020-10-11&radius=25000&distance=50000&unit=km), [Yolo](https://olwal.github.io/air/3d?location=Yolo&start_date=2020-08-16&end_date=2020-10-11&radius=50000&distance=50000&unit=km), Solano
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-lnu-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7027/), [Wikipedia](https://en.wikipedia.org/wiki/LNU_Lightning_Complex_fires)
 - [Napa Video](https://youtu.be/sms1VZ-AS3k)
 
 Interactive demo | Napa | Aug 16-Oct 03: 
 
-[![Napa](media/napa.gif)](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03)
+[![Napa](media/napa.gif)](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03&unit=km)
 
-### [CZU August Lightning Complex Fires](http://olwal.github.io/air/3d?location=CZU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-09-23&radius=20000&distance=50000) | Aug 17 to Sep 22
-- Locations: [Santa Cruz](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23&radius=20000&distance=30000), [San Mateo](https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-08-16&end_date=2020-09-23)
+### [CZU August Lightning Complex Fires](http://olwal.github.io/air/3d?location=CZU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-09-23&radius=20000&distance=50000&unit=km) | Aug 17 to Sep 22
+- Locations: [Santa Cruz](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23&radius=20000&distance=30000&unit=km), [San Mateo](https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-08-16&end_date=2020-09-23&unit=km)
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-cnu-august-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7028/), [Wikipedia](https://en.wikipedia.org/wiki/CZU_Lightning_Complex_fires)
 - [San Mateo Video](https://youtu.be/mKirhChPaWU)
 
 Interactive demo | Santa Cruz | Aug 16-Sep 23: 
 
-[![Santa Cruz](media/santa_cruz.gif)](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23)
+[![Santa Cruz](media/santa_cruz.gif)](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23&unit=km)
 
-### [SCU August Lightning Complex Fires](http://olwal.github.io/air/3d?location=SCU%20Lightning%20Complex%20Fires&start_date=2020-08-15&end_date=2020-10-03&radius=30000&distance=50000) | Aug 16 to Oct 02
-- Locations: [Santa Clara](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03&radius=20000&distance=20000), [Alameda](http://olwal.github.io/air/3d?location=Alameda&start_date=2020-08-15&end_date=2020-10-03&radius=20000&distance=20000), Contra Costa, [San Joaquin](http://olwal.github.io/air/3d?location=San%20Joaquin&start_date=2020-08-15&end_date=2020-10-03&radius=50000&distance=30000), Stanislaus
+### [SCU August Lightning Complex Fires](http://olwal.github.io/air/3d?location=SCU%20Lightning%20Complex%20Fires&start_date=2020-08-15&end_date=2020-10-03&radius=30000&distance=50000&unit=km) | Aug 16 to Oct 02
+- Locations: [Santa Clara](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03&radius=20000&distance=20000&unit=km), [Alameda](http://olwal.github.io/air/3d?location=Alameda&start_date=2020-08-15&end_date=2020-10-03&radius=20000&distance=20000&unit=km), Contra Costa, [San Joaquin](http://olwal.github.io/air/3d?location=San%20Joaquin&start_date=2020-08-15&end_date=2020-10-03&radius=50000&distance=30000&unit=km), Stanislaus
 - References: [SF Chronicle Fire Tracker](https://www.sfchronicle.com/projects/california-fire-map/2020-cnu-august-lightning-complex), [InciWeb](https://inciweb.nwcg.gov/incident/7056/), [Wikipedia](https://en.wikipedia.org/wiki/SCU_Lightning_Complex_fires)
 - [Santa Clara Video](https://youtu.be/gJdsuwGUNYg)
 
 Interactive demo | Santa Clara | Aug 15-Oct 03: 
 
-[![Santa Clara](media/santa_clara.gif)](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03)
+[![Santa Clara](media/santa_clara.gif)](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03&unit=km)
 
 ## 2020 | 1-year Time Series
 These full-year datasets take quite some time to load.
 Firefox seems most stable in loading these.
 
-- [Oakland](https://olwal.github.io/air/3d/?location=Oakland&start_date=2020-01-01&end_date=2021-01-01&radius=20000&distance=20000) | [Timelapse Video](https://youtu.be/jxLtuF0n3hA) (15:29) | 2020 Jan-Dec
-- [Santa Cruz](https://olwal.github.io/air/3d/?location=Santa%20Cruz&start_date=2020-01-01&end_date=2021-01-01&radius=20000&distance=30000) | [Timelapse Video](https://youtu.be/fsbrf3rNnMg) (15:40) | 2020 Jan-Dec
-- [San Francisco](https://olwal.github.io/air/3d/?location=San%20Francisco&start_date=2020-01-01&end_date=2021-01-01) | [Timelapse Video](https://youtu.be/-bVvzHcI12I) (17:11) | 2020 Jan-Dec
+- [Oakland](https://olwal.github.io/air/3d/?location=Oakland&start_date=2020-01-01&end_date=2021-01-01&radius=20000&distance=20000&unit=km) | [Timelapse Video](https://youtu.be/jxLtuF0n3hA) (15:29) | 2020 Jan-Dec
+- [Santa Cruz](https://olwal.github.io/air/3d/?location=Santa%20Cruz&start_date=2020-01-01&end_date=2021-01-01&radius=20000&distance=30000&unit=km) | [Timelapse Video](https://youtu.be/fsbrf3rNnMg) (15:40) | 2020 Jan-Dec
+- [San Francisco](https://olwal.github.io/air/3d/?location=San%20Francisco&start_date=2020-01-01&end_date=2021-01-01&unit=km) | [Timelapse Video](https://youtu.be/-bVvzHcI12I) (17:11) | 2020 Jan-Dec
 
 ## 3D views
 
@@ -128,4 +128,4 @@ Examples:
 | Alameda, Aug 15-Oct 03, 20 km radius, 30 km camera distance | http://olwal.github.io/air/3d?location=Alameda&start_date=2020-08-15&end_date=2020-10-03&radius=20000&distance=30000 |
 
 ## Acknowledgments
-Many thanks to Oskar Rönnberg, Carsten Schwesig, and Sebastian Rinnebach for insightful feedback on the interface and features. Special thanks to Felix Palmer for providing the open sourced procedural-gl.js library. 
+Many thanks to Oskar Rönnberg, Carsten Schwesig, and Sebastian Rinnebach for insightful feedback on the interface and features. Special thanks to Felix Palmer for discussions and for providing the open source procedural-gl.js library. 
