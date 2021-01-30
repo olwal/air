@@ -44,7 +44,7 @@ let DEFAULT_LOCATION = "San Francisco";
 let locationLabels = undefined;
 
 let showLabels = true;
-let showHelp = false;
+let showHelp = true;
 let showGraph = true;
 let showControls = SHOW_CONTROLS;
 let showDetails = true;
@@ -121,7 +121,7 @@ function digit(number)
     return ('0' + number).slice(-2);
 }
 
-function submitFormData(location, radius, start_date, end_date)
+function submitFormData(location, radius, start_date, end_date, loadLocation)
 {
     let long = NaN;
     let lat = NaN;
@@ -152,7 +152,7 @@ function submitFormData(location, radius, start_date, end_date)
         air.changeLocation(longitude, latitude, radius);
     }
     else
-        loadData(start_date, end_date, long, lat, radius, distance, location, doFocus);
+        loadData(start_date, end_date, long, lat, radius, distance, location, doFocus, loadLocation);
 }
 
 function setupLive() 
@@ -487,6 +487,16 @@ function setupTimeSeries()
     console.log("autoplay: " + autoplay + " [" + playParam + "]");
 
     radius = parseFloat(params['radius']);    
+    unit = params['unit'];
+
+    if (radius && !isNaN(radius) && unit)
+    {
+        let conversion = (unit == 'km') ? 1 : KM_TO_MILES;
+        print(unit + " " + conversion);
+        document.getElementById("unit").value = conversion;
+        radius *= conversion;
+    }
+
     radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
 
     distance = parseFloat(params['distance']);
@@ -694,7 +704,7 @@ function getLocationFromTable(location, defaultLongitude = undefined, defaultLat
     return [ longitude, latitude, found ];
 }
 
-function loadData(start_string, end_string, longitude, latitude, _radius, distance, location, doFocus = false)
+function loadData(start_string, end_string, longitude, latitude, _radius, distance, location, doFocus = false, loadLocation = false)
 {
     showDetails = true;
    
@@ -735,7 +745,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
     latitude = longlat[1];
     let found = longlat[2]; //indicates whether location match was found
 
-    if (found && !reloadNeeded)
+    if (found && !reloadNeeded && !loadLocation)
     {
         MAP_TARGET.longitude = longitude; 
         MAP_TARGET.latitude = latitude; 
@@ -861,7 +871,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
                                         if (!initialized)
                                         {
                                             //Procedural.displayLocation(MAP_TARGET);
-                                            focusOn(MAP_TARGET);
+                                            focusOn(MAP_TARGET, loadLocation);
                                         }
                                        setObservation(current, observations);
                                     }
@@ -896,7 +906,7 @@ function loadDataAggregate(start_date, end_date, longitude, latitude)
                 if (ms < start_date || ms > end_date || b.length == 0) //skips this file if it is too early or too late
                     continue;
 
-                count += 1;
+                count += 15;
 
                 let data = BINARY_AGGREGATE_DATA_PATH + b; //complete path for file to load   
                 
@@ -913,7 +923,7 @@ function loadDataAggregate(start_date, end_date, longitude, latitude)
                                     isLoadedComplete();
                                 }    
                             );
-                        }, count * 10); //(count / 100) * 1000);
+                        }, count); //(count / 100) * 1000);
 
                 observationsAggregate.push(o); //add each Observation object 
             }
@@ -931,7 +941,7 @@ function isLoadedComplete()
         if (!initialized)
         {
             initialized = true;
-            Procedural.focusOnLocation(MAP_TARGET);
+            focusOn(MAP_TARGET);
             if (autoplay)
                 setPlay(true);
         }
@@ -941,21 +951,19 @@ function isLoadedComplete()
     }    
 }
 
-function focusOn(target)
+function focusOn(target, loadLocation = false)
 {
-    /*
-    let target = {
-        latitude: latitude, longitude: longitude,
-        distance: distance,
-        angle: 35, bearing: 70,
-        animationDuration: 2
-    };    */
-
     if (proceduralLocation)
     {
         target.distance = proceduralLocation.distance;
         target.bearing = proceduralLocation.bearing;
         target.angle = proceduralLocation.angle;
+    }
+
+    if (loadLocation)
+    {
+        target.distance = 5000;
+        Procedural.displayLocation(target);
     }
 
     Procedural.focusOnLocation(target);

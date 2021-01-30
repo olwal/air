@@ -38,7 +38,7 @@ class Features
 //    console.log("length: " + locations.rows.length);    
 
     let dpr = window.devicePixelRatio; //scale labels based on pixel density
-    let fontScale = dpr; // * 1.5; //CANVAS_WIDTH/1000 * dpr;
+    let fontScale = CANVAS_WIDTH/1000 * dpr; // * 1.5; //CANVAS_WIDTH/1000 * dpr;
 
     for (let row of locations.rows)
     {

@@ -19,6 +19,8 @@
 
         <script>
 
+          var doTeleport = false;
+
           $( function() {
             $( "#start_date" ).datepicker(
               { 
@@ -47,6 +49,11 @@
               document.getElementById(parameter).value = value.replace(/\+/g, " "))
           }
 */          
+          function setTeleport(state)
+          {
+            doTeleport = state;
+          }
+
           function reloadData(event)
           {
             event.preventDefault(); 
@@ -54,8 +61,8 @@
             let end_date = document.getElementById("end_date").value;
             let location = document.getElementById("location").value;
             let unit = float(document.getElementById("unit").value);
-
             let radius = document.getElementById("radius").value;
+            let loadLocation = doTeleport;
 
             if (radius)
               radius *= unit;
@@ -64,7 +71,7 @@
 
             console.log(start_date + " " + end_date + " " + location + " " + radius + " meters, multiplier (km/miles) " + unit);
 
-            submitFormData(location, radius, start_date, end_date);
+            submitFormData(location, radius, start_date, end_date, loadLocation);
 
             return false;
           }
@@ -153,7 +160,7 @@
       <div id ="gl"></div>
 
             <!-- form action="/air/" target="_self" method="get" -->
-            <form onsubmit="reloadData(event);">
+            <form onsubmit="reloadData(event); return false;">
               <table>
                 <tr>
                   <td>
@@ -219,7 +226,8 @@
 
                   </td>
                   <td rowspan="2">
-                    <input class="button" type="submit" value="->">    
+                    <input class="button" type="submit" onclick="setTeleport(false); return true;" value="->">    
+                    <input class="button" type="submit" onclick="setTeleport(true); return true;" value="--->">   
                   </td>                                   
                 </tr>
                 <tr>
@@ -245,10 +253,13 @@
     We'll import our modified version that enables propagation of camera parameters (imported in geo3d.js)
     See https://github.com/olwal/procedural-gl-js/commit/d68aef2adc65be5b16e2c8caed1bdda2892fc766
     <script type="text/javascript" src="https://unpkg.com/procedural-gl/build/procedural-gl.js"></script>
-    <script type="text/javascript" src="js/geo3d.js"></script>
     -->
     <script type="module" src="js/geo3d.js"></script>
 
+    <!--
+    <script type="text/javascript" src="lib/procedural-gl.dev.js"></script>
+    <script type="text/javascript" src="js/geo3d.js"></script>
+    -->
     <!-- p5.js for main logic -->
     <script type="text/javascript" src="js/p5_extra.js"></script>    
     <script type="text/javascript" src="js/airquality.js"></script>

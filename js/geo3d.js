@@ -57,17 +57,7 @@ Procedural.onLocationLoaded =
     Procedural.focusOnLocation(MAP_TARGET);
   };
 
-//start orbiting after location is focused
 Procedural.onLocationFocused = 
-  function () 
-  {
-    console.log("Location focused");
-
-    if (ORBIT_AFTER_FOCUS)
-      Procedural.orbitTarget();
-  };
-
-  Procedural.onLocationFocused = 
   function () 
   {
     if (ORBIT_AFTER_FOCUS)
