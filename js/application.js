@@ -44,7 +44,7 @@ let DEFAULT_LOCATION = "San Francisco";
 let locationLabels = undefined;
 
 let showLabels = true;
-let showHelp = true;
+let showHelp = false;
 let showGraph = true;
 let showControls = SHOW_CONTROLS;
 let showDetails = true;
@@ -130,6 +130,8 @@ function submitFormData(location, radius, start_date, end_date, loadLocation)
 
     if (showLive)
     {
+        focusLive(location, radius);
+        /*
         let longlat = getLocationFromTable(location, MAP_TARGET.longitude, MAP_TARGET.latitude);
         longitude = longlat[0];
         latitude = longlat[1];
@@ -149,14 +151,76 @@ function submitFormData(location, radius, start_date, end_date, loadLocation)
         document.getElementById("end_date").value = year() + "-" + digit(month()) + "-" + digit(day());
     
         focusOn(MAP_TARGET);
-        air.changeLocation(longitude, latitude, radius);
+        air.changeLocation(longitude, latitude, radius);*/
     }
     else
         loadData(start_date, end_date, long, lat, radius, distance, location, doFocus, loadLocation);
 }
 
+function focusLive(location, radius)
+{
+    let longlat = getLocationFromTable(location, MAP_TARGET.longitude, MAP_TARGET.latitude);
+    longitude = longlat[0];
+    latitude = longlat[1];
+
+    MAP_TARGET.longitude = longitude;
+    MAP_TARGET.latitude = latitude;
+
+    let formRadius = document.getElementById("radius").value;
+    let formUnit = document.getElementById("unit").value;
+
+    if (formRadius && formUnit)
+        radius = formRadius * formUnit;
+
+    loadingText = location;
+
+    let currentDateString = year() + "-" + digit(month()) + "-" + digit(day());
+    document.getElementById("start_date").value = currentDateString;
+    document.getElementById("end_date").value = currentDateString;
+
+    focusOn(MAP_TARGET);
+    air.changeLocation(longitude, latitude, radius);
+}
+
 function setupLive() 
 {
+	let params = getURLParams();		    
+    //let longitude = parseFloat(params['longitude']);
+    //let latitude = parseFloat(params['latitude']);
+
+    radius = parseFloat(params['radius']);    
+    if (!radius)
+        radius = DEFAULT_RADIUS;
+    else
+    {
+        unit = params['unit'];
+
+        if (radius && !isNaN(radius) && unit)
+        {
+            let conversion = (unit == 'km') ? 1 : KM_TO_MILES;
+            print(unit + " " + conversion);
+            document.getElementById("unit").value = conversion;
+            radius *= conversion;
+        }
+
+        radius = isNaN(radius) ? DEFAULT_RADIUS : radius;
+    }
+
+    distance = parseFloat(params['distance']) || DEFAULT_DISTANCE;
+    
+    let location = params['location'];
+    if (location == undefined && params['city'])
+        location = params['city'];
+    if (location == undefined)
+        location = DEFAULT_LOCATION;
+    else
+    {
+        location = location.replace(/\+/g, " ");
+        location = location.replace(/\%20/g, " ");
+    }
+
+    let currentDateString = year() + "-" + digit(month()) + "-" + digit(day());
+
     //set the text size to 1/4 of the height to fit 2 lines + progress bar
     textSize(CANVAS_HEIGHT * 0.25);
     textFont("Inter");
@@ -175,9 +239,9 @@ function setupLive()
 
     timestampLive = year() + " " + digit(month()) + " " + digit(day()) + " "  + digit(hour()) + ":"  + digit(minute()); //zero-padded YYYY-MM-DD hh:mm
 
-    document.getElementById("start_date").value = year() + "-" + digit(month()) + "-" + digit(day());
-    document.getElementById("end_date").value = year() + "-" + digit(month()) + "-" + digit(day());
-
+    updateForm(location, currentDateString, currentDateString, radius);
+    focusLive(location, radius);
+    
     //callback for receiving updated sensor data
     air.onUpdateCallback = function(sensors) 
     {       
@@ -718,7 +782,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
 
     //if parameters changed reload
     reloadNeeded = start_string != START_DATE_STRING || end_string != END_DATE_STRING ||
-        _radius != radius;
+        _radius != radius || loadLocation;
 
     if (reloadNeeded)
     {
@@ -745,7 +809,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
     latitude = longlat[1];
     let found = longlat[2]; //indicates whether location match was found
 
-    if (found && !reloadNeeded && !loadLocation)
+    if (found && !reloadNeeded)
     {
         MAP_TARGET.longitude = longitude; 
         MAP_TARGET.latitude = latitude; 
@@ -1054,6 +1118,13 @@ function keyPressed() //handle keyboard presses
             showHelp = !showHelp;
             break; 
 
+        case 't':       
+            GL_ENVIRONMENT.parameters.inclination = GL_ENVIRONMENT.parameters.inclination + 0.1;
+            print(GL_ENVIRONMENT);
+            Procedural.setEnvironment(GL_ENVIRONMENT);
+            break; 
+    
+
         case 'g':
             showGraph = !showGraph;
             break; 
@@ -1278,7 +1349,7 @@ function drawTimeSeries()
         let hours = int(oc.hour_string);
         let minutes = 0;
         
-        if (play && UPDATE_MS < 400) //if running and inbetween values, interpolate minutes
+        if (play && UPDATE_MS < 400 && UPDATE_MS > 300) //if running and inbetween values, interpolate minutes
             minutes = 60 * (deltaT / UPDATE_MS);
 
         let pm = hours >= 12;
@@ -1288,11 +1359,15 @@ function drawTimeSeries()
         //let c = color(v * 150 + 100, v * 250 + 5, 0);
         let c = color(v * 50 + 150);
         drawAnalogTime(r, hours, minutes, undefined, c, c, c);
-
+        
         noStroke();
         fill(c);
         text(pm ? "PM" : "AM", r * 1.1, 0);
-
+/*
+        GL_ENVIRONMENT.parameters.inclination = 0.75 + v * 0.25;
+        print(GL_ENVIRONMENT.parameters.inclination);
+        Procedural.setEnvironment(GL_ENVIRONMENT);
+*/
     pop();
     
     if (oc.count && !showHelp)
