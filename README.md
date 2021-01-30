@@ -4,11 +4,11 @@
 This project visualizes air quality data overlaid onto a 3D geographical map. The map shows hourly data from thousands of sensors and allows interaction and playback of air quality pattern across various locations. These visualizations particularly highlight the significant impact that the 2020 Bay Area fires had on air quality, but can be used to explore patterns throughout the full year. 
 
 Tested platforms:
-- macOS/Windows: Works best. Tested with Firefox, Chrome, Safari. 
-- Android: Works for smaller datasets.
-- iOS (iPhone/iPad): Some rendering issues (flickering) and appears frozen until all data is loaded. Not recommended.
+- iOS (iPhone/iPad): Tested with Firefox, Chrome and Safari. 
+- macOS/Windows: Tested with Firefox, Chrome and Safari. 
+- Android: Tested with Firefox and Chrome. (clicking on city label not currently supported)
 
-Click a location label to load the sensor data for that location within specified (or default) radius. Given the potential large amount of sensor data at a specific location/radius, the interface does not dynamically load new data as the map is panned. 
+Use the menu to select a city, radius for the area to show sensors, and date range. Given the potential large amount of sensor data at a specific location/radius, the interface does not dynamically load new data as the map is panned. However, one can click a different city directly to load new data. 
 
 [Live 3D demo with time-series sensor data](https://olwal.github.io/air/3d/)
 
@@ -126,3 +126,6 @@ Examples:
 | Longitude/Latitude (Between Mountain View and Cupertino) with default dates | http://olwal.github.io/air/3d?longitude=-122.08&latitude=37.35 |
 | Default location and dates, but 20 km radius | http://olwal.github.io/air/3d?radius=20000 |
 | Alameda, Aug 15-Oct 03, 20 km radius, 30 km camera distance | http://olwal.github.io/air/3d?location=Alameda&start_date=2020-08-15&end_date=2020-10-03&radius=20000&distance=30000 |
+
+## Acknowledgments
+Many thanks to Oskar Rönnberg, Carsten Schwesig, and Sebastian Rinnebach for insightful feedback on the interface and features. Special thanks to Felix Palmer for providing the open sourced procedural-gl.js library. 
