@@ -90,9 +90,10 @@ class Features
           "fontSize":  fontScale * 10 + (10 / (show * show)),
           "color": textColor,        
           "name": name,
+          "padding": 0,
+          "borderWidth": 0
           /*"borderRadius": 25,
-          "padding": 20,
-          "borderWidth": 0,
+          "padding": 20,          
           "background": "rgba(100, 100, 100, 1)",*/
           }
         };
@@ -100,7 +101,7 @@ class Features
       if (selectedLocation)
       {
         feature.properties = {
-          "fontSize": fontScale * 10 + (10 / (show * show)),
+          "fontSize": 1.4 * fontScale * 10 + (10 / (show * show)),
           "color": textColor,
           "name": name,
           "borderRadius": 10,
