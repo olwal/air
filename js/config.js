@@ -49,6 +49,8 @@ let AUTOPLAY = false; //whether dataset play back starts
 let UPDATE_MS = 100; //inter-frame delay 
 let UPDATE_MULTIPLIER = 1.2;
 
+var CONFIG_GEO_HEIGHT = 0.73;
+
 let DEFAULT_DISTANCE = 20000;
 
 var ORBIT_AFTER_FOCUS = false;

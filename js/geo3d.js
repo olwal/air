@@ -7,7 +7,7 @@
     Externally defined constants/global variables in config.js
 */
 
-import Procedural from '../lib/procedural-gl.dev.js';
+//import Procedural from '../lib/procedural-gl.dev.js';
 
 const container = document.getElementById(DIV_GL);
 

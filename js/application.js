@@ -20,6 +20,7 @@ let sensorsAggregate;
 let observations = [];
 let observationsAggregate = [];
 let observationsCache = {};
+let observationsVisible = [];
 let current = 0;
 let nLoaded = 0;
 let nLoadedAggregate = 0;
@@ -50,6 +51,7 @@ let showControls = SHOW_CONTROLS;
 let showDetails = true;
 
 let focusOnClick = false;
+var selectionTracking = false;
 
 showLive = false;
 let lastUpdated = -1;
@@ -591,6 +593,8 @@ function setupTimeSeries()
 
     Procedural.onFeatureClicked = function (id) //clicking on a feature 
     {
+        selectionTracking++;
+
         console.log("---------------------")
         console.log("[ Clicked " + id + " ]");
 
@@ -643,9 +647,10 @@ function setupTimeSeries()
             locationName = id;
         }
 
-        if (MAP_TARGET.location == locationName)
+//        if (MAP_TARGET.location == locationName)
+        if (observationsVisible.indexOf(locationName) >= 0)
         {
-            hideDetailSensorView();
+            hideDetailSensorViewSpecific(locationName);
 //            console.log("Already loaded")
             return;
         }
@@ -703,6 +708,47 @@ function hideDetailSensorView()
     setObservations(current);
     locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations);
     Procedural.addOverlay(locationLabels);
+}
+
+function hideDetailSensorViewSpecific(name)
+{
+    let index = observationsVisible.indexOf(name);
+    if (index >= 0)
+    {
+        observationsVisible.splice(index, 1);
+        Procedural.removeOverlay(name);
+    
+    
+        if (observationsVisible.length == 0)
+            showDetails = false;    
+    
+        showObservationsAggregate();
+    }
+}
+
+function showObservationsAggregate()
+{
+    MAP_TARGET.location = undefined;
+    observations = observationsAggregate;
+    nLoaded = observations.length;
+    nLoadedAggregate = observations.length;
+
+    setObservations(current);
+    locationLabels = Features.getBayAreaFeatures(FEATURE_COLLECTION_NAME_LANDMARKS, locations);
+    Procedural.addOverlay(locationLabels);
+}
+
+function hideDetailSensorViewAll()
+{
+    for (o in observationsVisible)
+    {
+        Procedural.removeOverlay(observationsVisible[o]);
+    }
+
+    observationsVisible = [];
+    showDetails = false;
+    
+    showObservationsAggregate();
 }
 
 function updateForm(location, start_date = undefined, end_date = undefined, radius = undefined)
@@ -771,7 +817,8 @@ function getLocationFromTable(location, defaultLongitude = undefined, defaultLat
 function loadData(start_string, end_string, longitude, latitude, _radius, distance, location, doFocus = false, loadLocation = false)
 {
     showDetails = true;
-   
+    observationsVisible.push(location);
+
     let msCurrent = false;
     if (observations && observations[current])
     {
@@ -918,7 +965,7 @@ function loadData(start_string, end_string, longitude, latitude, _radius, distan
 
                 let data = BINARY_DATA_PATH + b; //complete path for file to load                                      
 
-                let o = new Observations(SENSORS_NAME, longitude, latitude, radius); //create a new Observations object, which will load and preprocess the data and overlays
+                let o = new Observations(location, longitude, latitude, radius); //create a new Observations object, which will load and preprocess the data and overlays
                 o.FEATURE_WIDTH = 1;
 
                 window.setTimeout(
@@ -1466,27 +1513,43 @@ function setObservationFromX(x) //set observation given X value (e.g, from mouse
 
 function mousePressed() //update observation based on timeline click
 {
+    selectionTracking = -10;
+
+    if (mouseY > displayHeight * 0.73 + CANVAS_HEIGHT)
+    {
+        print("form");
+    }
     if (mouseY > CANVAS_HEIGHT/2 && mouseY < CANVAS_HEIGHT)
     {
         setObservationFromX(mouseX);
         return;
     }
+    else if (showDetails && mouseButton == LEFT)
+    {
+        print("reset...");
+        selectionTracking = 0;
+    }
 }
 
-/*
+
 function mouseReleased() //update observation based on timeline click
 {
+    if (selectionTracking == 0)
+        hideDetailSensorViewAll();
+
     if (mouseY > CANVAS_HEIGHT/2 && mouseY < CANVAS_HEIGHT)
     {
-        return;
+        return false;
     }
 
-    console.log(mouseX + " " + mouseY);
+    return false;
 }
-*/
+
 
 function mouseDragged() //update observation based on timeline drag
 {
+    selectionTracking = -10;
+
     if (mouseY < CANVAS_HEIGHT/2 || mouseY > CANVAS_HEIGHT)
         return;
 
