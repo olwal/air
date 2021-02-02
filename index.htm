@@ -49,8 +49,15 @@
               document.getElementById(parameter).value = value.replace(/\+/g, " "))
           }
 */          
+
+          function dontResetSelections()
+          {
+            selectionTracking=100;            
+          }
+
           function setTeleport(state)
           {
+            dontResetSelections();
             doTeleport = state;
           }
 
@@ -129,7 +136,7 @@
         #gl /* div for GLSL canvas */
         {
           width: 100%;
-          height: 73%;
+          height: 73%; /* if changed needs update in config.js */ 
           position: relative;
         }
         #p5  /* div for p5.js canvas */
@@ -156,90 +163,90 @@
     </style>
 
     <body>
-      <div id ="p5"></div>                
+      <div id ="p5"></div>
       <div id ="gl"></div>
 
-            <!-- form action="/air/" target="_self" method="get" -->
-            <form onsubmit="reloadData(event); return false;">
-              <table>
-                <tr>
-                  <td>
-                    <select id="location" name="location">
-                      <option value='Alameda'>Alameda</option>
-                      <option value='Berkeley'>Berkeley</option>
-                      <option value='Boulder Creek'>Boulder Creek</option>
-                      <option value='Brookdale'>Brookdale</option>
-                      <option value='Campbell'>Campbell</option>
-                      <option value='Cupertino'>Cupertino</option>
-                      <option value='Daly City'>Daly City</option>
-                      <option value='El Cerrito'>El Cerrito</option>
-                      <option value='El Granada'>El Granada</option>
-                      <option value='Fremont'>Fremont</option>
-                      <option value='Half Moon Bay'>Half Moon Bay</option>
-                      <option value='Hayward'>Hayward</option>
-                      <option value='La Honda'>La Honda</option>
-                      <option value='Larkspur'>Larkspur</option>
-                      <option value='Los Altos'>Los Altos</option>
-                      <option value='Los Gatos town'>Los Gatos town</option>
-                      <option value='Mill Valley'>Mill Valley</option>
-                      <option value='Milpitas'>Milpitas</option>
-                      <option value='Mountain View'>Mountain View</option>
-                      <option value='Newark'>Newark</option>
-                      <option value='Oakland'>Oakland</option>
-                      <option value='Pacifica'>Pacifica</option>
-                      <option value='Palo Alto'>Palo Alto</option>
-                      <option value='Pescadero'>Pescadero</option>
-                      <option value='Redwood City'>Redwood City</option>
-                      <option value='Richmond'>Richmond</option>
-                      <option value='San Bruno'>San Bruno</option>
-                      <option value='San Francisco'>San Francisco</option>
-                      <option value='San Jose'>San Jose</option>
-                      <option value='San Leandro'>San Leandro</option>
-                      <option value='San Mateo'>San Mateo</option>
-                      <option value='San Pablo'>San Pablo</option>
-                      <option value='San Rafael'>San Rafael</option>
-                      <option value='Santa Clara'>Santa Clara</option>
-                      <option value='Santa Cruz'>Santa Cruz</option>
-                      <option value='Saratoga'>Saratoga</option>
-                      <option value='South San Francisco'>South San Francisco</option>
-                      <option value='Stinson Beach'>Stinson Beach</option>
-                      <option value='Union City'>Union City</option>
-                      <option value='CZU Lightning Complex Fires'>CZU Lightning Complex Fires</option>
-                      <option value='LNU Lightning Complex Fires'>LNU Lightning Complex Fires</option>
-                      <option value='SCU Lightning Complex Fires'>SCU Lightning Complex Fires</option>
-                    </select>
-                    <select id="radius" name="radius">
-                      <option value=""></option>
-                      <option value="3000">3</option>
-                      <option value="5000">5</option>
-                      <option value="10000">10</option>
-                      <option value="15000">15</option>
-                      <option value="20000">20</option>
-                      <option value="30000">30</option>
-                      <option value="40000">40</option>                      
-                      <option value="50000">50</option>                      
-                    </select>
-                    <select id="unit" name="unit">
-                      <option value="1.609">miles</option>
-                      <option value="1">km</option>
-                    </select>
+      <!-- form action="/air/" target="_self" method="get" -->
+      <form onsubmit="reloadData(event); return false;">
+        <table>
+          <tr>
+            <td>
+              <select id="location" name="location" onmouseup="dontResetSelections();">
+                <option value='Alameda'>Alameda</option>
+                <option value='Berkeley'>Berkeley</option>
+                <option value='Boulder Creek'>Boulder Creek</option>
+                <option value='Brookdale'>Brookdale</option>
+                <option value='Campbell'>Campbell</option>
+                <option value='Cupertino'>Cupertino</option>
+                <option value='Daly City'>Daly City</option>
+                <option value='El Cerrito'>El Cerrito</option>
+                <option value='El Granada'>El Granada</option>
+                <option value='Fremont'>Fremont</option>
+                <option value='Half Moon Bay'>Half Moon Bay</option>
+                <option value='Hayward'>Hayward</option>
+                <option value='La Honda'>La Honda</option>
+                <option value='Larkspur'>Larkspur</option>
+                <option value='Los Altos'>Los Altos</option>
+                <option value='Los Gatos town'>Los Gatos town</option>
+                <option value='Mill Valley'>Mill Valley</option>
+                <option value='Milpitas'>Milpitas</option>
+                <option value='Mountain View'>Mountain View</option>
+                <option value='Newark'>Newark</option>
+                <option value='Oakland'>Oakland</option>
+                <option value='Pacifica'>Pacifica</option>
+                <option value='Palo Alto'>Palo Alto</option>
+                <option value='Pescadero'>Pescadero</option>
+                <option value='Redwood City'>Redwood City</option>
+                <option value='Richmond'>Richmond</option>
+                <option value='San Bruno'>San Bruno</option>
+                <option value='San Francisco'>San Francisco</option>
+                <option value='San Jose'>San Jose</option>
+                <option value='San Leandro'>San Leandro</option>
+                <option value='San Mateo'>San Mateo</option>
+                <option value='San Pablo'>San Pablo</option>
+                <option value='San Rafael'>San Rafael</option>
+                <option value='Santa Clara'>Santa Clara</option>
+                <option value='Santa Cruz'>Santa Cruz</option>
+                <option value='Saratoga'>Saratoga</option>
+                <option value='South San Francisco'>South San Francisco</option>
+                <option value='Stinson Beach'>Stinson Beach</option>
+                <option value='Union City'>Union City</option>
+                <option value='CZU Lightning Complex Fires'>CZU Lightning Complex Fires</option>
+                <option value='LNU Lightning Complex Fires'>LNU Lightning Complex Fires</option>
+                <option value='SCU Lightning Complex Fires'>SCU Lightning Complex Fires</option>
+              </select>
+              <select id="radius" name="radius" onmouseup="dontResetSelections();">
+                <option value=""></option>
+                <option value="3000">3</option>
+                <option value="5000">5</option>
+                <option value="10000">10</option>
+                <option value="15000">15</option>
+                <option value="20000">20</option>
+                <option value="30000">30</option>
+                <option value="40000">40</option>                      
+                <option value="50000">50</option>                      
+              </select>
+              <select id="unit" name="unit" onmouseup="dontResetSelections();">
+                <option value="1.609">miles</option>
+                <option value="1">km</option>
+              </select>
 
-                  </td>
-                  <td rowspan="2">
-                    <input class="button" type="submit" onclick="setTeleport(false); return true;" value="->">    
-                    <input class="button" type="submit" onclick="setTeleport(true); return true;" value="--->">   
-                  </td>                                   
-                </tr>
-                <tr>
-                  <td>
-                    From <input name="start_date" type="text" id="start_date" size="11"> to <input name="end_date" type="text" id="end_date" size="11">
-                  </td>
-                </tr>
-              </table>              
+            </td>
+            <td rowspan="2">
+              <input class="button" type="submit" onmouseup="dontResetSelections();" onclick="setTeleport(false); return true;" value="->">    
+              <input class="button" type="submit" onmouseup="dontResetSelections();" onclick="setTeleport(true); return true;" value="--->">   
+            </td>                                   
+          </tr>
+          <tr>
+            <td>
+              From <input name="start_date" type="text" id="start_date" size="11" onmouseup="dontResetSelections();"> to 
+              <input name="end_date" type="text" id="end_date" size="11" onmouseup="dontResetSelections();">
+            </td>
+          </tr>
+        </table>              
 
 
-        </form>
-
+  </form>
 
 
     </body>
@@ -252,14 +259,24 @@
     <!--
     We'll import our modified version that enables propagation of camera parameters (imported in geo3d.js)
     See https://github.com/olwal/procedural-gl-js/commit/d68aef2adc65be5b16e2c8caed1bdda2892fc766
-    <script type="text/javascript" src="https://unpkg.com/procedural-gl/build/procedural-gl.js"></script>
+    <script type="module" src="js/geo3d.js"></script>
+    
+    
+    <script type="text/javascript" src="lib/procedural-gl.dev.js"></script>
+    
+    <script type="text/javascript" src="lib/procedural-gl-debug-build.js"></script>
+    <script type="module" src="js/geo3d.js"></script>
+    <script type="text/javascript" src="lib/procedural-gl.dev.debug.js"></script>
+      <script type="text/javascript" src="lib/procedural-gl-1.0.11.js"></script>
+  
+    <script type="text/javascript" src="lib/procedural-gl-debug-not-working-still-1.0.11.js"></script>
+    
+
     -->
     <script type="module" src="js/geo3d.js"></script>
-
-    <!--
-    <script type="text/javascript" src="lib/procedural-gl.dev.js"></script>
-    <script type="text/javascript" src="js/geo3d.js"></script>
-    -->
+    <script type="text/javascript" src="https://unpkg.com/procedural-gl/build/procedural-gl.js"></script>
+    
+    <!---->
     <!-- p5.js for main logic -->
     <script type="text/javascript" src="js/p5_extra.js"></script>    
     <script type="text/javascript" src="js/airquality.js"></script>
