@@ -634,6 +634,8 @@ function setupTimeSeries()
         }
         else if (isAverage)
         {
+            return;
+/*
             if (locations.rows[id])
                 locationName = locations.rows[id].arr[0];
     
@@ -641,7 +643,7 @@ function setupTimeSeries()
                 return;
             else    
                 isLandmark = true;
-        }
+*/       }
         else if (isLandmark)
         {
             locationName = id;
@@ -1539,10 +1541,10 @@ function mouseReleased() //update observation based on timeline click
 
     if (mouseY > CANVAS_HEIGHT/2 && mouseY < CANVAS_HEIGHT)
     {
-        return false;
+        return true;
     }
 
-    return false;
+    return true;
 }
 
 
