@@ -20,7 +20,7 @@ let sensorsAggregate;
 let observations = [];
 let observationsAggregate = [];
 let observationsCache = {};
-let observationsVisible = [];
+let observationsVisible = []; //location names, strings
 let current = 0;
 let nLoaded = 0;
 let nLoadedAggregate = 0;
@@ -31,16 +31,13 @@ let initialized = false;
 let autoplay = AUTOPLAY;
 let timestamp; //keep track of time for animation
 
-
 let play = false;
 let buttons = {};
 
 //Time intervals to load data, either these as default, or from urlParameters (start_date and end_date)
-let START_DATE_STRING = "2020-09-08";
-let END_DATE_STRING = "2020-09-10";
+
 let START_DATE = Date.parse(START_DATE_STRING);
 let END_DATE = Date.parse(END_DATE_STRING);
-let DEFAULT_LOCATION = "San Francisco";
 
 let locationLabels = undefined;
 
@@ -597,6 +594,11 @@ function setupTimeSeries()
 
         console.log("---------------------")
         console.log("[ Clicked " + id + " ]");
+
+        //check if this is one of the sensors, expanded from the average 
+        let separator = id.indexOf('#')
+        if (separator >= 0)
+            id = id.substring(0, separator)
 
         let isSensor = id.startsWith(SENSORS_NAME);
         let isAverage = id.startsWith(AVERAGE_NAME);
@@ -1472,7 +1474,15 @@ function setObservation(index, observations) //set current observation
 
 function setObservations(index) //set current observation
 {
-    setObservation(index, observations);
+//    setObservation(index, observations);
+
+    for (visible in observationsVisible)
+    {
+        let location = observationsVisible[visible]
+        if (observationsCache[location])
+            setObservation(index, observationsCache[location]);
+    }
+
     setObservation(index, observationsAggregate);
 }
 
@@ -1520,8 +1530,8 @@ function mousePressed() //update observation based on timeline click
     if (mouseY > displayHeight * 0.73 + CANVAS_HEIGHT)
     {
         print("form");
-    }
-    if (mouseY > CANVAS_HEIGHT/2 && mouseY < CANVAS_HEIGHT)
+    } 
+    else if (mouseY > CANVAS_HEIGHT/2 && mouseY < CANVAS_HEIGHT)
     {
         setObservationFromX(mouseX);
         return;
@@ -1536,8 +1546,13 @@ function mousePressed() //update observation based on timeline click
 
 function mouseReleased() //update observation based on timeline click
 {
-    if (selectionTracking == 0)
-        hideDetailSensorViewAll();
+    if (mouseY > CANVAS_HEIGHT && (mouseY < displayHeight * 0.73 + CANVAS_HEIGHT))
+    {
+        print(mouseY + " " + displayHeight * 0.73 + CANVAS_HEIGHT);
+
+        if (selectionTracking == 0)
+            hideDetailSensorViewAll();
+    }
 
     if (mouseY > CANVAS_HEIGHT/2 && mouseY < CANVAS_HEIGHT)
     {
