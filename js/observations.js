@@ -266,7 +266,7 @@ class Observations
                     "coordinates": [longitude, latitude]
                     },
                 "type": "Feature",
-                "id": name + id,
+                "id": name + '#' + id, //allows us to use individual sensors to be linked to name
                 "properties": {
                     "height": 20 + 150 * min(5000, Math.pow(aqi, 1.5))/5000,
                     "background": colorAqi,       

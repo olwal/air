@@ -49,6 +49,10 @@ let AUTOPLAY = false; //whether dataset play back starts
 let UPDATE_MS = 100; //inter-frame delay 
 let UPDATE_MULTIPLIER = 1.2;
 
+let START_DATE_STRING = "2020-09-08";
+let END_DATE_STRING = "2020-09-10";
+const DEFAULT_LOCATION = "San Francisco";
+
 var CONFIG_GEO_HEIGHT = 0.73;
 
 let DEFAULT_DISTANCE = 20000;
