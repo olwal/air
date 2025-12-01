@@ -1,6 +1,6 @@
 [![3D visualization of air quality sensor data](media/sensor_data_3d_bay_area.jpg)](https://olwal.github.io/air/3d/)
 
-# 2020 | Bay Area Air Quality Year in 4D Review
+# 2020 | Bay Area Air Quality | 4D Review
 This project visualizes air quality data overlaid onto a 3D geographical map. The map shows hourly data from thousands of sensors and allows interaction and playback of air quality pattern across various locations. These visualizations particularly highlight the significant impact that the 2020 Bay Area fires had on air quality, but can be used to explore patterns throughout the full year. 
 
 Tested platforms:
