@@ -1,4 +1,4 @@
-# Bay Area Air Quality: An Interactive 4D Review
+# Bay Area Air Quality: Interactive 4D Visualizations
 
 [![3D visualization of air quality sensor data](media/sensor_data_3d_bay_area.jpg)](https://olwal.github.io/air/3d/)
 
