@@ -1,0 +1,8 @@
+node_modules/
+dist/
+.env.local
+.env.*.local
+# headless smoke-test / diagnostic screenshots
+*.png
+# recorded demo videos
+out/
