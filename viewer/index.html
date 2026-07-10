@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>Bay Area Air Quality — 4D</title>
+    <link
+      rel="preconnect"
+      href="https://fonts.gstatic.com"
+      crossorigin
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./src/style.css" />
+  </head>
+  <body>
+    <!-- 3D map fills the viewport; HUD + controls float on top. -->
+    <div id="map"></div>
+
+    <!-- Timeline / status HUD (top strip). -->
+    <div id="hud" class="hud">
+      <canvas id="timeline"></canvas>
+    </div>
+
+    <!-- Collapsible control panel (location / radius / dates). -->
+    <button id="panel-toggle" class="panel-toggle" aria-label="Toggle controls">
+      &#9776;
+    </button>
+    <form id="controls" class="controls" autocomplete="off">
+      <div class="row">
+        <select id="location" name="location" aria-label="Location"></select>
+        <select id="radius" name="radius" aria-label="Radius">
+          <option value="">radius</option>
+          <option value="3000">3</option>
+          <option value="5000">5</option>
+          <option value="10000">10</option>
+          <option value="15000">15</option>
+          <option value="20000">20</option>
+          <option value="30000">30</option>
+          <option value="40000">40</option>
+          <option value="50000">50</option>
+        </select>
+        <select id="unit" name="unit" aria-label="Unit">
+          <option value="1">km</option>
+          <option value="1.609">miles</option>
+        </select>
+      </div>
+      <div class="row">
+        <input id="start_date" name="start_date" type="date" min="2020-01-01" max="2021-01-01" />
+        <span class="to">to</span>
+        <input id="end_date" name="end_date" type="date" min="2020-01-01" max="2021-01-01" />
+      </div>
+      <div class="row">
+        <select id="imagery" name="imagery" aria-label="Imagery source" class="wide"></select>
+      </div>
+      <div class="row">
+        <button type="submit" class="go">Load</button>
+      </div>
+    </form>
+
+    <div id="hint" class="hint" hidden></div>
+
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

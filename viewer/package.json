@@ -1,0 +1,23 @@
+{
+  "name": "air-viewer",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "description": "Modern MapLibre + deck.gl viewer for Bay Area air quality time-series data",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "record": "node record.mjs"
+  },
+  "dependencies": {
+    "@deck.gl/core": "^9.1.0",
+    "@deck.gl/layers": "^9.1.0",
+    "@deck.gl/mapbox": "^9.1.0",
+    "maplibre-gl": "^5.19.0"
+  },
+  "devDependencies": {
+    "playwright": "^1.61.1",
+    "vite": "^7.0.0"
+  }
+}

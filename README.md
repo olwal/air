@@ -17,7 +17,9 @@ Use the menu to select a city, radius for the area to show sensors, and date ran
 
 The application allows specification of location in California, start and end dates and other parameters for the visualization. (see URL parameters, below, for full list)
 
-The animated 3D visualizations are based on sensor data from [PurpleAir](https://purpleair.com/), leveraging JavaScript, [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/). Data files preprocessed with Python and [Jupyter Lab](https://jupyter.org/). 
+The animated 3D visualizations are based on sensor data from [PurpleAir](https://purpleair.com/). The current viewer (in [`viewer/`](viewer/)) is built with [MapLibre GL JS](https://maplibre.org/) for satellite imagery and 3D terrain, [deck.gl](https://deck.gl/) for the GPU-rendered air-quality columns, and [Vite](https://vitejs.dev/) as the build tool. Satellite imagery is switchable between seamless [Sentinel-2 cloudless](https://s2maps.eu/) (default), high-resolution Esri World Imagery, and MapTiler, with automatic promotion to higher-resolution tiles when zoomed in. Data files were preprocessed with Python and [Jupyter Lab](https://jupyter.org/).
+
+> The original 2020 version was built with [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/); it was rewritten onto MapLibre + deck.gl after procedural-gl.js became unmaintained. See [`viewer/README.md`](viewer/README.md) for how to run and build the current app. 
 
 ## 2020 Bay Area fires
 Here is a sample collection of interactive 3D visualization of air quality sensor data within a certain radius from the location, references to 3rd party material, and timelapse videos of the 3D visualizations. The visualizations are specified and configured through URL parameters.
