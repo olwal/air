@@ -15,44 +15,8 @@ Use the menu to select a city, radius for the area to show sensors, and date ran
 
 <table>
   <tr>
-    <td width="50%"><video src="https://olwal.github.io/air/media/clean/sf_pan.mp4" controls autoplay muted loop playsinline width="100%"></video></td>
-
-https://github.com/user-attachments/assets/9943b7e8-02eb-4fe2-9be1-09eaa5b852a0
-
-
-
-https://github.com/user-attachments/assets/4034b0a8-6e75-42ff-8404-10db43c3adb4
-
-
-
-https://github.com/user-attachments/assets/6fe52567-3211-4805-988e-209292786f27
-
-
-
-https://github.com/user-attachments/assets/5f031382-6a78-461b-88d7-b5cebbd91e4f
-
-
-
-https://github.com/user-attachments/assets/4a929961-2ae7-450f-82ed-21fdb57897bc
-
-
-
-https://github.com/user-attachments/assets/b646a41c-febd-46e1-a949-f8ff1a7effde
-
-
-
-https://github.com/user-attachments/assets/3e167e00-5656-4b6e-87b7-fa4f5f8612dc
-
-
-
-https://github.com/user-attachments/assets/4bf56f9e-3eb6-4663-97ae-d1c573720afc
-
-
-
-https://github.com/user-attachments/assets/30d0b7e1-98d4-460e-b9dc-2d1264730052
-
-
-    <td width="50%"><video src="https://olwal.github.io/air/media/clean/sf_pan_2.mp4" controls autoplay muted loop playsinline width="100%"></video></td>
+    <td width="50%"><video src="https://github.com/user-attachments/assets/4a929961-2ae7-450f-82ed-21fdb57897bc" controls autoplay muted loop playsinline width="100%"></video></td>
+    <td width="50%"><video src="https://github.com/user-attachments/assets/5f031382-6a78-461b-88d7-b5cebbd91e4f" controls autoplay muted loop playsinline width="100%"></video></td>
   </tr>
   <tr>
     <td align="center"><a href="https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-08&end_date=2020-09-12&radius=30000">▶ Pan SF → San Mateo · open demo</a></td>
@@ -87,7 +51,7 @@ Here is a sample collection of interactive 3D visualization of air quality senso
 
 Interactive demo | Napa | Aug 16-Oct 03: 
 
-<video src="https://olwal.github.io/air/media/clean/napa.mp4" controls autoplay muted loop playsinline width="720"></video>
+<video src="https://github.com/user-attachments/assets/4bf56f9e-3eb6-4663-97ae-d1c573720afc" controls autoplay muted loop playsinline width="720"></video>
 
 [▶ Open interactive demo — Napa](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03&unit=km)
 
@@ -98,7 +62,7 @@ Interactive demo | Napa | Aug 16-Oct 03:
 
 Interactive demo | Santa Cruz | Aug 16-Sep 23: 
 
-<video src="https://olwal.github.io/air/media/clean/santa_cruz.mp4" controls autoplay muted loop playsinline width="720"></video>
+<video src="https://github.com/user-attachments/assets/b646a41c-febd-46e1-a949-f8ff1a7effde" controls autoplay muted loop playsinline width="720"></video>
 
 [▶ Open interactive demo — Santa Cruz](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23&unit=km)
 
@@ -109,7 +73,7 @@ Interactive demo | Santa Cruz | Aug 16-Sep 23:
 
 Interactive demo | Santa Clara | Aug 15-Oct 03: 
 
-<video src="https://olwal.github.io/air/media/clean/santa_clara.mp4" controls autoplay muted loop playsinline width="720"></video>
+<video src="https://github.com/user-attachments/assets/3e167e00-5656-4b6e-87b7-fa4f5f8612dc" controls autoplay muted loop playsinline width="720"></video>
 
 [▶ Open interactive demo — Santa Clara](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03&unit=km)
 
@@ -125,12 +89,12 @@ Firefox on Desktop seems most stable in loading these.
 
 <table>
   <tr>
-    <td width="50%"><video src="https://olwal.github.io/air/media/clean/sf_pan_to_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Pan to San Francisco</sub></td>
-    <td width="50%"><video src="https://olwal.github.io/air/media/clean/sf_rotate_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Rotating around San Francisco</sub></td>
+    <td width="50%"><video src="https://github.com/user-attachments/assets/6fe52567-3211-4805-988e-209292786f27" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Pan to San Francisco</sub></td>
+    <td width="50%"><video src="https://github.com/user-attachments/assets/4034b0a8-6e75-42ff-8404-10db43c3adb4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Rotating around San Francisco</sub></td>
   </tr>
   <tr>
-    <td><video src="https://olwal.github.io/air/media/clean/east_bay_rotate_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Rotating around East Bay</sub></td>
-    <td><video src="https://olwal.github.io/air/media/clean/silicon_valley_approach_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Approaching Silicon Valley</sub></td>
+    <td><video src="https://github.com/user-attachments/assets/30d0b7e1-98d4-460e-b9dc-2d1264730052" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Rotating around East Bay</sub></td>
+    <td><video src="https://github.com/user-attachments/assets/9943b7e8-02eb-4fe2-9be1-09eaa5b852a0" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Approaching Silicon Valley</sub></td>
   </tr>
 </table>
 
@@ -177,7 +141,6 @@ Firefox on Desktop seems most stable in loading these.
 | Scroll wheel | Zoom |
 | Click on location | Load data for the location |
 | Click on data point | Focus on that data point |
-
 
 ## URL parameters
 
