@@ -15,8 +15,8 @@ Use the menu to select a city, radius for the area to show sensors, and date ran
 
 <table>
   <tr>
-    <td width="50%"><video src="https://github.com/olwal/air/raw/main/media/clean/sf_pan.mp4" controls autoplay muted loop playsinline width="100%"></video></td>
-    <td width="50%"><video src="https://github.com/olwal/air/raw/main/media/clean/sf_pan_2.mp4" controls autoplay muted loop playsinline width="100%"></video></td>
+    <td width="50%"><video src="https://olwal.github.io/air/media/clean/sf_pan.mp4" controls autoplay muted loop playsinline width="100%"></video></td>
+    <td width="50%"><video src="https://olwal.github.io/air/media/clean/sf_pan_2.mp4" controls autoplay muted loop playsinline width="100%"></video></td>
   </tr>
   <tr>
     <td align="center"><a href="https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-08&end_date=2020-09-12&radius=30000">▶ Pan SF → San Mateo · open demo</a></td>
@@ -51,7 +51,7 @@ Here is a sample collection of interactive 3D visualization of air quality senso
 
 Interactive demo | Napa | Aug 16-Oct 03: 
 
-<video src="https://github.com/olwal/air/raw/main/media/clean/napa.mp4" controls autoplay muted loop playsinline width="720"></video>
+<video src="https://olwal.github.io/air/media/clean/napa.mp4" controls autoplay muted loop playsinline width="720"></video>
 
 [▶ Open interactive demo — Napa](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03&unit=km)
 
@@ -62,7 +62,7 @@ Interactive demo | Napa | Aug 16-Oct 03:
 
 Interactive demo | Santa Cruz | Aug 16-Sep 23: 
 
-<video src="https://github.com/olwal/air/raw/main/media/clean/santa_cruz.mp4" controls autoplay muted loop playsinline width="720"></video>
+<video src="https://olwal.github.io/air/media/clean/santa_cruz.mp4" controls autoplay muted loop playsinline width="720"></video>
 
 [▶ Open interactive demo — Santa Cruz](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23&unit=km)
 
@@ -73,7 +73,7 @@ Interactive demo | Santa Cruz | Aug 16-Sep 23:
 
 Interactive demo | Santa Clara | Aug 15-Oct 03: 
 
-<video src="https://github.com/olwal/air/raw/main/media/clean/santa_clara.mp4" controls autoplay muted loop playsinline width="720"></video>
+<video src="https://olwal.github.io/air/media/clean/santa_clara.mp4" controls autoplay muted loop playsinline width="720"></video>
 
 [▶ Open interactive demo — Santa Clara](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03&unit=km)
 
@@ -89,12 +89,12 @@ Firefox on Desktop seems most stable in loading these.
 
 <table>
   <tr>
-    <td width="50%"><video src="https://github.com/olwal/air/raw/main/media/clean/sf_pan_to_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Pan to San Francisco</sub></td>
-    <td width="50%"><video src="https://github.com/olwal/air/raw/main/media/clean/sf_rotate_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Rotating around San Francisco</sub></td>
+    <td width="50%"><video src="https://olwal.github.io/air/media/clean/sf_pan_to_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Pan to San Francisco</sub></td>
+    <td width="50%"><video src="https://olwal.github.io/air/media/clean/sf_rotate_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Rotating around San Francisco</sub></td>
   </tr>
   <tr>
-    <td><video src="https://github.com/olwal/air/raw/main/media/clean/east_bay_rotate_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Rotating around East Bay</sub></td>
-    <td><video src="https://github.com/olwal/air/raw/main/media/clean/silicon_valley_approach_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Approaching Silicon Valley</sub></td>
+    <td><video src="https://olwal.github.io/air/media/clean/east_bay_rotate_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Rotating around East Bay</sub></td>
+    <td><video src="https://olwal.github.io/air/media/clean/silicon_valley_approach_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Approaching Silicon Valley</sub></td>
   </tr>
 </table>
 
