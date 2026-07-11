@@ -8,8 +8,10 @@ A rewrite of the Bay Area air-quality 4D visualization on a maintained stack:
 - **Vite** — dev server + build (ES modules, no global-script load order)
 
 It replaces the original root app's abandoned `procedural-gl.js` engine while
-**reusing the existing `data/` artifacts and the AQI math unchanged**. This is the
-time-series (2020 playback) mode only; the old live/PurpleAir mode is not ported.
+**reusing the existing `data/` artifacts and the AQI math unchanged**. It covers the
+historical time-series (2020 playback) visualization. (A prior real-time PurpleAir
+mode is not included — see [Future work](../README.md#future-work) for why and what
+reviving it would take.)
 
 ## Develop
 

@@ -11,7 +11,7 @@ Tested platforms:
 
 Use the menu to select a city, radius for the area to show sensors, and date range. Given the potential large amount of sensor data at a specific location/radius, the interface does not dynamically load new data as the map is panned. However, one can click a different city directly to load new data. 
 
-[Live 3D demo with time-series sensor data](https://olwal.github.io/air/3d/)
+[Interactive 3D demo (time-series sensor data)](https://olwal.github.io/air/3d/)
 
 [![Pan SF to San Mateo](media/sf_pan.gif)](https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-08&end_date=2020-09-12&radius=30000) [![Pan to SF](media/sf_pan_2.gif)](https://olwal.github.io/air/3d?location=San%20Francisco&start_date=2020-09-08&end_date=2020-09-12&radius=30000)
 
@@ -20,6 +20,17 @@ The application allows specification of location in California, start and end da
 The animated 3D visualizations are based on sensor data from [PurpleAir](https://purpleair.com/). The current viewer (in [`viewer/`](viewer/)) is built with [MapLibre GL JS](https://maplibre.org/) for satellite imagery and 3D terrain, [deck.gl](https://deck.gl/) for the GPU-rendered air-quality columns, and [Vite](https://vitejs.dev/) as the build tool. Satellite imagery is switchable between seamless [Sentinel-2 cloudless](https://s2maps.eu/) (default), high-resolution Esri World Imagery, and MapTiler, with automatic promotion to higher-resolution tiles when zoomed in. Data files were preprocessed with Python and [Jupyter Lab](https://jupyter.org/).
 
 > The original 2020 version was built with [procedural-gl.js](https://github.com/felixpalmer/procedural-gl-js) and [p5.js](https://p5js.org/); it was rewritten onto MapLibre + deck.gl after procedural-gl.js became unmaintained. See [`viewer/README.md`](viewer/README.md) for how to run and build the current app. 
+
+## Contents
+
+- [2020 Bay Area fires](#2020-bay-area-fires)
+- [2020 — 1-year time series](#2020--1-year-time-series)
+- [3D views](#3d-views)
+- [Input controls](#input-controls)
+- [URL parameters](#url-parameters)
+- [Running locally](#running-locally)
+- [Future work](#future-work)
+- [Acknowledgments](#acknowledgments)
 
 ## 2020 Bay Area fires
 Here is a sample collection of interactive 3D visualization of air quality sensor data within a certain radius from the location, references to 3rd party material, and timelapse videos of the 3D visualizations. The visualizations are specified and configured through URL parameters.
@@ -129,6 +140,51 @@ Examples:
 | Longitude/Latitude (Between Mountain View and Cupertino) with default dates | http://olwal.github.io/air/3d?longitude=-122.08&latitude=37.35 |
 | Default location and dates, but 20 km radius | http://olwal.github.io/air/3d?radius=20000 |
 | Alameda, Aug 15-Oct 03, 20 km radius, 30 km camera distance | http://olwal.github.io/air/3d?location=Alameda&start_date=2020-08-15&end_date=2020-10-03&radius=20000&distance=30000 |
+
+## Running locally
+
+The current app lives in [`viewer/`](viewer/) and is built with [Vite](https://vitejs.dev/):
+
+```bash
+cd viewer
+npm install
+npm run dev      # dev server at http://localhost:5173
+npm run build    # production build -> viewer/dist/
+```
+
+The dev server serves the repo-root `data/` directory automatically, so no data copying is needed. See [`viewer/README.md`](viewer/README.md) for imagery-source configuration, keyboard shortcuts, and the full URL-parameter reference.
+
+## Future work
+
+### Real-time sensor mode
+
+The original 2020 version had an optional real-time mode (activated with a
+`?realtime=<seconds>` URL parameter) that polled PurpleAir for each sensor's
+current reading and animated live air quality, instead of playing back the 2020
+time series. It fetched per sensor from the public, keyless endpoint:
+
+```
+https://www.purpleair.com/json?show=<sensorId>
+```
+
+parsed `PM2_5Value` into an AQI, and refreshed on an interval. (See the legacy
+implementation in [`js/observations_remote.js`](js/observations_remote.js).)
+
+**This no longer works.** PurpleAir retired that endpoint — requests to it now
+redirect to an "over-quota" page and return no sensor data. The current viewer is
+therefore historical time-series only.
+
+To restore real-time in the new viewer, the fetch layer would need to be rewritten
+against PurpleAir's current API at `api.purpleair.com`, which requires:
+
+- a registered **read API key** (the old endpoint needed none);
+- the v1 request shape — a single sensor (`GET /v1/sensors/<id>?fields=pm2.5,...`)
+  or a bounded bulk query (`GET /v1/sensors?fields=...&nwlng=...&selng=...`) rather
+  than one request per sensor;
+- mapping the new JSON response fields to the existing AQI/color pipeline in
+  [`viewer/src/aqi.js`](viewer/src/aqi.js);
+- keeping the API key out of the client — e.g. a small proxy/serverless function —
+  and respecting PurpleAir's rate limits.
 
 ## Acknowledgments
 Many thanks to Oskar Rönnberg, Carsten Schwesig, and Sebastian Rinnebach for insightful feedback on the interface and features. Special thanks to Felix Palmer for discussions and for providing the open source procedural-gl.js library. 

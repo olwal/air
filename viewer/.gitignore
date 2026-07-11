@@ -1,5 +1,6 @@
 node_modules/
 dist/
+.vite/
 .env.local
 .env.*.local
 # headless smoke-test / diagnostic screenshots
