@@ -6,10 +6,11 @@
 // Rough conversion from the original "distance" (camera distance in meters) to a
 // MapLibre zoom level, so existing ?distance= links land at a similar framing.
 export function distanceToZoom(distanceM) {
-  if (!distanceM || Number.isNaN(distanceM)) return 10.5;
-  // Empirical: ~5km -> z12.2, ~20km -> z10.2, ~50km -> z8.9.
-  const z = 24.5 - Math.log2(distanceM);
-  return Math.max(8, Math.min(15, z));
+  if (!distanceM || Number.isNaN(distanceM)) return 11.5;
+  // Closer framing (like the original app): ~5km -> z13.2, ~20km -> z11.2,
+  // ~50km -> z9.9.
+  const z = 25.5 - Math.log2(distanceM);
+  return Math.max(9, Math.min(15, z));
 }
 
 // First framing of a session: set a sensible zoom from the ?distance= param.

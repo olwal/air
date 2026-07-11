@@ -39,12 +39,25 @@ const browser = await chromium.launch({
 });
 const context = await browser.newContext({
   viewport: SIZE,
-  deviceScaleFactor: 2,
+  // 1x device scale: matches the video size, so software WebGL isn't rendering
+  // 4x the pixels — much smoother capture (on a real GPU you could bump to 2).
+  deviceScaleFactor: Number(process.env.RECORD_DPR || 1),
   recordVideo: { dir: OUT, size: SIZE },
 });
 const page = await context.newPage();
 
 await page.goto(`${BASE}?${query.replace(/ /g, '%20')}`, { waitUntil: 'load' });
+
+// Optional clean look: hide the left control panel (form + mobile toggle) and
+// the corner map control buttons — but keep the attribution (licensing) and the
+// top HUD.
+if (process.argv.includes('--hide-ui')) {
+  await page.addStyleTag({
+    content:
+      '#controls,#panel-toggle{display:none!important}' +
+      '.maplibregl-ctrl-group{display:none!important}',
+  });
+}
 
 // Wait for the terrain + first data to be ready before we start recording motion.
 await page
@@ -52,10 +65,43 @@ await page
   .catch(() => {});
 await page.waitForTimeout(4000);
 
-await page.evaluate(() => window.__app.setPlaying(true));
-if (orbit) await page.keyboard.press('o');
+// Cinematic tour: sweep the whole date span while orbiting and pushing in.
+// The timeline is driven directly from tour progress (not the app's playback
+// clock), so the full span always fits the clip regardless of frame count or
+// render speed. The promise resolves when the tour ends, bounding the recording.
+const zoomIn = Number(process.env.RECORD_ZOOM_IN || 2.0); // zoom levels gained over the clip
+const degPerSec = Number(process.env.RECORD_ORBIT_DEG || 8);
+const doOrbit = !process.argv.includes('--no-orbit');
 
-await page.waitForTimeout(seconds * 1000);
+await page.evaluate(
+  ({ secs, zoomIn, degPerSec, doOrbit }) =>
+    new Promise((resolve) => {
+      const app = window.__app;
+      const map = app.map;
+      app.applyImagery = () => {}; // freeze imagery source (no tile swap mid-shot)
+      app.setPlaying(false); // we drive the frame index ourselves
+      const n = Math.max(1, app.nFrames);
+      const z0 = map.getZoom(); // start at the load framing
+      const z1 = z0 + zoomIn; // push in over the clip
+      const b0 = map.getBearing();
+      const t0 = performance.now();
+      (function tick(now) {
+        const t = Math.min(1, (now - t0) / (secs * 1000));
+        const e = t * t * (3 - 2 * t); // smoothstep easing for the zoom
+        map.setZoom(z0 + (z1 - z0) * e);
+        if (doOrbit) map.setBearing(b0 + degPerSec * secs * t);
+        app.setCurrent(Math.round(t * (n - 1))); // linear timeline sweep
+        if (t < 1) requestAnimationFrame(tick);
+        else resolve();
+      })(t0);
+    }),
+  { secs: seconds, zoomIn, degPerSec, doOrbit },
+);
+
+// Hold the final view briefly so the browser teardown / video finalization
+// jank lands here (after the tour). We trim this tail off during encoding, so
+// the clip ends on clean tour footage instead of dropped/frozen frames.
+await page.waitForTimeout(1500);
 
 const video = page.video();
 await context.close(); // finalizes the video file

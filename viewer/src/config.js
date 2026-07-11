@@ -109,7 +109,7 @@ export const TERRAIN_EXAGGERATION = 1.4;
 export const INITIAL_VIEW = {
   longitude: DEFAULT_LONGITUDE,
   latitude: DEFAULT_LATITUDE,
-  zoom: 10.5,
+  zoom: 11.2,
   pitch: 62,
   bearing: 20,
 };

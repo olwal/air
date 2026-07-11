@@ -13,7 +13,16 @@ Use the menu to select a city, radius for the area to show sensors, and date ran
 
 [Interactive 3D demo (time-series sensor data)](https://olwal.github.io/air/3d/)
 
-[![Pan SF to San Mateo](media/sf_pan.gif)](https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-08&end_date=2020-09-12&radius=30000) [![Pan to SF](media/sf_pan_2.gif)](https://olwal.github.io/air/3d?location=San%20Francisco&start_date=2020-09-08&end_date=2020-09-12&radius=30000)
+<table>
+  <tr>
+    <td width="50%"><video src="https://github.com/olwal/air/raw/main/media/clean/sf_pan.mp4" controls autoplay muted loop playsinline width="100%"></video></td>
+    <td width="50%"><video src="https://github.com/olwal/air/raw/main/media/clean/sf_pan_2.mp4" controls autoplay muted loop playsinline width="100%"></video></td>
+  </tr>
+  <tr>
+    <td align="center"><a href="https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-09-08&end_date=2020-09-12&radius=30000">▶ Pan SF → San Mateo · open demo</a></td>
+    <td align="center"><a href="https://olwal.github.io/air/3d?location=San%20Francisco&start_date=2020-09-08&end_date=2020-09-12&radius=30000">▶ Pan to SF · open demo</a></td>
+  </tr>
+</table>
 
 The application allows specification of location in California, start and end dates and other parameters for the visualization. (see URL parameters, below, for full list)
 
@@ -42,7 +51,9 @@ Here is a sample collection of interactive 3D visualization of air quality senso
 
 Interactive demo | Napa | Aug 16-Oct 03: 
 
-[![Napa](media/napa.gif)](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03&unit=km)
+<video src="https://github.com/olwal/air/raw/main/media/clean/napa.mp4" controls autoplay muted loop playsinline width="720"></video>
+
+[▶ Open interactive demo — Napa](https://olwal.github.io/air/3d?location=LNU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-10-03&unit=km)
 
 ### [CZU August Lightning Complex Fires](http://olwal.github.io/air/3d?location=CZU%20Lightning%20Complex%20Fires&start_date=2020-08-16&end_date=2020-09-23&radius=20000&distance=50000&unit=km) | Aug 17 to Sep 22
 - Locations: [Santa Cruz](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23&radius=20000&distance=30000&unit=km), [San Mateo](https://olwal.github.io/air/3d?location=San%20Mateo&start_date=2020-08-16&end_date=2020-09-23&unit=km)
@@ -51,7 +62,9 @@ Interactive demo | Napa | Aug 16-Oct 03:
 
 Interactive demo | Santa Cruz | Aug 16-Sep 23: 
 
-[![Santa Cruz](media/santa_cruz.gif)](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23&unit=km)
+<video src="https://github.com/olwal/air/raw/main/media/clean/santa_cruz.mp4" controls autoplay muted loop playsinline width="720"></video>
+
+[▶ Open interactive demo — Santa Cruz](https://olwal.github.io/air/3d?location=Santa%20Cruz&start_date=2020-08-16&end_date=2020-09-23&unit=km)
 
 ### [SCU August Lightning Complex Fires](http://olwal.github.io/air/3d?location=SCU%20Lightning%20Complex%20Fires&start_date=2020-08-15&end_date=2020-10-03&radius=30000&distance=50000&unit=km) | Aug 16 to Oct 02
 - Locations: [Santa Clara](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03&radius=20000&distance=20000&unit=km), [Alameda](http://olwal.github.io/air/3d?location=Alameda&start_date=2020-08-15&end_date=2020-10-03&radius=20000&distance=20000&unit=km), Contra Costa, [San Joaquin](http://olwal.github.io/air/3d?location=San%20Joaquin&start_date=2020-08-15&end_date=2020-10-03&radius=50000&distance=30000&unit=km), Stanislaus
@@ -60,7 +73,9 @@ Interactive demo | Santa Cruz | Aug 16-Sep 23:
 
 Interactive demo | Santa Clara | Aug 15-Oct 03: 
 
-[![Santa Clara](media/santa_clara.gif)](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03&unit=km)
+<video src="https://github.com/olwal/air/raw/main/media/clean/santa_clara.mp4" controls autoplay muted loop playsinline width="720"></video>
+
+[▶ Open interactive demo — Santa Clara](http://olwal.github.io/air/3d?location=Santa%20Clara&start_date=2020-08-15&end_date=2020-10-03&unit=km)
 
 ## 2020 | 1-year Time Series
 These full-year datasets take quite some time to load.
@@ -72,11 +87,18 @@ Firefox on Desktop seems most stable in loading these.
 
 ## 3D views
 
-[![Pan to San Francisco](media/sf_pan_to_320.gif)](https://olwal.github.io/air/3d/)
-[![Rotating around San Francisco](media/sf_rotate_320.gif)](https://olwal.github.io/air/3d/)
+<table>
+  <tr>
+    <td width="50%"><video src="https://github.com/olwal/air/raw/main/media/clean/sf_pan_to_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Pan to San Francisco</sub></td>
+    <td width="50%"><video src="https://github.com/olwal/air/raw/main/media/clean/sf_rotate_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Rotating around San Francisco</sub></td>
+  </tr>
+  <tr>
+    <td><video src="https://github.com/olwal/air/raw/main/media/clean/east_bay_rotate_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Rotating around East Bay</sub></td>
+    <td><video src="https://github.com/olwal/air/raw/main/media/clean/silicon_valley_approach_320.mp4" controls autoplay muted loop playsinline width="100%"></video><br/><sub>Approaching Silicon Valley</sub></td>
+  </tr>
+</table>
 
-[![Rotating around East Bay](media/east_bay_rotate_320.gif)](https://olwal.github.io/air/3d/)
-[![Approaching Silicon Valley](media/silicon_valley_approach_320.gif)](https://olwal.github.io/air/3d/)
+[▶ Open the interactive demo](https://olwal.github.io/air/3d/)
 
 ## Input controls
 
