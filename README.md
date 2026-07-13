@@ -189,7 +189,7 @@ https://www.purpleair.com/json?show=<sensorId>
 ```
 
 parsed `PM2_5Value` into an AQI, and refreshed on an interval. (See the legacy
-implementation in [`js/observations_remote.js`](js/observations_remote.js).)
+implementation in [`legacy/js/observations_remote.js`](legacy/js/observations_remote.js).)
 
 **This no longer works.** PurpleAir retired that endpoint — requests to it now
 redirect to an "over-quota" page and return no sensor data. The current viewer is

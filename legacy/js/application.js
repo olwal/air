@@ -519,7 +519,7 @@ function preloadTimeSeries()
     }
 
     if (LANDMARKS.includes(landmarks))
-        LANDMARKS_PATH = "data/" + landmarks + ".csv";
+        LANDMARKS_PATH = "../data/" + landmarks + ".csv";
 
     locations = Features.preload();
 
@@ -1633,13 +1633,13 @@ function addButtons()
     let y = 7;
 
     //Fixed white SVG fill with https://vectorpaint.yaks.co.nz/
-    let button = createImg('data/images/play_arrow-24px_white.svg', 'Play');
+    let button = createImg('../data/images/play_arrow-24px_white.svg', 'Play');
     button.size(w, h);
     button.position(x, y);
     button.mousePressed(togglePlay);
     buttons['play'] = button;
 
-    button = createImg('data/images/pause-24px_white.svg', 'Pause');
+    button = createImg('../data/images/pause-24px_white.svg', 'Pause');
     button.size(w, h);
     button.position(x, y);    
     button.mousePressed(togglePlay);
