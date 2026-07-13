@@ -4,11 +4,6 @@
 
 This project visualizes air quality data overlaid onto a 3D geographical map. The map shows hourly data from thousands of sensors and allows interaction and playback of air quality pattern across various locations. These visualizations particularly highlight the significant impact that the 2020 Bay Area fires had on air quality, but can be used to explore patterns throughout the full year. 
 
-Tested platforms:
-- iOS (iPhone/iPad): Tested with Firefox, Chrome and Safari. 
-- macOS/Windows: Tested with Firefox, Chrome and Safari. 
-- Android: Tested with Firefox and Chrome. (clicking on city label not currently supported)
-
 Use the menu to select a city, radius for the area to show sensors, and date range. Given the potential large amount of sensor data at a specific location/radius, the interface does not dynamically load new data as the map is panned. However, one can click a different city directly to load new data. 
 
 [Interactive 3D demo (time-series sensor data)](https://olwal.github.io/air/3d/)
